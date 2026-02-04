@@ -66,6 +66,8 @@
     "history": "Historique",
     "identity": "Identité",
     "fullName": "Nom complet",
+    "firstName": "Prénom",
+    "lastName": "Nom",
     "dateOfBirth": "Date de naissance",
     "address": "Adresse",
     "phone": "Téléphone",

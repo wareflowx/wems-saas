@@ -22,6 +22,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { CreateEmployeeDialog } from '@/components/employees/CreateEmployeeDialog'
 
 export const Route = createFileRoute('/employees')({
   component: EmployeesLayout,
@@ -33,6 +34,7 @@ const EmployeesLayout = () => {
   const [search, setSearch] = useState('')
   const [departmentFilter, setDepartmentFilter] = useState<string>('all')
   const [statusFilter, setStatusFilter] = useState<string>('all')
+  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
   const itemsPerPage = 10
 
   const employees = [
@@ -112,7 +114,8 @@ const EmployeesLayout = () => {
   }
 
   return (
-    <SidebarInset>
+    <>
+      <SidebarInset>
       <header className="flex h-14 shrink-0 items-center gap-2 border-b px-4 sticky top-0 bg-background z-10">
         <SidebarTrigger className="-ml-1" />
         <div className="flex items-center gap-2"><Users className="h-5 w-5 text-gray-600" /><h2 className="text-lg font-semibold">{t('employees.title')}</h2></div>
@@ -201,7 +204,7 @@ const EmployeesLayout = () => {
                   ))}
                 </SelectContent>
               </Select>
-              <Button className="gap-2 ml-auto"><UserPlus className="h-4 w-4" />{t('employees.addEmployee')}</Button>
+              <Button className="gap-2 ml-auto" onClick={() => setIsCreateDialogOpen(true)}><UserPlus className="h-4 w-4" />{t('employees.addEmployee')}</Button>
             </div>
             <div className="rounded-lg border">
               <Table>
@@ -259,5 +262,13 @@ const EmployeesLayout = () => {
           </div>
         </div>
       </SidebarInset>
+      <CreateEmployeeDialog
+        open={isCreateDialogOpen}
+        onOpenChange={setIsCreateDialogOpen}
+        onSuccess={() => {
+          // TODO: Refresh employees list
+        }}
+      />
+    </>
   )
 }
