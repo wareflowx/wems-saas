@@ -147,65 +147,107 @@ const EmployeesLayout = () => {
               <Button variant="outline" size="icon" className="relative">
                 <Bell className="h-4 w-4" />
                 {notifications.critical.length > 0 && (
-                  <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white">
-                    {notifications.critical.length}
+                  <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white border-2 border-background">
+                    {notifications.critical.length + notifications.warning.length}
                   </span>
                 )}
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-80">
-              <DropdownMenuLabel>Notifications</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              {notifications.critical.length > 0 && (
-                <DropdownMenuGroup>
-                  <DropdownMenuLabel className="text-xs text-red-600 font-semibold flex items-center gap-2">
-                    <AlertCircle className="h-3 w-3" />
-                    Critiques ({notifications.critical.length})
-                  </DropdownMenuLabel>
-                  {notifications.critical.map((notification) => (
-                    <DropdownMenuItem key={notification.id} className="flex flex-col items-start gap-1 p-3">
-                      <div className="flex items-center gap-2 w-full">
-                        <ShieldAlert className="h-4 w-4 text-red-600 flex-shrink-0" />
-                        <div className="flex-1 min-w-0">
-                          <p className="font-medium text-sm truncate">{notification.employee}</p>
-                          <p className="text-xs text-gray-600">{notification.type}</p>
-                          {notification.category && (
-                            <p className="text-xs text-gray-500">CACES {notification.category}</p>
-                          )}
-                        </div>
-                      </div>
-                      <p className="text-xs text-gray-500 ml-6">{notification.time}</p>
-                    </DropdownMenuItem>
-                  ))}
-                  <DropdownMenuSeparator />
-                </DropdownMenuGroup>
-              )}
-              {notifications.warning.length > 0 && (
-                <DropdownMenuGroup>
-                  <DropdownMenuLabel className="text-xs text-yellow-600 font-semibold flex items-center gap-2">
-                    <AlertTriangle className="h-3 w-3" />
-                    Avertissements ({notifications.warning.length})
-                  </DropdownMenuLabel>
-                  {notifications.warning.map((notification) => (
-                    <DropdownMenuItem key={notification.id} className="flex flex-col items-start gap-1 p-3">
-                      <div className="flex items-center gap-2 w-full">
-                        <Calendar className="h-4 w-4 text-yellow-600 flex-shrink-0" />
-                        <div className="flex-1 min-w-0">
-                          <p className="font-medium text-sm truncate">{notification.employee}</p>
-                          <p className="text-xs text-gray-600">{notification.type}</p>
-                          <p className="text-xs text-gray-500">CACES {notification.category} • {notification.daysLeft} jours</p>
-                        </div>
-                      </div>
-                      <p className="text-xs text-gray-500 ml-6">{notification.time}</p>
-                    </DropdownMenuItem>
-                  ))}
-                </DropdownMenuGroup>
-              )}
-              {notifications.critical.length === 0 && notifications.warning.length === 0 && (
-                <div className="py-4 text-center text-sm text-gray-500">
-                  Aucune notification
+            <DropdownMenuContent align="end" className="w-96 p-0">
+              <div className="p-3 border-b">
+                <div className="flex items-center justify-between">
+                  <DropdownMenuLabel className="p-0 text-sm font-semibold">Notifications</DropdownMenuLabel>
+                  <span className="text-xs text-muted-foreground">{notifications.critical.length + notifications.warning.length} nouvelles</span>
                 </div>
-              )}
+              </div>
+
+              <div className="max-h-80 overflow-y-auto">
+                {notifications.critical.length > 0 && (
+                  <div className="border-b">
+                    <div className="px-3 py-2 bg-red-50 border-y border-red-100">
+                      <p className="text-xs font-semibold text-red-700 flex items-center gap-2">
+                        <AlertCircle className="h-3.5 w-3.5" />
+                        Critiques ({notifications.critical.length})
+                      </p>
+                    </div>
+                    {notifications.critical.map((notification) => (
+                      <DropdownMenuItem
+                        key={notification.id}
+                        className="flex flex-col items-start gap-2 p-3 border-l-2 border-l-red-500 hover:bg-red-50/50 cursor-pointer"
+                      >
+                        <div className="flex items-start gap-3 w-full">
+                          <div className="mt-0.5">
+                            <div className="h-8 w-8 rounded-full bg-red-100 flex items-center justify-center">
+                              <ShieldAlert className="h-4 w-4 text-red-600" />
+                            </div>
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="font-medium text-sm">{notification.employee}</p>
+                            <p className="text-xs text-muted-foreground mt-0.5">{notification.type}</p>
+                            {notification.category && (
+                              <Badge variant="destructive" className="mt-1.5 text-[10px] px-1.5 py-0 h-4">
+                                CACES {notification.category}
+                              </Badge>
+                            )}
+                          </div>
+                          <span className="text-[10px] text-muted-foreground whitespace-nowrap mt-1">{notification.time}</span>
+                        </div>
+                      </DropdownMenuItem>
+                    ))}
+                  </div>
+                )}
+
+                {notifications.warning.length > 0 && (
+                  <div>
+                    <div className="px-3 py-2 bg-yellow-50 border-y border-yellow-100">
+                      <p className="text-xs font-semibold text-yellow-700 flex items-center gap-2">
+                        <AlertTriangle className="h-3.5 w-3.5" />
+                        Avertissements ({notifications.warning.length})
+                      </p>
+                    </div>
+                    {notifications.warning.map((notification) => (
+                      <DropdownMenuItem
+                        key={notification.id}
+                        className="flex flex-col items-start gap-2 p-3 border-l-2 border-l-yellow-500 hover:bg-yellow-50/50 cursor-pointer"
+                      >
+                        <div className="flex items-start gap-3 w-full">
+                          <div className="mt-0.5">
+                            <div className="h-8 w-8 rounded-full bg-yellow-100 flex items-center justify-center">
+                              <Calendar className="h-4 w-4 text-yellow-600" />
+                            </div>
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="font-medium text-sm">{notification.employee}</p>
+                            <p className="text-xs text-muted-foreground mt-0.5">{notification.type}</p>
+                            <Badge variant="outline" className="mt-1.5 text-[10px] px-1.5 py-0 h-4 border-yellow-500 text-yellow-700">
+                              CACES {notification.category} • {notification.daysLeft}j
+                            </Badge>
+                          </div>
+                          <span className="text-[10px] text-muted-foreground whitespace-nowrap mt-1">{notification.time}</span>
+                        </div>
+                      </DropdownMenuItem>
+                    ))}
+                  </div>
+                )}
+
+                {notifications.critical.length === 0 && notifications.warning.length === 0 && (
+                  <div className="py-8 px-3 text-center">
+                    <div className="h-12 w-12 rounded-full bg-muted flex items-center justify-center mx-auto mb-3">
+                      <Bell className="h-6 w-6 text-muted-foreground" />
+                    </div>
+                    <p className="text-sm font-medium">Aucune notification</p>
+                    <p className="text-xs text-muted-foreground mt-1">Vous êtes à jour !</p>
+                  </div>
+                )}
+              </div>
+
+              {notifications.critical.length > 0 || notifications.warning.length > 0 ? (
+                <div className="p-2 border-t bg-muted/30">
+                  <Button variant="ghost" size="sm" className="w-full justify-center text-xs">
+                    Voir toutes les notifications
+                  </Button>
+                </div>
+              ) : null}
             </DropdownMenuContent>
           </DropdownMenu>
           <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium bg-green-50 text-green-700 border border-green-200"><div className="w-2 h-2 rounded-full bg-green-500" /><span>{t('dashboard.editMode')}</span></div>
