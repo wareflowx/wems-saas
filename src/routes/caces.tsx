@@ -109,7 +109,7 @@ const CACESLayout = () => {
     const colors = categoryColors[category] || 'bg-gray-500/10 border border-gray-500/20 text-gray-500'
     return (
       <span className={`inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium ${colors}`}>
-        {category}
+        CACES {category}
       </span>
     )
   }
