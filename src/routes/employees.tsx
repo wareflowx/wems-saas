@@ -153,7 +153,7 @@ const EmployeesLayout = () => {
                 )}
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-96 p-0">
+            <DropdownMenuContent align="end" className="w-80 p-0">
               <div className="p-3 border-b">
                 <div className="flex items-center justify-between">
                   <DropdownMenuLabel className="p-0 text-sm font-semibold">Notifications</DropdownMenuLabel>
