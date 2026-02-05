@@ -195,7 +195,7 @@ const DashboardContent = ({ t }: { t: (key: string) => string }) => {
               <TableHead>Employé</TableHead>
               <TableHead>Détails</TableHead>
               <TableHead>Date</TableHead>
-              <TableHead>{t('alerts.status')}</TableHead>
+              <TableHead>{t('caces.status')}</TableHead>
               <TableHead className="text-right">{t('employees.actions')}</TableHead>
             </TableRow>
           </TableHeader>

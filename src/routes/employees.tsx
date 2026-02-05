@@ -450,12 +450,12 @@ const EmployeesLayout = () => {
               <Card className="p-4 bg-background">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-0">
                   <CardTitle className="text-sm font-medium">
-                    {t("common.search")}
+                    {t("dashboard.totalEmployees")}
                   </CardTitle>
                   <Users className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent className="p-0">
-                  <div className="text-2xl font-bold">42</div>
+                  <div className="text-2xl font-bold">{kpis.totalEmployees}</div>
                   <p className="text-xs text-muted-foreground">
                     {kpis.activeEmployees} {t("employees.active")}
                   </p>
@@ -477,7 +477,7 @@ const EmployeesLayout = () => {
                       (kpis.activeEmployees / kpis.totalEmployees) *
                       100
                     ).toFixed(0)}
-                    % {t("common.search").toLowerCase()}
+% du total
                   </p>
                 </CardContent>
               </Card>
@@ -497,7 +497,7 @@ const EmployeesLayout = () => {
                       (kpis.onLeaveEmployees / kpis.totalEmployees) *
                       100
                     ).toFixed(0)}
-                    % {t("common.search").toLowerCase()}
+% du total
                   </p>
                 </CardContent>
               </Card>
