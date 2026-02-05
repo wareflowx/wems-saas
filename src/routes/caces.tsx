@@ -22,6 +22,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Link } from '@tanstack/react-router'
+import { AddCacesDialog } from '@/components/caces/AddCacesDialog'
 
 export const Route = createFileRoute('/caces')({
   component: CACESLayout,
@@ -33,6 +34,7 @@ const CACESLayout = () => {
   const [categoryFilter, setCategoryFilter] = useState<string>('all')
   const [statusFilter, setStatusFilter] = useState<string>('all')
   const [employeeFilter, setEmployeeFilter] = useState<string>('all')
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false)
 
   const caces = [
     { id: 1, employee: 'Jean Dupont', employeeId: 1, category: '1A', dateObtained: '2020-03-15', expirationDate: '2025-03-15', daysLeft: -10, status: 'expired' },
@@ -247,7 +249,7 @@ const CACESLayout = () => {
                 ))}
               </SelectContent>
             </Select>
-            <Button className="gap-2 ml-auto">
+            <Button className="gap-2 ml-auto" onClick={() => setIsAddDialogOpen(true)}>
               <Plus className="h-4 w-4" />{t('caces.addCaces')}
             </Button>
           </div>
@@ -312,6 +314,10 @@ const CACESLayout = () => {
           </div>
         </div>
       </div>
+      <AddCacesDialog
+        open={isAddDialogOpen}
+        onOpenChange={setIsAddDialogOpen}
+      />
     </SidebarInset>
   )
 }
