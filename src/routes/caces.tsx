@@ -128,20 +128,20 @@ const CACESLayout = () => {
   const getDaysBadge = (daysLeft: number) => {
     if (daysLeft < 0) {
       return (
-        <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-red-500/10 border border-red-500/20 text-red-500">
+        <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-red-500/10 border border-red-500/20 text-red-600">
           {Math.abs(daysLeft)} {t('caces.daysOverdue')}
         </span>
       )
     }
     if (daysLeft <= 30) {
       return (
-        <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-yellow-500/10 border border-yellow-500/20 text-yellow-500">
+        <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-yellow-500/10 border border-yellow-500/20 text-yellow-600">
           {daysLeft} {t('caces.daysLeft')}
         </span>
       )
     }
     return (
-      <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-green-500/10 border border-green-500/20 text-green-500">
+      <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-green-600/10 border border-green-600/20 text-green-700">
         {daysLeft} {t('caces.daysLeft')}
       </span>
     )
