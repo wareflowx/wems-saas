@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { Users, ShieldAlert, Stethoscope, FileText, Sparkles, Bell, AlertTriangle, ArrowRight, Search } from 'lucide-react'
+import { Users, ShieldAlert, Stethoscope, FileText, Sparkles, Bell, AlertTriangle, ArrowRight, Search, SearchX } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -289,7 +289,18 @@ const DashboardLayout = () => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {recentAlerts.map((alert) => (
+                {recentAlerts.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={6} className="h-24 text-center">
+                      <div className="flex flex-col items-center justify-center text-muted-foreground">
+                        <SearchX className="h-8 w-8 mb-2 opacity-50" />
+                        <p>Aucun résultat trouvé</p>
+                        <p className="text-xs mt-1">Essayez d'ajuster vos filtres</p>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ) : (
+                  recentAlerts.map((alert) => (
                   <TableRow key={alert.id} className="hover:bg-muted/50">
                     <TableCell>{getTypeBadge(alert.type)}</TableCell>
                     <TableCell>
@@ -308,7 +319,7 @@ const DashboardLayout = () => {
                       </div>
                     </TableCell>
                   </TableRow>
-                ))}
+                )))}
               </TableBody>
             </Table>
           </div>

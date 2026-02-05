@@ -38,6 +38,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { useState, useMemo } from 'react'
+import { SearchX } from 'lucide-react'
 
 export const Route = createFileRoute('/home')({
   component: DashboardLayout,
@@ -361,7 +362,18 @@ const DashboardContent = ({
             </TableRow>
           </TableHeader>
           <TableBody>
-            {upcomingDeadlines.map((deadline) => (
+            {upcomingDeadlines.length === 0 ? (
+              <TableRow>
+                <TableCell colSpan={6} className="h-24 text-center">
+                  <div className="flex flex-col items-center justify-center text-muted-foreground">
+                    <SearchX className="h-8 w-8 mb-2 opacity-50" />
+                    <p>Aucun résultat trouvé</p>
+                    <p className="text-xs mt-1">Essayez d'ajuster vos filtres</p>
+                  </div>
+                </TableCell>
+              </TableRow>
+            ) : (
+              upcomingDeadlines.map((deadline) => (
               <TableRow key={deadline.id} className="hover:bg-muted/50">
                 <TableCell>{getTypeBadge(deadline.type)}</TableCell>
                 <TableCell>
@@ -380,7 +392,7 @@ const DashboardContent = ({
                   </div>
                 </TableCell>
               </TableRow>
-            ))}
+            )))}
           </TableBody>
         </Table>
       </div>
