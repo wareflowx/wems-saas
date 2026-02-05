@@ -178,14 +178,14 @@ const DocumentsLayout = () => {
 
   const getFileIcon = (category: string) => {
     const iconConfig = {
-      'pdf': { icon: <FileIcon2 className="h-5 w-5" />, bgColor: 'bg-red-100', textColor: 'text-red-600' },
-      'spreadsheet': { icon: <FileSpreadsheet className="h-5 w-5" />, bgColor: 'bg-green-100', textColor: 'text-green-600' },
-      'image': { icon: <FileImage className="h-5 w-5" />, bgColor: 'bg-blue-100', textColor: 'text-blue-600' },
+      'pdf': { icon: <FileIcon2 className="h-4 w-4" />, bg: 'bg-red-600/10', border: 'border-red-600/20', text: 'text-red-700' },
+      'spreadsheet': { icon: <FileSpreadsheet className="h-4 w-4" />, bg: 'bg-green-600/10', border: 'border-green-600/20', text: 'text-green-700' },
+      'image': { icon: <FileImage className="h-4 w-4" />, bg: 'bg-blue-600/10', border: 'border-blue-600/20', text: 'text-blue-700' },
     }
-    const config = iconConfig[category as keyof typeof iconConfig] || { icon: <FileIcon className="h-5 w-5" />, bgColor: 'bg-gray-100', textColor: 'text-gray-600' }
+    const config = iconConfig[category as keyof typeof iconConfig] || { icon: <FileIcon className="h-4 w-4" />, bg: 'bg-gray-600/10', border: 'border-gray-600/20', text: 'text-gray-700' }
 
     return (
-      <div className={`p-2.5 rounded-lg ${config.bgColor} ${config.textColor}`}>
+      <div className={`p-2 rounded-lg border ${config.bg} ${config.border} ${config.text}`}>
         {config.icon}
       </div>
     )
