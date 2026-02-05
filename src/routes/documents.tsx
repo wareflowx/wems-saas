@@ -23,6 +23,7 @@ import {
 } from '@/components/ui/select'
 import { useState, useMemo } from 'react'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
+import { DeleteDocumentDialog } from '@/components/documents/DeleteDocumentDialog'
 
 export const Route = createFileRoute('/documents')({
   component: DocumentsLayout,
@@ -120,6 +121,7 @@ const DocumentsLayout = () => {
   }
 
   const [editingDocument, setEditingDocument] = useState<any>(null)
+  const [deletingDocument, setDeletingDocument] = useState<any>(null)
 
   const getTypeBadge = (type: string) => {
     const typeColors: { [key: string]: string } = {
@@ -450,7 +452,7 @@ const DocumentsLayout = () => {
                           <Button variant="ghost" size="icon">
                             <Download className="h-4 w-4" />
                           </Button>
-                          <Button variant="ghost" size="icon">
+                          <Button variant="ghost" size="icon" onClick={() => setDeletingDocument(doc)}>
                             <Trash2 className="h-4 w-4 text-red-600" />
                           </Button>
                         </div>
@@ -535,6 +537,11 @@ const DocumentsLayout = () => {
           )}
         </div>
       </div>
+      <DeleteDocumentDialog
+        open={deletingDocument !== null}
+        onOpenChange={(open) => !open && setDeletingDocument(null)}
+        document={deletingDocument}
+      />
     </SidebarInset>
   )
 }
