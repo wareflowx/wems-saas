@@ -54,7 +54,7 @@ export function DeleteEmployeeDialog({
       <DialogContent className="max-w-md">
         <DialogHeader>
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center flex-shrink-0">
+            <div className="w-12 h-12 rounded-full bg-red-100 border-2 border-red-200 flex items-center justify-center flex-shrink-0">
               <AlertTriangle className="h-6 w-6 text-red-600" />
             </div>
             <div className="flex-1">
