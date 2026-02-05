@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { Search, Filter, Upload, File, Download, Trash2, Eye, FileIcon, FileSpreadsheet, FileImage, FileText as FileIcon2, Sparkles, FileText } from 'lucide-react'
+import { Search, Filter, Upload, File, Download, Trash2, Eye, FileIcon, FileSpreadsheet, FileImage, FileText as FileIcon2, Sparkles, FileText, ChevronUp, ChevronDown, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, SearchX } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -14,6 +14,14 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import { useState, useMemo } from 'react'
 
 export const Route = createFileRoute('/documents')({
   component: DocumentsLayout,
@@ -21,12 +29,94 @@ export const Route = createFileRoute('/documents')({
 
 const DocumentsLayout = () => {
   const { t } = useTranslation()
+  const [search, setSearch] = useState('')
+  const [typeFilter, setTypeFilter] = useState<string>('all')
+  const [categoryFilter, setCategoryFilter] = useState<string>('all')
+  const [employeeFilter, setEmployeeFilter] = useState<string>('all')
+  const [sortColumn, setSortColumn] = useState<string>('name')
+  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc')
+  const [currentPage, setCurrentPage] = useState(1)
+  const itemsPerPage = 10
+
   const documents = [
     { id: 1, name: 'Contrat_CDID_Dupont.pdf', type: 'Contrat', employee: 'Jean Dupont', uploadDate: '2024-01-15', size: '2.4 MB', category: 'pdf' },
     { id: 2, name: 'CACES_1A_Certificat.pdf', type: 'CACES', employee: 'Marie Martin', uploadDate: '2023-11-20', size: '1.8 MB', category: 'pdf' },
     { id: 3, name: 'Visite_Medicale_Initial.pdf', type: 'Visite médicale', employee: 'Pierre Bernard', uploadDate: '2024-01-10', size: '945 KB', category: 'pdf' },
     { id: 4, name: 'Photo_Identification.jpg', type: 'Identification', employee: 'Sophie Petit', uploadDate: '2023-09-15', size: '2.1 MB', category: 'image' },
   ]
+
+  // Get unique types, categories and employees
+  const uniqueTypes = useMemo(() => {
+    const types = new Set(documents.map(d => d.type))
+    return Array.from(types)
+  }, [documents])
+
+  const uniqueCategories = useMemo(() => {
+    const categories = new Set(documents.map(d => d.category))
+    return Array.from(categories)
+  }, [documents])
+
+  const uniqueEmployees = useMemo(() => {
+    const employees = new Set(documents.map(d => d.employee))
+    return Array.from(employees)
+  }, [documents])
+
+  // Filter documents
+  const filteredDocuments = useMemo(() => {
+    return documents.filter((doc) => {
+      const matchesSearch =
+        search === '' ||
+        doc.name.toLowerCase().includes(search.toLowerCase()) ||
+        doc.employee.toLowerCase().includes(search.toLowerCase()) ||
+        doc.type.toLowerCase().includes(search.toLowerCase())
+
+      const matchesType = typeFilter === 'all' || doc.type === typeFilter
+      const matchesCategory = categoryFilter === 'all' || doc.category === categoryFilter
+      const matchesEmployee = employeeFilter === 'all' || doc.employee === employeeFilter
+
+      return matchesSearch && matchesType && matchesCategory && matchesEmployee
+    })
+  }, [documents, search, typeFilter, categoryFilter, employeeFilter])
+
+  // Sort documents
+  const sortedDocuments = useMemo(() => {
+    const sorted = [...filteredDocuments].sort((a, b) => {
+      let aValue: any = a[sortColumn as keyof typeof a]
+      let bValue: any = b[sortColumn as keyof typeof b]
+
+      if (aValue < bValue) return sortDirection === 'asc' ? -1 : 1
+      if (aValue > bValue) return sortDirection === 'asc' ? 1 : -1
+      return 0
+    })
+    return sorted
+  }, [filteredDocuments, sortColumn, sortDirection])
+
+  // Pagination
+  const totalPages = Math.ceil(sortedDocuments.length / itemsPerPage)
+  const paginatedDocuments = sortedDocuments.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  )
+
+  const handleSort = (column: string) => {
+    if (sortColumn === column) {
+      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc')
+    } else {
+      setSortColumn(column)
+      setSortDirection('asc')
+    }
+    setCurrentPage(1)
+  }
+
+  // Reset to page 1 when filters change
+  useMemo(() => {
+    setCurrentPage(1)
+  }, [search, typeFilter, categoryFilter, employeeFilter])
+
+  const getSortIcon = (column: string) => {
+    if (sortColumn !== column) return null
+    return sortDirection === 'asc' ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />
+  }
 
   // KPIs
   const kpis = {
@@ -58,7 +148,7 @@ const DocumentsLayout = () => {
         <div className="min-h-full space-y-3">
           {/* Header */}
           <div className="mb-2">
-            <Card className="p-3 bg-background shadow-sm rounded-md">
+            <Card className="gap-4 p-3 bg-background shadow-sm rounded-md">
               <div className="flex items-start gap-3">
                 <div className="mt-0.5">
                   <Sparkles className="h-4 w-4 text-gray-600" />
@@ -73,8 +163,8 @@ const DocumentsLayout = () => {
           </div>
 
           {/* Key Metrics */}
-          <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-4">
-            <Card className="p-4 bg-background">
+          <div className="grid gap-2 md:grid-cols-2 lg:grid-cols-4">
+            <Card className="gap-4 p-4 bg-background">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-0">
                 <CardTitle className="text-sm font-medium">{t('documents.name')}</CardTitle>
                 <FileText className="h-4 w-4 text-muted-foreground" />
@@ -84,7 +174,7 @@ const DocumentsLayout = () => {
                 <p className="text-xs text-muted-foreground">Total documents</p>
               </CardContent>
             </Card>
-            <Card className="p-4 bg-background">
+            <Card className="gap-4 p-4 bg-background">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-0">
                 <CardTitle className="text-sm font-medium">PDF</CardTitle>
                 <FileIcon2 className="h-4 w-4 text-red-500" />
@@ -94,7 +184,7 @@ const DocumentsLayout = () => {
                 <p className="text-xs text-muted-foreground">{((kpis.pdfDocuments / kpis.totalDocuments) * 100).toFixed(0)}% du total</p>
               </CardContent>
             </Card>
-            <Card className="p-4 bg-background">
+            <Card className="gap-4 p-4 bg-background">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-0">
                 <CardTitle className="text-sm font-medium">Images</CardTitle>
                 <FileImage className="h-4 w-4 text-blue-500" />
@@ -104,7 +194,7 @@ const DocumentsLayout = () => {
                 <p className="text-xs text-muted-foreground">{((kpis.imageDocuments / kpis.totalDocuments) * 100).toFixed(0)}% du total</p>
               </CardContent>
             </Card>
-            <Card className="p-4 bg-background">
+            <Card className="gap-4 p-4 bg-background">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-0">
                 <CardTitle className="text-sm font-medium">Ce mois</CardTitle>
                 <Upload className="h-4 w-4 text-green-500" />
@@ -122,10 +212,50 @@ const DocumentsLayout = () => {
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
                 placeholder={t('documents.search')}
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
                 className="pl-9"
               />
             </div>
-            <Button variant="outline" size="icon"><Filter className="h-4 w-4" /></Button>
+            <Select value={typeFilter} onValueChange={setTypeFilter}>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder={t('documents.type')} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Tous les types</SelectItem>
+                {uniqueTypes.map((type) => (
+                  <SelectItem key={type} value={type}>
+                    {type}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Catégorie" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Toutes les catégories</SelectItem>
+                {uniqueCategories.map((category) => (
+                  <SelectItem key={category} value={category}>
+                    {category.toUpperCase()}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Select value={employeeFilter} onValueChange={setEmployeeFilter}>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder={t('caces.employee')} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">{t('dashboard.allEmployees')}</SelectItem>
+                {uniqueEmployees.map((employee) => (
+                  <SelectItem key={employee} value={employee}>
+                    {employee}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
             <Button className="gap-2 ml-auto"><Upload className="h-4 w-4" />{t('documents.addDocument')}</Button>
           </div>
 
@@ -134,41 +264,189 @@ const DocumentsLayout = () => {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>{t('documents.name')}</TableHead>
-                  <TableHead>{t('documents.type')}</TableHead>
-                  <TableHead>{t('caces.employee')}</TableHead>
-                  <TableHead>{t('caces.date')}</TableHead>
-                  <TableHead>{t('documents.name')} (Taille)</TableHead>
+                  <TableHead>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="-ml-4 h-8 hover:bg-muted font-medium"
+                      onClick={() => handleSort('name')}
+                    >
+                      <div className="flex items-center gap-1">
+                        {t('documents.name')}
+                        {getSortIcon('name')}
+                      </div>
+                    </Button>
+                  </TableHead>
+                  <TableHead>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="-ml-4 h-8 hover:bg-muted font-medium"
+                      onClick={() => handleSort('type')}
+                    >
+                      <div className="flex items-center gap-1">
+                        {t('documents.type')}
+                        {getSortIcon('type')}
+                      </div>
+                    </Button>
+                  </TableHead>
+                  <TableHead>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="-ml-4 h-8 hover:bg-muted font-medium"
+                      onClick={() => handleSort('employee')}
+                    >
+                      <div className="flex items-center gap-1">
+                        {t('caces.employee')}
+                        {getSortIcon('employee')}
+                      </div>
+                    </Button>
+                  </TableHead>
+                  <TableHead>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="-ml-4 h-8 hover:bg-muted font-medium"
+                      onClick={() => handleSort('uploadDate')}
+                    >
+                      <div className="flex items-center gap-1">
+                        {t('caces.date')}
+                        {getSortIcon('uploadDate')}
+                      </div>
+                    </Button>
+                  </TableHead>
+                  <TableHead>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="-ml-4 h-8 hover:bg-muted font-medium"
+                      onClick={() => handleSort('size')}
+                    >
+                      <div className="flex items-center gap-1">
+                        Taille
+                        {getSortIcon('size')}
+                      </div>
+                    </Button>
+                  </TableHead>
                   <TableHead className="text-right">{t('employees.actions')}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {documents.map((doc) => (
-                  <TableRow key={doc.id} className="hover:bg-muted/50">
-                    <TableCell>
-                      <div className="flex items-center gap-3">
-                        <div className="p-2 bg-gray-100 rounded-lg">{getFileIcon(doc.category)}</div>
-                        <div>
-                          <p className="font-medium text-gray-900">{doc.name}</p>
+                {paginatedDocuments.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={6} className="h-64">
+                      <div className="flex flex-col items-center justify-center h-full text-muted-foreground p-8">
+                        <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mb-4">
+                          <SearchX className="h-8 w-8 opacity-50" />
                         </div>
-                      </div>
-                    </TableCell>
-                    <TableCell><Badge>{doc.type}</Badge></TableCell>
-                    <TableCell className="text-gray-700">{doc.employee}</TableCell>
-                    <TableCell className="text-gray-700">{doc.uploadDate}</TableCell>
-                    <TableCell className="text-gray-700">{doc.size}</TableCell>
-                    <TableCell>
-                      <div className="flex items-center justify-end gap-2">
-                        <Button variant="ghost" size="icon"><Eye className="h-4 w-4" /></Button>
-                        <Button variant="ghost" size="icon"><Download className="h-4 w-4" /></Button>
-                        <Button variant="ghost" size="icon"><Trash2 className="h-4 w-4 text-red-600" /></Button>
+                        <p className="text-lg font-medium">{t('common.noData')}</p>
+                        <p className="text-sm mt-2 max-w-md text-center">
+                          {t('dashboard.noDataFound')}
+                        </p>
                       </div>
                     </TableCell>
                   </TableRow>
-                ))}
+                ) : (
+                  paginatedDocuments.map((doc) => (
+                    <TableRow key={doc.id} className="hover:bg-muted/50">
+                      <TableCell>
+                        <div className="flex items-center gap-3">
+                          <div className="p-2 bg-gray-100 rounded-lg">{getFileIcon(doc.category)}</div>
+                          <div>
+                            <p className="font-medium text-gray-900">{doc.name}</p>
+                          </div>
+                        </div>
+                      </TableCell>
+                      <TableCell><Badge>{doc.type}</Badge></TableCell>
+                      <TableCell className="text-gray-700">{doc.employee}</TableCell>
+                      <TableCell className="text-gray-700">{doc.uploadDate}</TableCell>
+                      <TableCell className="text-gray-700">{doc.size}</TableCell>
+                      <TableCell>
+                        <div className="flex items-center justify-end gap-2">
+                          <Button variant="ghost" size="icon"><Eye className="h-4 w-4" /></Button>
+                          <Button variant="ghost" size="icon"><Download className="h-4 w-4" /></Button>
+                          <Button variant="ghost" size="icon"><Trash2 className="h-4 w-4 text-red-600" /></Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
               </TableBody>
             </Table>
           </div>
+
+          {/* Pagination */}
+          {totalPages > 1 && (
+            <div className="flex items-center justify-between">
+              <p className="text-sm text-muted-foreground">
+                Affichage de {((currentPage - 1) * itemsPerPage) + 1} à {Math.min(currentPage * itemsPerPage, sortedDocuments.length)} sur {sortedDocuments.length}
+              </p>
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={() => setCurrentPage(1)}
+                  disabled={currentPage === 1}
+                  className="h-8 w-8"
+                >
+                  <ChevronsLeft className="h-4 w-4" />
+                </Button>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
+                  disabled={currentPage === 1}
+                  className="h-8 w-8"
+                >
+                  <ChevronLeft className="h-4 w-4" />
+                </Button>
+                <div className="flex items-center gap-1">
+                  {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                    let pageNum
+                    if (totalPages <= 5) {
+                      pageNum = i + 1
+                    } else if (currentPage <= 3) {
+                      pageNum = i + 1
+                    } else if (currentPage >= totalPages - 2) {
+                      pageNum = totalPages - 4 + i
+                    } else {
+                      pageNum = currentPage - 2 + i
+                    }
+                    return (
+                      <Button
+                        key={pageNum}
+                        variant={currentPage === pageNum ? "default" : "outline"}
+                        size="icon"
+                        onClick={() => setCurrentPage(pageNum)}
+                        className="h-8 w-8"
+                      >
+                        {pageNum}
+                      </Button>
+                    )
+                  })}
+                </div>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
+                  disabled={currentPage === totalPages}
+                  className="h-8 w-8"
+                >
+                  <ChevronRight className="h-4 w-4" />
+                </Button>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={() => setCurrentPage(totalPages)}
+                  disabled={currentPage === totalPages}
+                  className="h-8 w-8"
+                >
+                  <ChevronsRight className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </SidebarInset>

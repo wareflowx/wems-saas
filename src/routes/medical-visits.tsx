@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { Search, Filter, Plus, Calendar, User, FileText, CheckCircle2, Clock, AlertTriangle, Sparkles, Stethoscope } from 'lucide-react'
+import { Search, Filter, Plus, Calendar, User, FileText, CheckCircle2, Clock, AlertTriangle, Sparkles, Stethoscope, ChevronUp, ChevronDown, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, SearchX } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -14,15 +14,104 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import { useState, useMemo } from 'react'
 
 const MedicalVisitsLayout = () => {
   const { t } = useTranslation()
+  const [search, setSearch] = useState('')
+  const [typeFilter, setTypeFilter] = useState<string>('all')
+  const [statusFilter, setStatusFilter] = useState<string>('all')
+  const [employeeFilter, setEmployeeFilter] = useState<string>('all')
+  const [sortColumn, setSortColumn] = useState<string>('employee')
+  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc')
+  const [currentPage, setCurrentPage] = useState(1)
+  const itemsPerPage = 10
+
   const visits = [
-    { id: 1, employee: 'Jean Dupont', type: t('medicalVisits.periodicVisit'), scheduledDate: '2025-02-15', status: 'scheduled', daysUntil: 3 },
-    { id: 2, employee: 'Marie Martin', type: t('medicalVisits.returnVisit'), scheduledDate: '2025-02-01', status: 'overdue', daysUntil: -10 },
-    { id: 3, employee: 'Pierre Bernard', type: t('medicalVisits.initialVisit'), scheduledDate: '2025-03-20', status: 'scheduled', daysUntil: 36 },
-    { id: 4, employee: 'Sophie Petit', type: t('medicalVisits.periodicVisit'), scheduledDate: '2025-02-10', status: 'completed', actualDate: '2025-02-10', fitnessStatus: 'Apt' },
+    { id: 1, employee: 'Jean Dupont', type: 'Visite périodique', scheduledDate: '2025-02-15', status: 'scheduled', daysUntil: 3 },
+    { id: 2, employee: 'Marie Martin', type: 'Visite de reprise', scheduledDate: '2025-02-01', status: 'overdue', daysUntil: -10 },
+    { id: 3, employee: 'Pierre Bernard', type: 'Visite initiale', scheduledDate: '2025-03-20', status: 'scheduled', daysUntil: 36 },
+    { id: 4, employee: 'Sophie Petit', type: 'Visite périodique', scheduledDate: '2025-02-10', status: 'completed', actualDate: '2025-02-10', fitnessStatus: 'Apt' },
   ]
+
+  // Get unique types, statuses and employees
+  const uniqueTypes = useMemo(() => {
+    const types = new Set(visits.map(v => v.type))
+    return Array.from(types)
+  }, [visits])
+
+  const uniqueStatuses = useMemo(() => {
+    const statuses = new Set(visits.map(v => v.status))
+    return Array.from(statuses)
+  }, [visits])
+
+  const uniqueEmployees = useMemo(() => {
+    const employees = new Set(visits.map(v => v.employee))
+    return Array.from(employees)
+  }, [visits])
+
+  // Filter visits
+  const filteredVisits = useMemo(() => {
+    return visits.filter((visit) => {
+      const matchesSearch =
+        search === '' ||
+        visit.employee.toLowerCase().includes(search.toLowerCase()) ||
+        visit.type.toLowerCase().includes(search.toLowerCase())
+
+      const matchesType = typeFilter === 'all' || visit.type === typeFilter
+      const matchesStatus = statusFilter === 'all' || visit.status === statusFilter
+      const matchesEmployee = employeeFilter === 'all' || visit.employee === employeeFilter
+
+      return matchesSearch && matchesType && matchesStatus && matchesEmployee
+    })
+  }, [visits, search, typeFilter, statusFilter, employeeFilter])
+
+  // Sort visits
+  const sortedVisits = useMemo(() => {
+    const sorted = [...filteredVisits].sort((a, b) => {
+      let aValue: any = a[sortColumn as keyof typeof a]
+      let bValue: any = b[sortColumn as keyof typeof b]
+
+      if (aValue < bValue) return sortDirection === 'asc' ? -1 : 1
+      if (aValue > bValue) return sortDirection === 'asc' ? 1 : -1
+      return 0
+    })
+    return sorted
+  }, [filteredVisits, sortColumn, sortDirection])
+
+  // Pagination
+  const totalPages = Math.ceil(sortedVisits.length / itemsPerPage)
+  const paginatedVisits = sortedVisits.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  )
+
+  const handleSort = (column: string) => {
+    if (sortColumn === column) {
+      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc')
+    } else {
+      setSortColumn(column)
+      setSortDirection('asc')
+    }
+    setCurrentPage(1)
+  }
+
+  // Reset to page 1 when filters change
+  useMemo(() => {
+    setCurrentPage(1)
+  }, [search, typeFilter, statusFilter, employeeFilter])
+
+  const getSortIcon = (column: string) => {
+    if (sortColumn !== column) return null
+    return sortDirection === 'asc' ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />
+  }
 
   // KPIs
   const kpis = {
@@ -51,7 +140,7 @@ const MedicalVisitsLayout = () => {
         <div className="min-h-full space-y-3">
           {/* Header */}
           <div className="mb-2">
-            <Card className="p-3 bg-background shadow-sm rounded-md">
+            <Card className="gap-4 p-3 bg-background shadow-sm rounded-md">
               <div className="flex items-start gap-3">
                 <div className="mt-0.5">
                   <Sparkles className="h-4 w-4 text-gray-600" />
@@ -66,8 +155,8 @@ const MedicalVisitsLayout = () => {
           </div>
 
           {/* Key Metrics */}
-          <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-4">
-            <Card className="p-4 bg-background">
+          <div className="grid gap-2 md:grid-cols-2 lg:grid-cols-4">
+            <Card className="gap-4 p-4 bg-background">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-0">
                 <CardTitle className="text-sm font-medium">{t('medicalVisits.total')}</CardTitle>
                 <FileText className="h-4 w-4 text-muted-foreground" />
@@ -77,7 +166,7 @@ const MedicalVisitsLayout = () => {
                 <p className="text-xs text-muted-foreground">Total visites</p>
               </CardContent>
             </Card>
-            <Card className="p-4 bg-background">
+            <Card className="gap-4 p-4 bg-background">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-0">
                 <CardTitle className="text-sm font-medium">{t('medicalVisits.overdue')}</CardTitle>
                 <AlertTriangle className="h-4 w-4 text-red-500" />
@@ -87,7 +176,7 @@ const MedicalVisitsLayout = () => {
                 <p className="text-xs text-muted-foreground">{((kpis.overdueVisits / kpis.totalVisits) * 100).toFixed(0)}% du total</p>
               </CardContent>
             </Card>
-            <Card className="p-4 bg-background">
+            <Card className="gap-4 p-4 bg-background">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-0">
                 <CardTitle className="text-sm font-medium">{t('medicalVisits.upcoming')}</CardTitle>
                 <Calendar className="h-4 w-4 text-blue-500" />
@@ -97,7 +186,7 @@ const MedicalVisitsLayout = () => {
                 <p className="text-xs text-muted-foreground">{((kpis.upcomingVisits / kpis.totalVisits) * 100).toFixed(0)}% du total</p>
               </CardContent>
             </Card>
-            <Card className="p-4 bg-background">
+            <Card className="gap-4 p-4 bg-background">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-0">
                 <CardTitle className="text-sm font-medium">{t('medicalVisits.completed')}</CardTitle>
                 <CheckCircle2 className="h-4 w-4 text-green-500" />
@@ -115,10 +204,48 @@ const MedicalVisitsLayout = () => {
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
                 placeholder={t('common.search')}
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
                 className="pl-9"
               />
             </div>
-            <Button variant="outline" size="icon"><Filter className="h-4 w-4" /></Button>
+            <Select value={typeFilter} onValueChange={setTypeFilter}>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder={t('medicalVisits.type')} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Tous les types</SelectItem>
+                {uniqueTypes.map((type) => (
+                  <SelectItem key={type} value={type}>
+                    {type}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Select value={statusFilter} onValueChange={setStatusFilter}>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder={t('medicalVisits.status')} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Tous les statuts</SelectItem>
+                <SelectItem value="scheduled">{t('medicalVisits.scheduled')}</SelectItem>
+                <SelectItem value="overdue">{t('medicalVisits.overdue')}</SelectItem>
+                <SelectItem value="completed">{t('medicalVisits.completed')}</SelectItem>
+              </SelectContent>
+            </Select>
+            <Select value={employeeFilter} onValueChange={setEmployeeFilter}>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder={t('caces.employee')} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">{t('dashboard.allEmployees')}</SelectItem>
+                {uniqueEmployees.map((employee) => (
+                  <SelectItem key={employee} value={employee}>
+                    {employee}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
             <Button className="gap-2 ml-auto"><Plus className="h-4 w-4" />{t('medicalVisits.newVisit')}</Button>
           </div>
 
@@ -127,30 +254,166 @@ const MedicalVisitsLayout = () => {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>{t('medicalVisits.employee')}</TableHead>
-                  <TableHead>{t('medicalVisits.type')}</TableHead>
-                  <TableHead>{t('medicalVisits.scheduledDate')}</TableHead>
-                  <TableHead>{t('medicalVisits.status')}</TableHead>
+                  <TableHead>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="-ml-4 h-8 hover:bg-muted font-medium"
+                      onClick={() => handleSort('employee')}
+                    >
+                      <div className="flex items-center gap-1">
+                        {t('medicalVisits.employee')}
+                        {getSortIcon('employee')}
+                      </div>
+                    </Button>
+                  </TableHead>
+                  <TableHead>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="-ml-4 h-8 hover:bg-muted font-medium"
+                      onClick={() => handleSort('type')}
+                    >
+                      <div className="flex items-center gap-1">
+                        {t('medicalVisits.type')}
+                        {getSortIcon('type')}
+                      </div>
+                    </Button>
+                  </TableHead>
+                  <TableHead>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="-ml-4 h-8 hover:bg-muted font-medium"
+                      onClick={() => handleSort('scheduledDate')}
+                    >
+                      <div className="flex items-center gap-1">
+                        {t('medicalVisits.scheduledDate')}
+                        {getSortIcon('scheduledDate')}
+                      </div>
+                    </Button>
+                  </TableHead>
+                  <TableHead>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="-ml-4 h-8 hover:bg-muted font-medium"
+                      onClick={() => handleSort('status')}
+                    >
+                      <div className="flex items-center gap-1">
+                        {t('medicalVisits.status')}
+                        {getSortIcon('status')}
+                      </div>
+                    </Button>
+                  </TableHead>
                   <TableHead className="text-right">{t('common.actions')}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {visits.map((visit) => (
-                  <TableRow key={visit.id} className="hover:bg-muted/50">
-                    <TableCell className="font-medium">{visit.employee}</TableCell>
-                    <TableCell>{visit.type}</TableCell>
-                    <TableCell className="text-gray-700">{visit.scheduledDate}</TableCell>
-                    <TableCell>{getStatusBadge(visit.status)}</TableCell>
-                    <TableCell className="text-right">
-                      <div className="flex justify-end gap-2">
-                        <Button variant="ghost" size="icon"><FileText className="h-4 w-4" /></Button>
+                {paginatedVisits.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={5} className="h-64">
+                      <div className="flex flex-col items-center justify-center h-full text-muted-foreground p-8">
+                        <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mb-4">
+                          <SearchX className="h-8 w-8 opacity-50" />
+                        </div>
+                        <p className="text-lg font-medium">{t('common.noData')}</p>
+                        <p className="text-sm mt-2 max-w-md text-center">
+                          {t('dashboard.noDataFound')}
+                        </p>
                       </div>
                     </TableCell>
                   </TableRow>
-                ))}
+                ) : (
+                  paginatedVisits.map((visit) => (
+                    <TableRow key={visit.id} className="hover:bg-muted/50">
+                      <TableCell className="font-medium">{visit.employee}</TableCell>
+                      <TableCell>{visit.type}</TableCell>
+                      <TableCell className="text-gray-700">{visit.scheduledDate}</TableCell>
+                      <TableCell>{getStatusBadge(visit.status)}</TableCell>
+                      <TableCell className="text-right">
+                        <div className="flex justify-end gap-2">
+                          <Button variant="ghost" size="icon"><FileText className="h-4 w-4" /></Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
               </TableBody>
             </Table>
           </div>
+
+          {/* Pagination */}
+          {totalPages > 1 && (
+            <div className="flex items-center justify-between">
+              <p className="text-sm text-muted-foreground">
+                Affichage de {((currentPage - 1) * itemsPerPage) + 1} à {Math.min(currentPage * itemsPerPage, sortedVisits.length)} sur {sortedVisits.length}
+              </p>
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={() => setCurrentPage(1)}
+                  disabled={currentPage === 1}
+                  className="h-8 w-8"
+                >
+                  <ChevronsLeft className="h-4 w-4" />
+                </Button>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
+                  disabled={currentPage === 1}
+                  className="h-8 w-8"
+                >
+                  <ChevronLeft className="h-4 w-4" />
+                </Button>
+                <div className="flex items-center gap-1">
+                  {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                    let pageNum
+                    if (totalPages <= 5) {
+                      pageNum = i + 1
+                    } else if (currentPage <= 3) {
+                      pageNum = i + 1
+                    } else if (currentPage >= totalPages - 2) {
+                      pageNum = totalPages - 4 + i
+                    } else {
+                      pageNum = currentPage - 2 + i
+                    }
+                    return (
+                      <Button
+                        key={pageNum}
+                        variant={currentPage === pageNum ? "default" : "outline"}
+                        size="icon"
+                        onClick={() => setCurrentPage(pageNum)}
+                        className="h-8 w-8"
+                      >
+                        {pageNum}
+                      </Button>
+                    )
+                  })}
+                </div>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
+                  disabled={currentPage === totalPages}
+                  className="h-8 w-8"
+                >
+                  <ChevronRight className="h-4 w-4" />
+                </Button>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={() => setCurrentPage(totalPages)}
+                  disabled={currentPage === totalPages}
+                  className="h-8 w-8"
+                >
+                  <ChevronsRight className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </SidebarInset>
