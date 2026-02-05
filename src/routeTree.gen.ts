@@ -20,7 +20,7 @@ import { Route as SettingsSystemRouteImport } from './routes/settings/system'
 import { Route as SettingsReferenceDataRouteImport } from './routes/settings/reference-data'
 import { Route as SettingsBackupRouteImport } from './routes/settings/backup'
 import { Route as SettingsAlertsRouteImport } from './routes/settings/alerts'
-import { Route as EmployeesIdRouteImport } from './routes/employees_.$id'
+import { Route as EmployeesIdRouteImport } from './routes/employees.$id'
 import { Route as DemoStartServerFuncsRouteImport } from './routes/demo/start.server-funcs'
 import { Route as DemoStartApiRequestRouteImport } from './routes/demo/start.api-request'
 import { Route as DemoApiNamesRouteImport } from './routes/demo/api.names'
@@ -85,9 +85,9 @@ const SettingsAlertsRoute = SettingsAlertsRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const EmployeesIdRoute = EmployeesIdRouteImport.update({
-  id: '/employees_/$id',
-  path: '/employees/$id',
-  getParentRoute: () => rootRouteImport,
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => EmployeesRoute,
 } as any)
 const DemoStartServerFuncsRoute = DemoStartServerFuncsRouteImport.update({
   id: '/demo/start/server-funcs',
@@ -130,7 +130,7 @@ export interface FileRoutesByFullPath {
   '/alerts': typeof AlertsRoute
   '/caces': typeof CacesRoute
   '/documents': typeof DocumentsRoute
-  '/employees': typeof EmployeesRoute
+  '/employees': typeof EmployeesRouteWithChildren
   '/home': typeof HomeRoute
   '/medical-visits': typeof MedicalVisitsRoute
   '/employees/$id': typeof EmployeesIdRoute
@@ -151,7 +151,7 @@ export interface FileRoutesByTo {
   '/alerts': typeof AlertsRoute
   '/caces': typeof CacesRoute
   '/documents': typeof DocumentsRoute
-  '/employees': typeof EmployeesRoute
+  '/employees': typeof EmployeesRouteWithChildren
   '/home': typeof HomeRoute
   '/medical-visits': typeof MedicalVisitsRoute
   '/employees/$id': typeof EmployeesIdRoute
@@ -173,10 +173,10 @@ export interface FileRoutesById {
   '/alerts': typeof AlertsRoute
   '/caces': typeof CacesRoute
   '/documents': typeof DocumentsRoute
-  '/employees': typeof EmployeesRoute
+  '/employees': typeof EmployeesRouteWithChildren
   '/home': typeof HomeRoute
   '/medical-visits': typeof MedicalVisitsRoute
-  '/employees_/$id': typeof EmployeesIdRoute
+  '/employees/$id': typeof EmployeesIdRoute
   '/settings/alerts': typeof SettingsAlertsRoute
   '/settings/backup': typeof SettingsBackupRoute
   '/settings/reference-data': typeof SettingsReferenceDataRoute
@@ -241,7 +241,7 @@ export interface FileRouteTypes {
     | '/employees'
     | '/home'
     | '/medical-visits'
-    | '/employees_/$id'
+    | '/employees/$id'
     | '/settings/alerts'
     | '/settings/backup'
     | '/settings/reference-data'
@@ -260,10 +260,9 @@ export interface RootRouteChildren {
   AlertsRoute: typeof AlertsRoute
   CacesRoute: typeof CacesRoute
   DocumentsRoute: typeof DocumentsRoute
-  EmployeesRoute: typeof EmployeesRoute
+  EmployeesRoute: typeof EmployeesRouteWithChildren
   HomeRoute: typeof HomeRoute
   MedicalVisitsRoute: typeof MedicalVisitsRoute
-  EmployeesIdRoute: typeof EmployeesIdRoute
   SettingsAlertsRoute: typeof SettingsAlertsRoute
   SettingsBackupRoute: typeof SettingsBackupRoute
   SettingsReferenceDataRoute: typeof SettingsReferenceDataRoute
@@ -356,12 +355,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SettingsAlertsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/employees_/$id': {
-      id: '/employees_/$id'
-      path: '/employees/$id'
+    '/employees/$id': {
+      id: '/employees/$id'
+      path: '/$id'
       fullPath: '/employees/$id'
       preLoaderRoute: typeof EmployeesIdRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof EmployeesRoute
     }
     '/demo/start/server-funcs': {
       id: '/demo/start/server-funcs'
@@ -415,15 +414,26 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface EmployeesRouteChildren {
+  EmployeesIdRoute: typeof EmployeesIdRoute
+}
+
+const EmployeesRouteChildren: EmployeesRouteChildren = {
+  EmployeesIdRoute: EmployeesIdRoute,
+}
+
+const EmployeesRouteWithChildren = EmployeesRoute._addFileChildren(
+  EmployeesRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AlertsRoute: AlertsRoute,
   CacesRoute: CacesRoute,
   DocumentsRoute: DocumentsRoute,
-  EmployeesRoute: EmployeesRoute,
+  EmployeesRoute: EmployeesRouteWithChildren,
   HomeRoute: HomeRoute,
   MedicalVisitsRoute: MedicalVisitsRoute,
-  EmployeesIdRoute: EmployeesIdRoute,
   SettingsAlertsRoute: SettingsAlertsRoute,
   SettingsBackupRoute: SettingsBackupRoute,
   SettingsReferenceDataRoute: SettingsReferenceDataRoute,

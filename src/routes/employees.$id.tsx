@@ -153,6 +153,7 @@ const EmployeeDetailLayout = () => {
                 </Card>
               </TabsContent>
           </div>
+        </div>
         </Tabs>
       </SidebarInset>
   )
