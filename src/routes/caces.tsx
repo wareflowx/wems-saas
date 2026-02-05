@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { Search, Filter, Plus, ShieldAlert, Sparkles, SearchX, Download, Edit } from 'lucide-react'
+import { Search, Filter, Plus, ShieldAlert, Sparkles, SearchX, Download, Edit, ChevronUp, ChevronDown, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -37,6 +37,10 @@ const CACESLayout = () => {
   const [employeeFilter, setEmployeeFilter] = useState<string>('all')
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false)
   const [editingCaces, setEditingCaces] = useState<any>(null)
+  const [sortColumn, setSortColumn] = useState<string>('employee')
+  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc')
+  const [currentPage, setCurrentPage] = useState(1)
+  const itemsPerPage = 10
 
   const caces = [
     { id: 1, employee: 'Jean Dupont', employeeId: 1, category: '1A', dateObtained: '2020-03-15', expirationDate: '2025-03-15', daysLeft: -10, status: 'expired' },
@@ -85,6 +89,51 @@ const CACESLayout = () => {
       return matchesSearch && matchesCategory && matchesStatus && matchesEmployee
     })
   }, [caces, search, categoryFilter, statusFilter, employeeFilter])
+
+  // Sort CACES
+  const sortedCaces = useMemo(() => {
+    const sorted = [...filteredCaces].sort((a, b) => {
+      let aValue: any = a[sortColumn as keyof typeof a]
+      let bValue: any = b[sortColumn as keyof typeof b]
+
+      if (sortColumn === 'daysLeft') {
+        aValue = a.daysLeft
+        bValue = b.daysLeft
+      }
+
+      if (aValue < bValue) return sortDirection === 'asc' ? -1 : 1
+      if (aValue > bValue) return sortDirection === 'asc' ? 1 : -1
+      return 0
+    })
+    return sorted
+  }, [filteredCaces, sortColumn, sortDirection])
+
+  // Pagination
+  const totalPages = Math.ceil(sortedCaces.length / itemsPerPage)
+  const paginatedCaces = sortedCaces.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  )
+
+  const handleSort = (column: string) => {
+    if (sortColumn === column) {
+      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc')
+    } else {
+      setSortColumn(column)
+      setSortDirection('asc')
+    }
+    setCurrentPage(1)
+  }
+
+  // Reset to page 1 when filters change
+  useMemo(() => {
+    setCurrentPage(1)
+  }, [search, categoryFilter, statusFilter, employeeFilter])
+
+  const getSortIcon = (column: string) => {
+    if (sortColumn !== column) return null
+    return sortDirection === 'asc' ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />
+  }
 
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -276,17 +325,89 @@ const CACESLayout = () => {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>{t('caces.employee')}</TableHead>
-                  <TableHead>{t('caces.category')}</TableHead>
-                  <TableHead>{t('caces.issueDate')}</TableHead>
-                  <TableHead>{t('caces.expiryDate')}</TableHead>
-                  <TableHead>{t('dashboard.days')}</TableHead>
-                  <TableHead>{t('caces.status')}</TableHead>
+                  <TableHead>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="-ml-4 h-8 hover:bg-muted font-medium"
+                      onClick={() => handleSort('employee')}
+                    >
+                      <div className="flex items-center gap-1">
+                        {t('caces.employee')}
+                        {getSortIcon('employee')}
+                      </div>
+                    </Button>
+                  </TableHead>
+                  <TableHead>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="-ml-4 h-8 hover:bg-muted font-medium"
+                      onClick={() => handleSort('category')}
+                    >
+                      <div className="flex items-center gap-1">
+                        {t('caces.category')}
+                        {getSortIcon('category')}
+                      </div>
+                    </Button>
+                  </TableHead>
+                  <TableHead>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="-ml-4 h-8 hover:bg-muted font-medium"
+                      onClick={() => handleSort('dateObtained')}
+                    >
+                      <div className="flex items-center gap-1">
+                        {t('caces.issueDate')}
+                        {getSortIcon('dateObtained')}
+                      </div>
+                    </Button>
+                  </TableHead>
+                  <TableHead>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="-ml-4 h-8 hover:bg-muted font-medium"
+                      onClick={() => handleSort('expirationDate')}
+                    >
+                      <div className="flex items-center gap-1">
+                        {t('caces.expiryDate')}
+                        {getSortIcon('expirationDate')}
+                      </div>
+                    </Button>
+                  </TableHead>
+                  <TableHead>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="-ml-4 h-8 hover:bg-muted font-medium"
+                      onClick={() => handleSort('daysLeft')}
+                    >
+                      <div className="flex items-center gap-1">
+                        {t('dashboard.days')}
+                        {getSortIcon('daysLeft')}
+                      </div>
+                    </Button>
+                  </TableHead>
+                  <TableHead>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="-ml-4 h-8 hover:bg-muted font-medium"
+                      onClick={() => handleSort('status')}
+                    >
+                      <div className="flex items-center gap-1">
+                        {t('caces.status')}
+                        {getSortIcon('status')}
+                      </div>
+                    </Button>
+                  </TableHead>
                   <TableHead className="text-right">{t('caces.actions')}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredCaces.length === 0 ? (
+                {paginatedCaces.length === 0 ? (
                   <TableRow>
                     <TableCell colSpan={7} className="h-64">
                       <div className="flex flex-col items-center justify-center h-full text-muted-foreground p-8">
@@ -301,7 +422,7 @@ const CACESLayout = () => {
                     </TableCell>
                   </TableRow>
                 ) : (
-                  filteredCaces.map((cacesItem) => (
+                  paginatedCaces.map((cacesItem) => (
                     <TableRow key={cacesItem.id} className="hover:bg-muted/50">
                       <TableCell>
                         <Link
@@ -332,6 +453,82 @@ const CACESLayout = () => {
               </TableBody>
             </Table>
           </div>
+
+          {/* Pagination */}
+          {totalPages > 1 && (
+            <div className="flex items-center justify-between">
+              <p className="text-sm text-muted-foreground">
+                {t('caces.showing', {
+                  from: ((currentPage - 1) * itemsPerPage) + 1,
+                  to: Math.min(currentPage * itemsPerPage, sortedCaces.length),
+                  total: sortedCaces.length
+                })}
+              </p>
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={() => setCurrentPage(1)}
+                  disabled={currentPage === 1}
+                  className="h-8 w-8"
+                >
+                  <ChevronsLeft className="h-4 w-4" />
+                </Button>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
+                  disabled={currentPage === 1}
+                  className="h-8 w-8"
+                >
+                  <ChevronLeft className="h-4 w-4" />
+                </Button>
+                <div className="flex items-center gap-1">
+                  {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                    let pageNum
+                    if (totalPages <= 5) {
+                      pageNum = i + 1
+                    } else if (currentPage <= 3) {
+                      pageNum = i + 1
+                    } else if (currentPage >= totalPages - 2) {
+                      pageNum = totalPages - 4 + i
+                    } else {
+                      pageNum = currentPage - 2 + i
+                    }
+                    return (
+                      <Button
+                        key={pageNum}
+                        variant={currentPage === pageNum ? "default" : "outline"}
+                        size="icon"
+                        onClick={() => setCurrentPage(pageNum)}
+                        className="h-8 w-8"
+                      >
+                        {pageNum}
+                      </Button>
+                    )
+                  })}
+                </div>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
+                  disabled={currentPage === totalPages}
+                  className="h-8 w-8"
+                >
+                  <ChevronRight className="h-4 w-4" />
+                </Button>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={() => setCurrentPage(totalPages)}
+                  disabled={currentPage === totalPages}
+                  className="h-8 w-8"
+                >
+                  <ChevronsRight className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
+          )}
         </div>
       </div>
       <AddCacesDialog

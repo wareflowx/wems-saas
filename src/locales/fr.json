@@ -146,7 +146,8 @@
     "actions": "Actions",
     "view": "Voir",
     "allCategories": "Toutes les catégories",
-    "allStatuses": "Tous les statuts"
+    "allStatuses": "Tous les statuts",
+    "showing": "Affichage de {{from}} à {{to}} sur {{total}}"
   },
   "medicalVisits": {
     "title": "Visites médicales",

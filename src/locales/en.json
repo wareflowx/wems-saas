@@ -146,7 +146,8 @@
     "actions": "Actions",
     "view": "View",
     "allCategories": "All categories",
-    "allStatuses": "All statuses"
+    "allStatuses": "All statuses",
+    "showing": "Showing {{from}} to {{to}} of {{total}}"
   },
   "medicalVisits": {
     "title": "Medical Visits",
