@@ -195,7 +195,7 @@ const CACESLayout = () => {
       </span>
     )
 
-    const tooltipKey = `caces.tooltip.category${category}` as const
+    const tooltipKey = `caces.tooltip.category${category.toLowerCase()}`
 
     return (
       <Tooltip>
