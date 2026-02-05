@@ -52,18 +52,18 @@ export function DeleteEmployeeDialog({
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent className="max-w-md">
-        <DialogHeader>
+        <DialogHeader className="space-y-1">
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 rounded-full bg-red-100 border border-red-200 flex items-center justify-center flex-shrink-0">
               <AlertTriangle className="h-6 w-6 text-red-600" />
             </div>
             <div className="flex-1">
               <DialogTitle>{t('employees.deleteEmployee')}</DialogTitle>
+              <DialogDescription className="pl-15 pt-0">
+                {t('employees.deleteEmployeeWarning')}
+              </DialogDescription>
             </div>
           </div>
-          <DialogDescription className="pl-15">
-            {t('employees.deleteEmployeeWarning')}
-          </DialogDescription>
         </DialogHeader>
 
         <div className="py-4">
