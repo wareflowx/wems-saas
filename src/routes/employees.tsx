@@ -128,7 +128,7 @@ const EmployeesLayout = () => {
         <div className="min-h-full space-y-3">
             {/* Header */}
             <div className="mb-2">
-              <div className="relative group rounded-lg border border-border p-3">
+              <Card className="p-4 bg-background shadow-sm">
                 <div className="flex items-start gap-3">
                   <div className="mt-0.5">
                     <Sparkles className="h-4 w-4 text-gray-600" />
@@ -139,7 +139,7 @@ const EmployeesLayout = () => {
                     </p>
                   </div>
                 </div>
-              </div>
+              </Card>
             </div>
             <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-4">
               <Card className="p-4 bg-background">
