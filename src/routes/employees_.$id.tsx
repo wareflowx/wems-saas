@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { ArrowLeft, Edit, FileText, ShieldAlert, Stethoscope, Calendar, User, Building, Briefcase, Phone, Mail, MapPin, Cake, CheckCircle2 } from 'lucide-react'
+import { ArrowLeft, Edit, FileText, ShieldAlert, Stethoscope, Calendar, User, Building, Briefcase, Phone, Mail, MapPin, Cake, CheckCircle2, Plus } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -8,6 +8,8 @@ import { Separator } from '@/components/ui/separator'
 import { Link } from '@tanstack/react-router'
 import { SidebarInset, SidebarTrigger } from '@/components/ui/sidebar'
 import { useTranslation } from 'react-i18next'
+import { AddCacesDialog } from '@/components/employees/AddCacesDialog'
+import { useState } from 'react'
 
 export const Route = createFileRoute('/employees_/$id')({
   component: EmployeeDetailLayout,
@@ -20,6 +22,25 @@ const employees = [
   { id: 4, firstName: 'Sophie', lastName: 'Petit', department: 'RH', jobTitle: 'Responsable RH', status: 'active', startDate: '2020-09-20', email: 'sophie.petit@email.com', phone: '+33 6 55 66 77 88', dateOfBirth: '1992-02-14', address: '321 Rue de Rivoli, 75004 Paris' },
   { id: 5, firstName: 'Luc', lastName: 'Dubois', department: 'Production', jobTitle: 'Opérateur', status: 'active', startDate: '2024-01-08', email: 'luc.dubois@email.com', phone: '+33 6 77 88 99 00', dateOfBirth: '1995-05-30', address: '654 Boulevard Voltaire, 75011 Paris' },
 ]
+
+const employeeCaces: { [key: number]: Array<{
+  id: number
+  category: string
+  issueDate: string
+  expiryDate: string
+  status: 'valid' | 'expiring_soon' | 'expired'
+}> } = {
+  1: [
+    { id: 1, category: '1A', issueDate: '2022-03-15', expiryDate: '2025-03-15', status: 'expiring_soon' },
+    { id: 2, category: '3', issueDate: '2021-06-01', expiryDate: '2026-06-01', status: 'valid' },
+  ],
+  2: [
+    { id: 3, category: '2', issueDate: '2023-01-10', expiryDate: '2026-01-10', status: 'valid' },
+  ],
+  5: [
+    { id: 4, category: '1B', issueDate: '2023-08-20', expiryDate: '2024-08-20', status: 'expired' },
+  ],
+}
 
 const getAge = (dateOfBirth: string) => {
   const dob = new Date(dateOfBirth)
@@ -39,10 +60,22 @@ const getStatusBadge = (status: string) => {
   return <Badge variant={variant}>{label}</Badge>
 }
 
+const getCacesStatusBadge = (status: 'valid' | 'expiring_soon' | 'expired') => {
+  const statusMap = {
+    valid: { label: 'Valide', variant: 'default' as const },
+    expiring_soon: { label: 'Expire bientôt', variant: 'secondary' as const },
+    expired: { label: 'Expiré', variant: 'destructive' as const }
+  }
+  const { label, variant } = statusMap[status]
+  return <Badge variant={variant}>{label}</Badge>
+}
+
 const EmployeeDetailLayout = () => {
   const { t } = useTranslation()
   const { id } = Route.useParams()
+  const [isAddCacesDialogOpen, setIsAddCacesDialogOpen] = useState(false)
   const employee = employees.find(e => e.id === parseInt(id))
+  const cacesList = employeeCaces[employee?.id || 0] || []
 
   if (!employee) {
     return (
@@ -136,8 +169,46 @@ const EmployeeDetailLayout = () => {
               </TabsContent>
               <TabsContent value="caces" className="mt-0">
                 <Card>
-                  <CardHeader><CardTitle>{t('employeeDetail.caces')}</CardTitle></CardHeader>
-                  <CardContent><div className="text-center py-8 text-gray-500"><ShieldAlert className="h-12 w-12 mx-auto mb-4 opacity-50" /><p>{t('employeeDetail.noCaces')}</p></div></CardContent>
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle>{t('employeeDetail.caces')}</CardTitle>
+                    <Button size="sm" className="gap-2" onClick={() => setIsAddCacesDialogOpen(true)}>
+                      <Plus className="h-4 w-4" />
+                      Ajouter
+                    </Button>
+                  </CardHeader>
+                  <CardContent>
+                    {cacesList.length === 0 ? (
+                      <div className="text-center py-8 text-gray-500">
+                        <ShieldAlert className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                        <p>{t('employeeDetail.noCaces')}</p>
+                      </div>
+                    ) : (
+                      <div className="space-y-3">
+                        {cacesList.map((caces) => (
+                          <div key={caces.id} className="flex items-center justify-between p-4 border rounded-lg hover:bg-muted/50 transition-colors">
+                            <div className="flex items-center gap-4">
+                              <div className="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center">
+                                <ShieldAlert className="h-5 w-5 text-blue-600" />
+                              </div>
+                              <div>
+                                <p className="font-medium">CACES {caces.category}</p>
+                                <p className="text-sm text-muted-foreground">
+                                  Obtenu le {new Date(caces.issueDate).toLocaleDateString('fr-FR')}
+                                </p>
+                              </div>
+                            </div>
+                            <div className="flex items-center gap-4">
+                              <div className="text-right">
+                                <p className="text-sm text-muted-foreground">Expiration</p>
+                                <p className="font-medium">{new Date(caces.expiryDate).toLocaleDateString('fr-FR')}</p>
+                              </div>
+                              {getCacesStatusBadge(caces.status)}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </CardContent>
                 </Card>
               </TabsContent>
               <TabsContent value="visits" className="mt-0">
@@ -155,6 +226,15 @@ const EmployeeDetailLayout = () => {
           </div>
         </div>
         </Tabs>
+        <AddCacesDialog
+          open={isAddCacesDialogOpen}
+          onOpenChange={setIsAddCacesDialogOpen}
+          onSuccess={() => {
+            // TODO: Refresh CACES list
+          }}
+          employeeId={employee?.id}
+          employeeName={`${employee?.firstName} ${employee?.lastName}`}
+        />
       </SidebarInset>
   )
 }
