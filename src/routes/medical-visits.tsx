@@ -58,7 +58,7 @@ const MedicalVisitsLayout = () => {
                 </div>
                 <div className="flex-1">
                   <p className="text-gray-700">
-                    <span className="font-medium">{t('medicalVisits.title')}</span> - {kpis.totalVisits} visites
+                    <span className="font-medium">{t('medicalVisits.title')}</span> - Planifiez et suivez les visites médicales obligatoires de vos employés
                   </p>
                 </div>
               </div>

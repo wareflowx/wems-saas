@@ -65,7 +65,7 @@ const DocumentsLayout = () => {
                 </div>
                 <div className="flex-1">
                   <p className="text-gray-700">
-                    <span className="font-medium">{t('documents.title')}</span> - {kpis.totalDocuments} {t('documents.name').toLowerCase()}
+                    <span className="font-medium">{t('documents.title')}</span> - Gérez et consultez tous les documents des employés
                   </p>
                 </div>
               </div>

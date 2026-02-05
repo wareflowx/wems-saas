@@ -64,7 +64,7 @@ const CACESLayout = () => {
                 </div>
                 <div className="flex-1">
                   <p className="text-gray-700">
-                    <span className="font-medium">{t('caces.title')}</span> - {kpis.totalCaces} certificats
+                    <span className="font-medium">{t('caces.title')}</span> - Suivez les certificats CACES de vos employés et leurs dates d'expiration
                   </p>
                 </div>
               </div>

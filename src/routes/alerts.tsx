@@ -50,7 +50,7 @@ const AlertsLayout = () => {
                 </div>
                 <div className="flex-1">
                   <p className="text-gray-700">
-                    <span className="font-medium">{t('alerts.title')}</span> - {kpis.totalAlerts} alertes actives
+                    <span className="font-medium">{t('alerts.title')}</span> - Restez informé des alertes critiques et à venir concernant vos employés
                   </p>
                 </div>
               </div>
