@@ -9,7 +9,7 @@ import { Link } from '@tanstack/react-router'
 import { SidebarInset, SidebarTrigger } from '@/components/ui/sidebar'
 import { useTranslation } from 'react-i18next'
 
-export const Route = createFileRoute('/employees_/$id')({
+export const Route = createFileRoute('/employees/$id')({
   component: EmployeeDetailLayout,
 })
 
@@ -75,6 +75,16 @@ const EmployeeDetailLayout = () => {
           <div className="flex items-center gap-2"><User className="h-5 w-5 text-gray-600" /><h2 className="text-lg font-semibold">{t('employeeDetail.title')}</h2></div>
           <div className="ml-auto flex items-center gap-2"><Button variant="outline" className="gap-2"><Edit className="h-4 w-4" />{t('employeeDetail.edit')}</Button></div>
         </header>
+        <Tabs defaultValue="information" className="flex-1 flex flex-col">
+          <div className="border-b bg-background px-4">
+            <TabsList className="grid w-full grid-cols-5 h-14 bg-transparent border-0 rounded-none">
+              <TabsTrigger value="information" className="rounded-none data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:bg-transparent">{t('employeeDetail.information')}</TabsTrigger>
+              <TabsTrigger value="documents" className="rounded-none data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:bg-transparent">{t('employeeDetail.documents')}</TabsTrigger>
+              <TabsTrigger value="caces" className="rounded-none data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:bg-transparent">{t('employeeDetail.caces')}</TabsTrigger>
+              <TabsTrigger value="visits" className="rounded-none data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:bg-transparent">{t('employeeDetail.visits')}</TabsTrigger>
+              <TabsTrigger value="history" className="rounded-none data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:bg-transparent">{t('employeeDetail.history')}</TabsTrigger>
+            </TabsList>
+          </div>
         <div className="flex flex-1 flex-col gap-4 p-4 py-6">
           <div className="min-h-full">
             <div className="mb-6">
@@ -86,15 +96,7 @@ const EmployeeDetailLayout = () => {
                 </div>
               </div>
             </div>
-            <Tabs defaultValue="information">
-              <TabsList className="grid w-full grid-cols-6">
-                <TabsTrigger value="information">{t('employeeDetail.information')}</TabsTrigger>
-                <TabsTrigger value="documents">{t('employeeDetail.documents')}</TabsTrigger>
-                <TabsTrigger value="caces">{t('employeeDetail.caces')}</TabsTrigger>
-                <TabsTrigger value="visits">{t('employeeDetail.visits')}</TabsTrigger>
-                <TabsTrigger value="history">{t('employeeDetail.history')}</TabsTrigger>
-              </TabsList>
-              <TabsContent value="information" className="space-y-4">
+              <TabsContent value="information" className="space-y-4 mt-0">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                   <Card>
                     <CardHeader><CardTitle>{t('employeeDetail.identity')}</CardTitle></CardHeader>
@@ -126,33 +128,32 @@ const EmployeeDetailLayout = () => {
                   </Card>
                 </div>
               </TabsContent>
-              <TabsContent value="documents">
+              <TabsContent value="documents" className="mt-0">
                 <Card>
                   <CardHeader><CardTitle>{t('employeeDetail.documents')}</CardTitle></CardHeader>
                   <CardContent><div className="text-center py-8 text-gray-500"><FileText className="h-12 w-12 mx-auto mb-4 opacity-50" /><p>{t('employeeDetail.noDocuments')}</p></div></CardContent>
                 </Card>
               </TabsContent>
-              <TabsContent value="caces">
+              <TabsContent value="caces" className="mt-0">
                 <Card>
                   <CardHeader><CardTitle>{t('employeeDetail.caces')}</CardTitle></CardHeader>
                   <CardContent><div className="text-center py-8 text-gray-500"><ShieldAlert className="h-12 w-12 mx-auto mb-4 opacity-50" /><p>{t('employeeDetail.noCaces')}</p></div></CardContent>
                 </Card>
               </TabsContent>
-              <TabsContent value="visits">
+              <TabsContent value="visits" className="mt-0">
                 <Card>
                   <CardHeader><CardTitle>{t('employeeDetail.visits')}</CardTitle></CardHeader>
                   <CardContent><div className="text-center py-8 text-gray-500"><Stethoscope className="h-12 w-12 mx-auto mb-4 opacity-50" /><p>{t('employeeDetail.noMedicalVisits')}</p></div></CardContent>
                 </Card>
               </TabsContent>
-              <TabsContent value="history">
+              <TabsContent value="history" className="mt-0">
                 <Card>
                   <CardHeader><CardTitle>{t('employeeDetail.history')}</CardTitle></CardHeader>
                   <CardContent><div className="text-center py-8 text-gray-500"><Calendar className="h-12 w-12 mx-auto mb-4 opacity-50" /><p>{t('employeeDetail.noHistory')}</p></div></CardContent>
                 </Card>
               </TabsContent>
-            </Tabs>
           </div>
-        </div>
+        </Tabs>
       </SidebarInset>
   )
 }
