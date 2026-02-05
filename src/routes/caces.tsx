@@ -125,11 +125,26 @@ const CACESLayout = () => {
     )
   }
 
-  const getDaysText = (daysLeft: number) => {
+  const getDaysBadge = (daysLeft: number) => {
     if (daysLeft < 0) {
-      return <span className="text-red-600 font-medium">{Math.abs(daysLeft)} {t('caces.daysOverdue')}</span>
+      return (
+        <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-red-500/10 border border-red-500/20 text-red-500">
+          {Math.abs(daysLeft)} {t('caces.daysOverdue')}
+        </span>
+      )
     }
-    return <span className="text-gray-700">{daysLeft} {t('caces.daysLeft')}</span>
+    if (daysLeft <= 30) {
+      return (
+        <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-yellow-500/10 border border-yellow-500/20 text-yellow-500">
+          {daysLeft} {t('caces.daysLeft')}
+        </span>
+      )
+    }
+    return (
+      <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-green-500/10 border border-green-500/20 text-green-500">
+        {daysLeft} {t('caces.daysLeft')}
+      </span>
+    )
   }
 
   return (
@@ -299,7 +314,7 @@ const CACESLayout = () => {
                       <TableCell>{getCategoryBadge(cacesItem.category)}</TableCell>
                       <TableCell className="text-gray-700">{cacesItem.dateObtained}</TableCell>
                       <TableCell className="text-gray-700">{cacesItem.expirationDate}</TableCell>
-                      <TableCell>{getDaysText(cacesItem.daysLeft)}</TableCell>
+                      <TableCell>{getDaysBadge(cacesItem.daysLeft)}</TableCell>
                       <TableCell>{getStatusBadge(cacesItem.status)}</TableCell>
                       <TableCell>
                         <div className="flex items-center justify-end gap-2">
