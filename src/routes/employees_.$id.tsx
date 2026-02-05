@@ -9,7 +9,7 @@ import { Link } from '@tanstack/react-router'
 import { SidebarInset, SidebarTrigger } from '@/components/ui/sidebar'
 import { useTranslation } from 'react-i18next'
 
-export const Route = createFileRoute('/employees/$id')({
+export const Route = createFileRoute('/employees_/$id')({
   component: EmployeeDetailLayout,
 })
 
