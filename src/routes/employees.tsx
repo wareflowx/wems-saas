@@ -76,6 +76,7 @@ const EmployeesLayout = () => {
       lastName: "Dupont",
       contract: "CDI",
       jobTitle: "Opérateur",
+      workLocation: "Site A",
       status: "active",
       startDate: "2023-01-15",
     },
@@ -85,6 +86,7 @@ const EmployeesLayout = () => {
       lastName: "Martin",
       contract: "CDD",
       jobTitle: "Comptable",
+      workLocation: "Site B",
       status: "active",
       startDate: "2022-06-01",
     },
@@ -94,6 +96,7 @@ const EmployeesLayout = () => {
       lastName: "Bernard",
       contract: "Intérim",
       jobTitle: "Technicien",
+      workLocation: "Site A",
       status: "on_leave",
       startDate: "2021-03-10",
     },
@@ -103,6 +106,7 @@ const EmployeesLayout = () => {
       lastName: "Petit",
       contract: "CDI",
       jobTitle: "Responsable RH",
+      workLocation: "Site C",
       status: "active",
       startDate: "2020-09-20",
     },
@@ -112,6 +116,7 @@ const EmployeesLayout = () => {
       lastName: "Dubois",
       contract: "CDD",
       jobTitle: "Opérateur",
+      workLocation: "Site A",
       status: "active",
       startDate: "2024-01-08",
     },
@@ -267,6 +272,20 @@ const EmployeesLayout = () => {
     return (
       <span className={`inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium ${colors}`}>
         {position}
+      </span>
+    );
+  };
+
+  const getWorkLocationBadge = (location: string) => {
+    const locationColors: { [key: string]: string } = {
+      'Site A': 'bg-cyan-500/10 border border-cyan-500/20 text-cyan-500',
+      'Site B': 'bg-lime-500/10 border border-lime-500/20 text-lime-500',
+      'Site C': 'bg-violet-500/10 border border-violet-500/20 text-violet-500',
+    };
+    const colors = locationColors[location] || 'bg-gray-500/10 border border-gray-500/20 text-gray-500';
+    return (
+      <span className={`inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium ${colors}`}>
+        {location}
       </span>
     );
   };
@@ -609,6 +628,7 @@ const EmployeesLayout = () => {
                     <TableHead>{t("employeeDetail.fullName")}</TableHead>
                     <TableHead>{t("employeeDetail.contractType")}</TableHead>
                     <TableHead>{t("employees.position")}</TableHead>
+                    <TableHead>{t("employees.workLocation")}</TableHead>
                     <TableHead>{t("employeeDetail.status")}</TableHead>
                     <TableHead>{t("employeeDetail.startDate")}</TableHead>
                     <TableHead className="text-right">
@@ -619,7 +639,7 @@ const EmployeesLayout = () => {
                 <TableBody>
                   {paginatedEmployees.length === 0 ? (
                     <TableRow>
-                      <TableCell colSpan={6} className="h-64">
+                      <TableCell colSpan={7} className="h-64">
                         <div className="flex flex-col items-center justify-center h-full text-muted-foreground p-8">
                           <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mb-4">
                             <SearchX className="h-8 w-8 opacity-50" />
@@ -649,6 +669,7 @@ const EmployeesLayout = () => {
                         </TableCell>
                         <TableCell>{getContractBadge(employee.contract)}</TableCell>
                         <TableCell>{getPositionBadge(employee.jobTitle)}</TableCell>
+                        <TableCell>{getWorkLocationBadge(employee.workLocation)}</TableCell>
                         <TableCell>{getStatusBadge(employee.status)}</TableCell>
                         <TableCell className="text-gray-700">
                           {employee.startDate}
