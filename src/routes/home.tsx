@@ -90,6 +90,12 @@ const DashboardContent = ({ t }: { t: (key: string) => string }) => {
     return <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-gray-500/10 border border-gray-500/20 text-gray-500">{type}</span>
   }
 
+  const getDetailBadge = (category?: string, visitType?: string) => {
+    if (category) return <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-indigo-500/10 border border-indigo-500/20 text-indigo-500">CACES {category}</span>
+    if (visitType) return <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-cyan-500/10 border border-cyan-500/20 text-cyan-500">{visitType}</span>
+    return null
+  }
+
   return (
     <div className="min-h-full space-y-3">
       {/* Header */}
@@ -213,7 +219,7 @@ const DashboardContent = ({ t }: { t: (key: string) => string }) => {
                     {deadline.employee}
                   </Link>
                 </TableCell>
-                <TableCell className="text-gray-700">{deadline.category || deadline.visitType}</TableCell>
+                <TableCell>{getDetailBadge(deadline.category, deadline.visitType)}</TableCell>
                 <TableCell className="text-gray-700">{deadline.date}</TableCell>
                 <TableCell>{getStatusBadge(deadline.severity)}</TableCell>
                 <TableCell className="text-right">

@@ -21,11 +21,11 @@ const DashboardLayout = () => {
 
   // Mock data
   const recentAlerts = [
-    { id: 1, type: 'CACES expiré', employee: 'Jean Dupont', employeeId: 1, severity: 'critical', date: '2025-02-10' },
-    { id: 2, type: 'Visite en retard', employee: 'Marie Martin', employeeId: 2, severity: 'critical', date: '2025-02-01' },
-    { id: 3, type: 'CACES expiration proche', employee: 'Pierre Bernard', employeeId: 3, severity: 'warning', daysLeft: 5, date: '2025-02-15' },
-    { id: 4, type: 'CACES expiration proche', employee: 'Sophie Petit', employeeId: 4, severity: 'warning', daysLeft: 12, date: '2025-02-22' },
-    { id: 5, type: 'Visite planifiée', employee: 'Luc Dubois', employeeId: 5, severity: 'info', date: '2025-03-01' },
+    { id: 1, type: 'CACES expiré', employee: 'Jean Dupont', employeeId: 1, category: '1A', severity: 'critical', date: '2025-02-10' },
+    { id: 2, type: 'Visite en retard', employee: 'Marie Martin', employeeId: 2, visitType: 'Visite de reprise', severity: 'critical', date: '2025-02-01' },
+    { id: 3, type: 'CACES expiration proche', employee: 'Pierre Bernard', employeeId: 3, category: '3', severity: 'warning', daysLeft: 5, date: '2025-02-15' },
+    { id: 4, type: 'CACES expiration proche', employee: 'Sophie Petit', employeeId: 4, category: '5', severity: 'warning', daysLeft: 12, date: '2025-02-22' },
+    { id: 5, type: 'Visite planifiée', employee: 'Luc Dubois', employeeId: 5, visitType: 'Visite périodique', severity: 'info', date: '2025-03-01' },
   ]
 
   const kpis = {
@@ -45,6 +45,12 @@ const DashboardLayout = () => {
     if (type.includes('CACES')) return <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-purple-500/10 border border-purple-500/20 text-purple-500">{t('caces.title')}</span>
     if (type.includes('Visite')) return <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-teal-500/10 border border-teal-500/20 text-teal-500">{t('medicalVisits.title')}</span>
     return <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-gray-500/10 border border-gray-500/20 text-gray-500">{type}</span>
+  }
+
+  const getDetailBadge = (category?: string, visitType?: string) => {
+    if (category) return <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-indigo-500/10 border border-indigo-500/20 text-indigo-500">CACES {category}</span>
+    if (visitType) return <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-cyan-500/10 border border-cyan-500/20 text-cyan-500">{visitType}</span>
+    return <span className="text-gray-400">-</span>
   }
 
   return (
@@ -164,6 +170,7 @@ const DashboardLayout = () => {
                 <TableRow>
                   <TableHead>Type</TableHead>
                   <TableHead>Employé</TableHead>
+                  <TableHead>Détails</TableHead>
                   <TableHead>Date</TableHead>
                   <TableHead>{t('caces.status')}</TableHead>
                   <TableHead className="text-right">{t('employees.actions')}</TableHead>
@@ -178,6 +185,7 @@ const DashboardLayout = () => {
                         {alert.employee}
                       </Link>
                     </TableCell>
+                    <TableCell>{getDetailBadge(alert.category, alert.visitType)}</TableCell>
                     <TableCell className="text-gray-700">{alert.date}</TableCell>
                     <TableCell>{getAlertBadge(alert.severity)}</TableCell>
                     <TableCell className="text-right">
