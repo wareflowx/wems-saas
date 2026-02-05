@@ -52,6 +52,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { CreateEmployeeDialog } from "@/components/employees/CreateEmployeeDialog";
+import { DeleteEmployeeDialog } from "@/components/employees/DeleteEmployeeDialog";
 import { Link } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/employees")({
@@ -65,6 +66,8 @@ const EmployeesLayout = () => {
   const [departmentFilter, setDepartmentFilter] = useState<string>("all");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [employeeToDelete, setEmployeeToDelete] = useState<{id: number, name: string} | null>(null);
   const itemsPerPage = 10;
 
   const employees = [
@@ -659,7 +662,17 @@ const EmployeesLayout = () => {
                             <Button variant="ghost" size="icon">
                               <Edit className="h-4 w-4" />
                             </Button>
-                            <Button variant="ghost" size="icon">
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              onClick={() => {
+                                setEmployeeToDelete({
+                                  id: employee.id,
+                                  name: `${employee.firstName} ${employee.lastName}`
+                                });
+                                setIsDeleteDialogOpen(true);
+                              }}
+                            >
                               <Trash2 className="h-4 w-4 text-red-600" />
                             </Button>
                           </div>
@@ -706,6 +719,15 @@ const EmployeesLayout = () => {
         onSuccess={() => {
           // TODO: Refresh employees list
         }}
+      />
+      <DeleteEmployeeDialog
+        open={isDeleteDialogOpen}
+        onOpenChange={setIsDeleteDialogOpen}
+        onConfirm={() => {
+          // TODO: Refresh employees list
+        }}
+        employeeId={employeeToDelete?.id}
+        employeeName={employeeToDelete?.name}
       />
     </>
   );
