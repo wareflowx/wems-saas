@@ -190,6 +190,12 @@
     "search": "Rechercher...",
     "filter": "Filtrer",
     "newVisit": "Nouvelle visite",
+    "addVisitDescription": "Ajoutez une nouvelle visite médicale pour un employé",
+    "selectType": "Sélectionner un type",
+    "deleteVisit": "Supprimer la visite",
+    "deleteVisitWarning": "Êtes-vous sûr de vouloir supprimer cette visite ? Cette action est irréversible.",
+    "typeToDeleteDescription": "Pour confirmer la suppression, tapez le nom complet de l'employé.",
+    "visitToDelete": "Visite à supprimer",
     "overdue": "En retard",
     "upcoming": "À venir",
     "completed": "Complétées",
@@ -205,7 +211,16 @@
     "actions": "Actions",
     "periodicVisit": "Visite périodique",
     "returnVisit": "Visite de reprise",
-    "initialVisit": "Visite initiale"
+    "initialVisit": "Visite initiale",
+    "tooltip": {
+      "periodicVisit": "Visite médicale périodique obligatoire pour les salariés",
+      "returnVisit": "Visite de reprise après un arrêt de travail ou une maladie",
+      "initialVisit": "Visite médicale d'embauche pour les nouveaux salariés",
+      "statusScheduled": "Cette visite est planifiée et à venir",
+      "statusOverdue": "Cette visite est en retard et devrait être complétée",
+      "statusCompleted": "Cette visite a été complétée avec succès",
+      "statusCancelled": "Cette visite a été annulée"
+    }
   },
   "alerts": {
     "title": "Alertes",
