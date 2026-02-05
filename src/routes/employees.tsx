@@ -279,7 +279,7 @@ const EmployeesLayout = () => {
   const getWorkLocationBadge = (location: string) => {
     const locationColors: { [key: string]: string } = {
       'Site A': 'bg-cyan-500/10 border border-cyan-500/20 text-cyan-500',
-      'Site B': 'bg-lime-500/10 border border-lime-500/20 text-lime-500',
+      'Site B': 'bg-amber-500/10 border border-amber-500/20 text-amber-500',
       'Site C': 'bg-violet-500/10 border border-violet-500/20 text-violet-500',
     };
     const colors = locationColors[location] || 'bg-gray-500/10 border border-gray-500/20 text-gray-500';
