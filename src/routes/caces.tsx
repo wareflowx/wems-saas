@@ -170,7 +170,7 @@ const CACESLayout = () => {
             <Card className="p-4 bg-background">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-0">
                 <CardTitle className="text-sm font-medium">{t('caces.expired')}</CardTitle>
-                <FileText className="h-4 w-4 text-red-500" />
+                <ShieldAlert className="h-4 w-4 text-red-500" />
               </CardHeader>
               <CardContent className="p-0">
                 <div className="text-2xl font-bold">{kpis.expiredCaces}</div>
@@ -190,7 +190,7 @@ const CACESLayout = () => {
             <Card className="p-4 bg-background">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-0">
                 <CardTitle className="text-sm font-medium">{t('caces.valid')}</CardTitle>
-                <FileText className="h-4 w-4 text-green-500" />
+                <ShieldAlert className="h-4 w-4 text-green-500" />
               </CardHeader>
               <CardContent className="p-0">
                 <div className="text-2xl font-bold">{kpis.validCaces}</div>
