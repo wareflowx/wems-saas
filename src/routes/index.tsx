@@ -228,20 +228,20 @@ const DashboardLayout = () => {
             </div>
             <Select value={typeFilter} onValueChange={setTypeFilter}>
               <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Type" />
+                <SelectValue placeholder={t('dashboard.filterByType')} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">Tous les types</SelectItem>
+                <SelectItem value="all">{t('dashboard.allTypes')}</SelectItem>
                 <SelectItem value="caces">{t('caces.title')}</SelectItem>
                 <SelectItem value="medical">{t('medicalVisits.title')}</SelectItem>
               </SelectContent>
             </Select>
             <Select value={severityFilter} onValueChange={setSeverityFilter}>
               <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Sévérité" />
+                <SelectValue placeholder={t('dashboard.filterBySeverity')} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">Toutes les sévérités</SelectItem>
+                <SelectItem value="all">{t('dashboard.allSeverities')}</SelectItem>
                 <SelectItem value="critical">{t('alerts.critical')}</SelectItem>
                 <SelectItem value="warning">{t('alerts.warning')}</SelectItem>
                 <SelectItem value="info">{t('alerts.info')}</SelectItem>
@@ -249,10 +249,10 @@ const DashboardLayout = () => {
             </Select>
             <Select value={employeeFilter} onValueChange={setEmployeeFilter}>
               <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Employé" />
+                <SelectValue placeholder={t('dashboard.filterByEmployee')} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">Tous les employés</SelectItem>
+                <SelectItem value="all">{t('dashboard.allEmployees')}</SelectItem>
                 {uniqueEmployees.map((employee) => (
                   <SelectItem key={employee} value={employee}>
                     {employee}
@@ -262,10 +262,10 @@ const DashboardLayout = () => {
             </Select>
             <Select value={detailFilter} onValueChange={setDetailFilter}>
               <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Détail" />
+                <SelectValue placeholder={t('dashboard.filterByDetail')} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">Tous les détails</SelectItem>
+                <SelectItem value="all">{t('dashboard.allDetails')}</SelectItem>
                 {uniqueDetails.map((detail) => (
                   <SelectItem key={detail} value={detail}>
                     {detail}
@@ -280,10 +280,10 @@ const DashboardLayout = () => {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Type</TableHead>
-                  <TableHead>Employé</TableHead>
-                  <TableHead>Détails</TableHead>
-                  <TableHead>Date</TableHead>
+                  <TableHead>{t('dashboard.filterByType')}</TableHead>
+                  <TableHead>{t('dashboard.filterByEmployee')}</TableHead>
+                  <TableHead>{t('dashboard.filterByDetail')}</TableHead>
+                  <TableHead>{t('caces.date')}</TableHead>
                   <TableHead>{t('caces.status')}</TableHead>
                   <TableHead className="text-right">{t('employees.actions')}</TableHead>
                 </TableRow>

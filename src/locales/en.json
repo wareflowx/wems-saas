@@ -43,7 +43,15 @@
     "hoursAgo": "hours ago",
     "dayAgo": "day ago",
     "editMode": "Edit mode",
-    "noDataFound": "No data matches your search criteria"
+    "noDataFound": "No data matches your search criteria",
+    "allTypes": "All types",
+    "allSeverities": "All severities",
+    "allEmployees": "All employees",
+    "allDetails": "All details",
+    "filterByType": "Type",
+    "filterBySeverity": "Severity",
+    "filterByEmployee": "Employee",
+    "filterByDetail": "Detail"
   },
   "employees": {
     "title": "Employees",

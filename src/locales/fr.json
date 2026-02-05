@@ -43,7 +43,15 @@
     "hoursAgo": "heures de suite",
     "dayAgo": "jour de suite",
     "editMode": "Mode édition",
-    "noDataFound": "Aucune donnée ne correspond à vos critères de recherche"
+    "noDataFound": "Aucune donnée ne correspond à vos critères de recherche",
+    "allTypes": "Tous les types",
+    "allSeverities": "Toutes les sévérités",
+    "allEmployees": "Tous les employés",
+    "allDetails": "Tous les détails",
+    "filterByType": "Type",
+    "filterBySeverity": "Sévérité",
+    "filterByEmployee": "Employé",
+    "filterByDetail": "Détail"
   },
   "employees": {
     "title": "Employés",
