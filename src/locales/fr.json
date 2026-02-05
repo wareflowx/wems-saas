@@ -119,6 +119,7 @@
   },
   "caces": {
     "title": "CACES",
+    "description": "Suivez les certificats CACES de vos employés et leurs dates d'expiration",
     "search": "Rechercher...",
     "filter": "Filtrer",
     "addCaces": "Ajouter un CACES",
@@ -130,8 +131,13 @@
     "valid": "Valide",
     "expired": "Expiré",
     "expiringSoon": "Expire bientôt",
+    "totalCaces": "Total CACES",
+    "daysLeft": "jours restants",
+    "daysOverdue": "jours de retard",
     "actions": "Actions",
-    "view": "Voir"
+    "view": "Voir",
+    "allCategories": "Toutes les catégories",
+    "allStatuses": "Tous les statuts"
   },
   "medicalVisits": {
     "title": "Visites médicales",

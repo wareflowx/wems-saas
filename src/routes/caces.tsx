@@ -1,11 +1,11 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { Search, Filter, Plus, AlertTriangle, ShieldAlert, Calendar, FileText, Sparkles, AlertCircle, Download } from 'lucide-react'
+import { Search, Filter, Plus, ShieldAlert, Sparkles, SearchX, FileText } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
 import { SidebarInset, SidebarTrigger } from '@/components/ui/sidebar'
 import { useTranslation } from 'react-i18next'
+import { useState, useMemo } from 'react'
 import {
   Table,
   TableBody,
@@ -14,6 +14,14 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import { Link } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/caces')({
   component: CACESLayout,
@@ -21,12 +29,16 @@ export const Route = createFileRoute('/caces')({
 
 const CACESLayout = () => {
   const { t } = useTranslation()
+  const [search, setSearch] = useState('')
+  const [categoryFilter, setCategoryFilter] = useState<string>('all')
+  const [statusFilter, setStatusFilter] = useState<string>('all')
+
   const caces = [
-    { id: 1, employee: 'Jean Dupont', category: '1A', dateObtained: '2020-03-15', expirationDate: '2025-03-15', daysLeft: -10, status: 'expired' },
-    { id: 2, employee: 'Marie Martin', category: '3', dateObtained: '2023-06-10', expirationDate: '2028-06-10', daysLeft: 856, status: 'valid' },
-    { id: 3, employee: 'Pierre Bernard', category: '5', dateObtained: '2019-11-20', expirationDate: '2025-02-10', daysLeft: 5, status: 'warning' },
-    { id: 4, employee: 'Sophie Petit', category: '7', dateObtained: '2022-01-05', expirationDate: '2027-01-05', daysLeft: 335, status: 'valid' },
-    { id: 5, employee: 'Luc Dubois', category: '1B', dateObtained: '2024-02-01', expirationDate: '2029-02-01', daysLeft: 1093, status: 'valid' },
+    { id: 1, employee: 'Jean Dupont', employeeId: 1, category: '1A', dateObtained: '2020-03-15', expirationDate: '2025-03-15', daysLeft: -10, status: 'expired' },
+    { id: 2, employee: 'Marie Martin', employeeId: 2, category: '3', dateObtained: '2023-06-10', expirationDate: '2028-06-10', daysLeft: 856, status: 'valid' },
+    { id: 3, employee: 'Pierre Bernard', employeeId: 3, category: '5', dateObtained: '2019-11-20', expirationDate: '2025-02-10', daysLeft: 5, status: 'warning' },
+    { id: 4, employee: 'Sophie Petit', employeeId: 4, category: '7', dateObtained: '2022-01-05', expirationDate: '2027-01-05', daysLeft: 335, status: 'valid' },
+    { id: 5, employee: 'Luc Dubois', employeeId: 5, category: '1B', dateObtained: '2024-02-01', expirationDate: '2029-02-01', daysLeft: 1093, status: 'valid' },
   ]
 
   // KPIs
@@ -37,11 +49,76 @@ const CACESLayout = () => {
     validCaces: caces.filter(c => c.status === 'valid').length,
   }
 
-  const getStatusBadge = (status: string, daysLeft: number) => {
-    if (daysLeft < 0) return <Badge variant="destructive">{t('caces.expired')}</Badge>
-    if (daysLeft <= 30) return <Badge variant="destructive">{t('caces.expiringSoon')}</Badge>
-    if (daysLeft <= 90) return <Badge className="bg-yellow-500">{t('caces.expiringSoon')}</Badge>
-    return <Badge variant="default">{t('caces.valid')}</Badge>
+  // Get unique categories and statuses
+  const uniqueCategories = useMemo(() => {
+    const categories = new Set(caces.map(c => c.category))
+    return Array.from(categories)
+  }, [caces])
+
+  const uniqueStatuses = useMemo(() => {
+    const statuses = new Set(caces.map(c => c.status))
+    return Array.from(statuses)
+  }, [caces])
+
+  // Filter CACES
+  const filteredCaces = useMemo(() => {
+    return caces.filter((cace) => {
+      const matchesSearch =
+        search === '' ||
+        cace.employee.toLowerCase().includes(search.toLowerCase()) ||
+        cace.category.toLowerCase().includes(search.toLowerCase())
+
+      const matchesCategory = categoryFilter === 'all' || cace.category === categoryFilter
+      const matchesStatus = statusFilter === 'all' || cace.status === statusFilter
+
+      return matchesSearch && matchesCategory && matchesStatus
+    })
+  }, [caces, search, categoryFilter, statusFilter])
+
+  const getStatusBadge = (status: string) => {
+    switch (status) {
+      case 'expired':
+        return (
+          <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-red-500/10 border border-red-500/20 text-red-500">
+            {t('caces.expired')}
+          </span>
+        )
+      case 'warning':
+        return (
+          <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-yellow-500/10 border border-yellow-500/20 text-yellow-500">
+            {t('caces.expiringSoon')}
+          </span>
+        )
+      default:
+        return (
+          <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-green-500/10 border border-green-500/20 text-green-500">
+            {t('caces.valid')}
+          </span>
+        )
+    }
+  }
+
+  const getCategoryBadge = (category: string) => {
+    const categoryColors: { [key: string]: string } = {
+      '1A': 'bg-blue-500/10 border border-blue-500/20 text-blue-500',
+      '1B': 'bg-indigo-500/10 border border-indigo-500/20 text-indigo-500',
+      '3': 'bg-purple-500/10 border border-purple-500/20 text-purple-500',
+      '5': 'bg-pink-500/10 border border-pink-500/20 text-pink-500',
+      '7': 'bg-teal-500/10 border border-teal-500/20 text-teal-500',
+    }
+    const colors = categoryColors[category] || 'bg-gray-500/10 border border-gray-500/20 text-gray-500'
+    return (
+      <span className={`inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium ${colors}`}>
+        {category}
+      </span>
+    )
+  }
+
+  const getDaysText = (daysLeft: number) => {
+    if (daysLeft < 0) {
+      return <span className="text-red-600 font-medium">{Math.abs(daysLeft)} {t('caces.daysOverdue')}</span>
+    }
+    return <span className="text-gray-700">{daysLeft} {t('caces.daysLeft')}</span>
   }
 
   return (
@@ -64,7 +141,7 @@ const CACESLayout = () => {
                 </div>
                 <div className="flex-1">
                   <p className="text-gray-700">
-                    <span className="font-medium">{t('caces.title')}</span> - Suivez les certificats CACES de vos employés et leurs dates d'expiration
+                    <span className="font-medium">{t('caces.title')}</span> - {t('caces.description')}
                   </p>
                 </div>
               </div>
@@ -75,32 +152,32 @@ const CACESLayout = () => {
           <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-4">
             <Card className="p-4 bg-background">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-0">
-                <CardTitle className="text-sm font-medium">{t('common.search')}</CardTitle>
+                <CardTitle className="text-sm font-medium">{t('caces.totalCaces')}</CardTitle>
                 <ShieldAlert className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent className="p-0">
                 <div className="text-2xl font-bold">{kpis.totalCaces}</div>
-                <p className="text-xs text-muted-foreground">Total CACES</p>
+                <p className="text-xs text-muted-foreground">{kpis.validCaces} {t('caces.valid')}</p>
               </CardContent>
             </Card>
             <Card className="p-4 bg-background">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-0">
                 <CardTitle className="text-sm font-medium">{t('caces.expired')}</CardTitle>
-                <AlertCircle className="h-4 w-4 text-red-500" />
+                <FileText className="h-4 w-4 text-red-500" />
               </CardHeader>
               <CardContent className="p-0">
                 <div className="text-2xl font-bold">{kpis.expiredCaces}</div>
-                <p className="text-xs text-muted-foreground">{((kpis.expiredCaces / kpis.totalCaces) * 100).toFixed(0)}% du total</p>
+                <p className="text-xs text-muted-foreground">{((kpis.expiredCaces / kpis.totalCaces) * 100).toFixed(0)}{t('common.ofTotal')}</p>
               </CardContent>
             </Card>
             <Card className="p-4 bg-background">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-0">
                 <CardTitle className="text-sm font-medium">{t('caces.expiringSoon')}</CardTitle>
-                <AlertTriangle className="h-4 w-4 text-yellow-500" />
+                <Filter className="h-4 w-4 text-yellow-500" />
               </CardHeader>
               <CardContent className="p-0">
                 <div className="text-2xl font-bold">{kpis.warningCaces}</div>
-                <p className="text-xs text-muted-foreground">{((kpis.warningCaces / kpis.totalCaces) * 100).toFixed(0)}% du total</p>
+                <p className="text-xs text-muted-foreground">{((kpis.warningCaces / kpis.totalCaces) * 100).toFixed(0)}{t('common.ofTotal')}</p>
               </CardContent>
             </Card>
             <Card className="p-4 bg-background">
@@ -110,7 +187,7 @@ const CACESLayout = () => {
               </CardHeader>
               <CardContent className="p-0">
                 <div className="text-2xl font-bold">{kpis.validCaces}</div>
-                <p className="text-xs text-muted-foreground">{((kpis.validCaces / kpis.totalCaces) * 100).toFixed(0)}% du total</p>
+                <p className="text-xs text-muted-foreground">{((kpis.validCaces / kpis.totalCaces) * 100).toFixed(0)}{t('common.ofTotal')}</p>
               </CardContent>
             </Card>
           </div>
@@ -121,11 +198,38 @@ const CACESLayout = () => {
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
                 placeholder={t('caces.search')}
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
                 className="pl-9"
               />
             </div>
-            <Button variant="outline" size="icon"><Filter className="h-4 w-4" /></Button>
-            <Button className="gap-2 ml-auto"><Plus className="h-4 w-4" />{t('caces.addCaces')}</Button>
+            <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder={t('caces.category')} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">{t('caces.allCategories')}</SelectItem>
+                {uniqueCategories.map((category) => (
+                  <SelectItem key={category} value={category}>
+                    {category}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Select value={statusFilter} onValueChange={setStatusFilter}>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder={t('caces.status')} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">{t('caces.allStatuses')}</SelectItem>
+                <SelectItem value="expired">{t('caces.expired')}</SelectItem>
+                <SelectItem value="warning">{t('caces.expiringSoon')}</SelectItem>
+                <SelectItem value="valid">{t('caces.valid')}</SelectItem>
+              </SelectContent>
+            </Select>
+            <Button className="gap-2 ml-auto">
+              <Plus className="h-4 w-4" />{t('caces.addCaces')}
+            </Button>
           </div>
 
           {/* Table */}
@@ -143,26 +247,46 @@ const CACESLayout = () => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {caces.map((cacesItem) => (
-                  <TableRow key={cacesItem.id} className="hover:bg-muted/50">
-                    <TableCell className="font-medium">{cacesItem.employee}</TableCell>
-                    <TableCell><Badge variant="outline">{cacesItem.category}</Badge></TableCell>
-                    <TableCell className="text-gray-700">{cacesItem.dateObtained}</TableCell>
-                    <TableCell className="text-gray-700">{cacesItem.expirationDate}</TableCell>
-                    <TableCell>
-                      <span className={`font-semibold ${cacesItem.daysLeft < 0 ? 'text-red-600' : cacesItem.daysLeft <= 30 ? 'text-yellow-600' : 'text-green-600'}`}>
-                        {cacesItem.daysLeft < 0 ? `${Math.abs(cacesItem.daysLeft)} jours de retard` : `${cacesItem.daysLeft} jours`}
-                      </span>
-                    </TableCell>
-                    <TableCell>{getStatusBadge(cacesItem.status, cacesItem.daysLeft)}</TableCell>
-                    <TableCell>
-                      <div className="flex items-center justify-end gap-2">
-                        <Button variant="ghost" size="icon"><Download className="h-4 w-4" /></Button>
-                        <Button variant="ghost" size="icon"><FileText className="h-4 w-4" /></Button>
+                {filteredCaces.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={7} className="h-64">
+                      <div className="flex flex-col items-center justify-center h-full text-muted-foreground p-8">
+                        <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mb-4">
+                          <SearchX className="h-8 w-8 opacity-50" />
+                        </div>
+                        <p className="text-lg font-medium">{t('common.noData')}</p>
+                        <p className="text-sm mt-2 max-w-md text-center">
+                          {t('dashboard.noDataFound')}
+                        </p>
                       </div>
                     </TableCell>
                   </TableRow>
-                ))}
+                ) : (
+                  filteredCaces.map((cacesItem) => (
+                    <TableRow key={cacesItem.id} className="hover:bg-muted/50">
+                      <TableCell>
+                        <Link
+                          to={`/employees_/${cacesItem.employeeId}`}
+                          className="text-gray-700 underline hover:opacity-80 transition-opacity"
+                        >
+                          {cacesItem.employee}
+                        </Link>
+                      </TableCell>
+                      <TableCell>{getCategoryBadge(cacesItem.category)}</TableCell>
+                      <TableCell className="text-gray-700">{cacesItem.dateObtained}</TableCell>
+                      <TableCell className="text-gray-700">{cacesItem.expirationDate}</TableCell>
+                      <TableCell>{getDaysText(cacesItem.daysLeft)}</TableCell>
+                      <TableCell>{getStatusBadge(cacesItem.status)}</TableCell>
+                      <TableCell>
+                        <div className="flex items-center justify-end gap-2">
+                          <Button variant="ghost" size="icon">
+                            <FileText className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
               </TableBody>
             </Table>
           </div>

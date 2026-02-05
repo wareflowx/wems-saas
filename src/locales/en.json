@@ -119,6 +119,7 @@
   },
   "caces": {
     "title": "CACES",
+    "description": "Track employee CACES certificates and their expiration dates",
     "search": "Search...",
     "filter": "Filter",
     "addCaces": "Add CACES",
@@ -130,8 +131,13 @@
     "valid": "Valid",
     "expired": "Expired",
     "expiringSoon": "Expiring soon",
+    "totalCaces": "Total CACES",
+    "daysLeft": "days left",
+    "daysOverdue": "days overdue",
     "actions": "Actions",
-    "view": "View"
+    "view": "View",
+    "allCategories": "All categories",
+    "allStatuses": "All statuses"
   },
   "medicalVisits": {
     "title": "Medical Visits",
