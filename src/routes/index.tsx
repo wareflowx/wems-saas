@@ -30,6 +30,8 @@ const DashboardLayout = () => {
   const [search, setSearch] = useState('')
   const [typeFilter, setTypeFilter] = useState<string>('all')
   const [severityFilter, setSeverityFilter] = useState<string>('all')
+  const [employeeFilter, setEmployeeFilter] = useState<string>('all')
+  const [detailFilter, setDetailFilter] = useState<string>('all')
 
   // Mock data
   const allAlerts = [
@@ -53,9 +55,30 @@ const DashboardLayout = () => {
 
       const matchesSeverity = severityFilter === 'all' || alert.severity === severityFilter
 
-      return matchesSearch && matchesType && matchesSeverity
+      const matchesEmployee = employeeFilter === 'all' || alert.employee === employeeFilter
+
+      const matchesDetail = detailFilter === 'all' ||
+        (alert.category && detailFilter === `CACES ${alert.category}`) ||
+        (alert.visitType && detailFilter === alert.visitType)
+
+      return matchesSearch && matchesType && matchesSeverity && matchesEmployee && matchesDetail
     })
-  }, [allAlerts, search, typeFilter, severityFilter])
+  }, [allAlerts, search, typeFilter, severityFilter, employeeFilter, detailFilter])
+
+  // Get unique employees and details
+  const uniqueEmployees = useMemo(() => {
+    const employees = new Set(allAlerts.map(a => a.employee))
+    return Array.from(employees)
+  }, [allAlerts])
+
+  const uniqueDetails = useMemo(() => {
+    const details = new Set<string>()
+    allAlerts.forEach(a => {
+      if (a.category) details.add(`CACES ${a.category}`)
+      if (a.visitType) details.add(a.visitType)
+    })
+    return Array.from(details)
+  }, [allAlerts])
 
   const kpis = {
     totalEmployees: 42,
@@ -222,6 +245,32 @@ const DashboardLayout = () => {
                 <SelectItem value="critical">{t('alerts.critical')}</SelectItem>
                 <SelectItem value="warning">{t('alerts.warning')}</SelectItem>
                 <SelectItem value="info">{t('alerts.info')}</SelectItem>
+              </SelectContent>
+            </Select>
+            <Select value={employeeFilter} onValueChange={setEmployeeFilter}>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Employé" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Tous les employés</SelectItem>
+                {uniqueEmployees.map((employee) => (
+                  <SelectItem key={employee} value={employee}>
+                    {employee}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Select value={detailFilter} onValueChange={setDetailFilter}>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Détail" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Tous les détails</SelectItem>
+                {uniqueDetails.map((detail) => (
+                  <SelectItem key={detail} value={detail}>
+                    {detail}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>

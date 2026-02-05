@@ -48,6 +48,8 @@ const DashboardLayout = () => {
   const [search, setSearch] = useState('')
   const [typeFilter, setTypeFilter] = useState<string>('all')
   const [severityFilter, setSeverityFilter] = useState<string>('all')
+  const [employeeFilter, setEmployeeFilter] = useState<string>('all')
+  const [detailFilter, setDetailFilter] = useState<string>('all')
 
   return (
     <SidebarInset>
@@ -67,9 +69,13 @@ const DashboardLayout = () => {
           search={search}
           typeFilter={typeFilter}
           severityFilter={severityFilter}
+          employeeFilter={employeeFilter}
+          detailFilter={detailFilter}
           setSearch={setSearch}
           setTypeFilter={setTypeFilter}
           setSeverityFilter={setSeverityFilter}
+          setEmployeeFilter={setEmployeeFilter}
+          setDetailFilter={setDetailFilter}
         />
       </div>
     </SidebarInset>
@@ -81,17 +87,25 @@ const DashboardContent = ({
   search,
   typeFilter,
   severityFilter,
+  employeeFilter,
+  detailFilter,
   setSearch,
   setTypeFilter,
-  setSeverityFilter
+  setSeverityFilter,
+  setEmployeeFilter,
+  setDetailFilter
 }: {
   t: (key: string) => string
   search: string
   typeFilter: string
   severityFilter: string
+  employeeFilter: string
+  detailFilter: string
   setSearch: (value: string) => void
   setTypeFilter: (value: string) => void
   setSeverityFilter: (value: string) => void
+  setEmployeeFilter: (value: string) => void
+  setDetailFilter: (value: string) => void
 }) => {
   // TODO: Replace with real data from database
   const metrics = {
@@ -116,6 +130,21 @@ const DashboardContent = ({
     { id: 5, type: 'Visite en retard', employee: 'Luc Dubois', employeeId: 5, visitType: 'Visite de reprise', severity: 'critical', date: '2025-01-28' },
   ]
 
+  // Get unique employees and details
+  const uniqueEmployees = useMemo(() => {
+    const employees = new Set(allDeadlines.map(d => d.employee))
+    return Array.from(employees)
+  }, [allDeadlines])
+
+  const uniqueDetails = useMemo(() => {
+    const details = new Set<string>()
+    allDeadlines.forEach(d => {
+      if (d.category) details.add(`CACES ${d.category}`)
+      if (d.visitType) details.add(d.visitType)
+    })
+    return Array.from(details)
+  }, [allDeadlines])
+
   const upcomingDeadlines = useMemo(() => {
     return allDeadlines.filter((deadline) => {
       const matchesSearch =
@@ -129,9 +158,15 @@ const DashboardContent = ({
 
       const matchesSeverity = severityFilter === 'all' || deadline.severity === severityFilter
 
-      return matchesSearch && matchesType && matchesSeverity
+      const matchesEmployee = employeeFilter === 'all' || deadline.employee === employeeFilter
+
+      const matchesDetail = detailFilter === 'all' ||
+        (deadline.category && detailFilter === `CACES ${deadline.category}`) ||
+        (deadline.visitType && detailFilter === deadline.visitType)
+
+      return matchesSearch && matchesType && matchesSeverity && matchesEmployee && matchesDetail
     })
-  }, [allDeadlines, search, typeFilter, severityFilter])
+  }, [allDeadlines, search, typeFilter, severityFilter, employeeFilter, detailFilter])
 
   const getStatusBadge = (severity: string) => {
     if (severity === 'critical') return <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-red-500/10 border border-red-500/20 text-red-500">{t('alerts.critical')}</span>
@@ -282,6 +317,32 @@ const DashboardContent = ({
             <SelectItem value="critical">{t('alerts.critical')}</SelectItem>
             <SelectItem value="warning">{t('alerts.warning')}</SelectItem>
             <SelectItem value="info">{t('alerts.info')}</SelectItem>
+          </SelectContent>
+        </Select>
+        <Select value={employeeFilter} onValueChange={setEmployeeFilter}>
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Employé" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">Tous les employés</SelectItem>
+            {uniqueEmployees.map((employee) => (
+              <SelectItem key={employee} value={employee}>
+                {employee}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        <Select value={detailFilter} onValueChange={setDetailFilter}>
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Détail" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">Tous les détails</SelectItem>
+            {uniqueDetails.map((detail) => (
+              <SelectItem key={detail} value={detail}>
+                {detail}
+              </SelectItem>
+            ))}
           </SelectContent>
         </Select>
       </div>
