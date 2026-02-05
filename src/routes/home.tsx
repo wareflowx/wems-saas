@@ -9,14 +9,25 @@ import {
   ShieldAlert,
   Users,
   Sparkles,
+  ArrowRight,
 } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
 import {
   SidebarInset,
   SidebarTrigger,
 } from '@/components/ui/sidebar'
 import { useTranslation } from 'react-i18next'
+import { Link } from '@tanstack/react-router'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
 
 export const Route = createFileRoute('/home')({
   component: DashboardLayout,
@@ -29,6 +40,7 @@ const DashboardLayout = () => {
     <SidebarInset>
       <header className="flex h-14 shrink-0 items-center gap-2 border-b px-4 sticky top-0 bg-background z-10">
         <SidebarTrigger className="-ml-1" />
+        <div className="flex items-center gap-2"><Sparkles className="h-5 w-5 text-gray-600" /><h2 className="text-lg font-semibold">{t('dashboard.title')}</h2></div>
         <div className="ml-auto flex items-center gap-2">
           <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium bg-green-50 text-green-700 border border-green-200">
             <div className="w-2 h-2 rounded-full bg-green-500" />
@@ -59,300 +71,153 @@ const DashboardContent = ({ t }: { t: (key: string) => string }) => {
     medicalVisitsUpcoming: 8,
   }
 
-  const upcomingDeadlines = {
-    next7Days: {
-      caces: [
-        { id: 1, employee: 'Jean Dupont', category: '1A', daysLeft: 3 },
-        { id: 2, employee: 'Marie Martin', category: '3', daysLeft: 5 },
-      ],
-      medicalVisits: [
-        { id: 1, employee: 'Pierre Bernard', type: 'Visite de reprise', date: '2026-02-07' },
-        { id: 2, employee: 'Sophie Petit', type: 'Visite périodique', date: '2026-02-10' },
-      ],
-    },
-    next30Days: {
-      cacesCount: 8,
-      medicalVisitsCount: 15,
-    },
-  }
-
-  const recentActivity = [
-    { id: 1, type: 'employee_added', message: `${t('dashboard.newEmployee')}: Luc Dubois`, time: `2 ${t('dashboard.hoursAgo')}` },
-    { id: 2, type: 'document_uploaded', message: `${t('documents.add')} ${t('documents.name')} pour Marie Martin`, time: `3 ${t('dashboard.hoursAgo')}` },
-    { id: 3, type: 'caces_renewed', message: `${t('dashboard.cacesRenewed')} Pierre Bernard`, time: `1 ${t('dashboard.dayAgo')}` },
+  const upcomingDeadlines = [
+    { id: 1, type: 'CACES expiration proche', employee: 'Jean Dupont', category: '1A', daysLeft: 3, severity: 'warning', date: '2025-02-18' },
+    { id: 2, type: 'CACES expiration proche', employee: 'Marie Martin', category: '3', daysLeft: 5, severity: 'warning', date: '2025-02-20' },
+    { id: 3, type: 'CACES expiré', employee: 'Pierre Bernard', category: '5', severity: 'critical', date: '2025-02-01' },
+    { id: 4, type: 'Visite médicale planifiée', employee: 'Sophie Petit', visitType: 'Visite périodique', severity: 'info', date: '2025-02-22' },
+    { id: 5, type: 'Visite en retard', employee: 'Luc Dubois', visitType: 'Visite de reprise', severity: 'critical', date: '2025-01-28' },
   ]
 
+  const getStatusBadge = (severity: string) => {
+    if (severity === 'critical') return <Badge variant="destructive">{t('alerts.critical')}</Badge>
+    if (severity === 'warning') return <Badge className="bg-yellow-600">{t('alerts.warning')}</Badge>
+    return <Badge variant="outline">{t('alerts.info')}</Badge>
+  }
+
   return (
-    <div className="min-h-full">
+    <div className="min-h-full space-y-3">
       {/* Header */}
-      <div className="mb-6">
-        <div className="relative group rounded-lg border border-border p-3">
+      <div className="mb-2">
+        <Card className="p-3 bg-background shadow-sm rounded-md">
           <div className="flex items-start gap-3">
             <div className="mt-0.5">
               <Sparkles className="h-4 w-4 text-gray-600" />
             </div>
             <div className="flex-1">
               <p className="text-gray-700">
-                <span className="font-medium">{t('dashboard.title')}</span> - {t('dashboard.subtitle')}
+                <span className="font-medium">{t('dashboard.title')}</span> - Vue d'ensemble de votre entreprise et alertes importantes
               </p>
             </div>
           </div>
-        </div>
+        </Card>
       </div>
 
       {/* Key Metrics */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-        <MetricCard
-          title={t('dashboard.totalEmployees')}
-          value={metrics.totalEmployees}
-          icon={<Users className="h-5 w-5" />}
-          color="blue"
-        />
-        <MetricCard
-          title={t('dashboard.newHires')}
-          value={metrics.newHiresThisMonth}
-          subtitle={t('dashboard.thisMonth')}
-          icon={<CheckCircle2 className="h-5 w-5" />}
-          color="green"
-        />
-        <MetricCard
-          title={t('dashboard.departures')}
-          value={metrics.departuresThisMonth}
-          subtitle={t('dashboard.thisMonth')}
-          icon={<Users className="h-5 w-5" />}
-          color="gray"
-        />
-        <MetricCard
-          title={t('dashboard.employeesOnLeave')}
-          value={metrics.employeesOnLeave}
-          icon={<Clock className="h-5 w-5" />}
-          color="yellow"
-        />
-      </div>
-
-      {/* Active Alerts */}
-      <div className="mb-6">
-        <h3 className="text-2xl font-semibold text-gray-900 mb-4">{t('dashboard.activeAlerts')}</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          <AlertCard
-            title={t('dashboard.expiredCaces')}
-            count={alerts.cacesExpired}
-            severity="critical"
-            icon={<ShieldAlert className="h-5 w-5" />}
-          />
-          <AlertCard
-            title={t('dashboard.expiringSoonCaces')}
-            count={alerts.cacesExpiringSoon}
-            severity="warning"
-            icon={<AlertTriangle className="h-5 w-5" />}
-          />
-          <AlertCard
-            title={t('dashboard.overdueMedicalVisits')}
-            count={alerts.medicalVisitsOverdue}
-            severity="critical"
-            icon={<AlertCircle className="h-5 w-5" />}
-          />
-          <AlertCard
-            title={t('dashboard.upcomingMedicalVisits')}
-            count={alerts.medicalVisitsUpcoming}
-            severity="info"
-            icon={<Calendar className="h-5 w-5" />}
-          />
-        </div>
-      </div>
-
-      {/* Upcoming Deadlines */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
-        {/* Next 7 Days */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Calendar className="h-5 w-5 text-blue-600" />
-              {t('dashboard.next7Days')}
-            </CardTitle>
+      <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-4">
+        <Card className="p-4 bg-background">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-0">
+            <CardTitle className="text-sm font-medium">{t('dashboard.totalEmployees')}</CardTitle>
+            <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
-          <CardContent>
-            {upcomingDeadlines.next7Days.caces.length === 0 &&
-            upcomingDeadlines.next7Days.medicalVisits.length === 0 ? (
-              <p className="text-gray-500 text-center py-4">{t('dashboard.noDeadlines')}</p>
-            ) : (
-              <div className="space-y-4">
-                {/* CACES */}
-                {upcomingDeadlines.next7Days.caces.length > 0 && (
-                  <div>
-                    <h4 className="font-semibold text-gray-700 mb-2">{t('dashboard.caces')}</h4>
-                    <div className="space-y-2">
-                      {upcomingDeadlines.next7Days.caces.map((item) => (
-                        <div
-                          key={item.id}
-                          className="flex items-center justify-between p-3 bg-red-50 rounded-lg border border-red-200"
-                        >
-                          <div>
-                            <p className="font-medium text-gray-900">{item.employee}</p>
-                            <p className="text-sm text-gray-600">{t('dashboard.caces')} {item.category}</p>
-                          </div>
-                          <Badge variant="destructive">{item.daysLeft} {t('dashboard.days')}</Badge>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* Medical Visits */}
-                {upcomingDeadlines.next7Days.medicalVisits.length > 0 && (
-                  <div>
-                    <h4 className="font-semibold text-gray-700 mb-2 mt-4">
-                      {t('dashboard.medicalVisits')}
-                    </h4>
-                    <div className="space-y-2">
-                      {upcomingDeadlines.next7Days.medicalVisits.map((item) => (
-                        <div
-                          key={item.id}
-                          className="flex items-center justify-between p-3 bg-blue-50 rounded-lg border border-blue-200"
-                        >
-                          <div>
-                            <p className="font-medium text-gray-900">{item.employee}</p>
-                            <p className="text-sm text-gray-600">{item.type}</p>
-                          </div>
-                          <Badge variant="outline">{item.date}</Badge>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
-            )}
+          <CardContent className="p-0">
+            <div className="text-2xl font-bold">{metrics.totalEmployees}</div>
+            <p className="text-xs text-muted-foreground">{metrics.totalEmployees - metrics.employeesOnLeave} actifs</p>
           </CardContent>
         </Card>
-
-        {/* Next 30 Days */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Calendar className="h-5 w-5 text-purple-600" />
-              {t('dashboard.next30Days')}
-            </CardTitle>
+        <Card className="p-4 bg-background">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-0">
+            <CardTitle className="text-sm font-medium">{t('dashboard.newHires')}</CardTitle>
+            <CheckCircle2 className="h-4 w-4 text-green-500" />
           </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="text-center p-4 bg-yellow-50 rounded-lg border border-yellow-200">
-                <p className="text-3xl font-bold text-yellow-700">
-                  {upcomingDeadlines.next30Days.cacesCount}
-                </p>
-                <p className="text-sm text-gray-600 mt-1">{t('dashboard.cacesToRenew')}</p>
-              </div>
-              <div className="text-center p-4 bg-blue-50 rounded-lg border border-blue-200">
-                <p className="text-3xl font-bold text-blue-700">
-                  {upcomingDeadlines.next30Days.medicalVisitsCount}
-                </p>
-                <p className="text-sm text-gray-600 mt-1">{t('dashboard.medicalVisitsPlanned')}</p>
-              </div>
-            </div>
+          <CardContent className="p-0">
+            <div className="text-2xl font-bold">{metrics.newHiresThisMonth}</div>
+            <p className="text-xs text-muted-foreground">{t('dashboard.thisMonth')}</p>
+          </CardContent>
+        </Card>
+        <Card className="p-4 bg-background">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-0">
+            <CardTitle className="text-sm font-medium">{t('alerts.critical')}</CardTitle>
+            <ShieldAlert className="h-4 w-4 text-red-500" />
+          </CardHeader>
+          <CardContent className="p-0">
+            <div className="text-2xl font-bold">{alerts.cacesExpired + alerts.medicalVisitsOverdue}</div>
+            <p className="text-xs text-muted-foreground">{((alerts.cacesExpired + alerts.medicalVisitsOverdue) / (alerts.cacesExpired + alerts.cacesExpiringSoon + alerts.medicalVisitsOverdue + alerts.medicalVisitsUpcoming) * 100).toFixed(0)}% du total</p>
+          </CardContent>
+        </Card>
+        <Card className="p-4 bg-background">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-0">
+            <CardTitle className="text-sm font-medium">{t('alerts.warning')}</CardTitle>
+            <AlertTriangle className="h-4 w-4 text-yellow-500" />
+          </CardHeader>
+          <CardContent className="p-0">
+            <div className="text-2xl font-bold">{alerts.cacesExpiringSoon}</div>
+            <p className="text-xs text-muted-foreground">{((alerts.cacesExpiringSoon) / (alerts.cacesExpired + alerts.cacesExpiringSoon + alerts.medicalVisitsOverdue + alerts.medicalVisitsUpcoming) * 100).toFixed(0)}% du total</p>
           </CardContent>
         </Card>
       </div>
 
-      {/* Recent Activity */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <FileText className="h-5 w-5 text-gray-600" />
-            {t('dashboard.recentActivity')}
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-3">
-            {recentActivity.map((activity) => (
-              <div key={activity.id} className="flex items-start gap-3 p-3 hover:bg-gray-50 rounded-lg">
-                <div className="mt-1">
-                  <CheckCircle2 className="h-4 w-4 text-green-600" />
-                </div>
-                <div className="flex-1">
-                  <p className="text-gray-900">{activity.message}</p>
-                  <p className="text-sm text-gray-500">{activity.time}</p>
-                </div>
-              </div>
+      {/* Quick Links */}
+      <div className="flex flex-wrap gap-2">
+        <Link to="/employees">
+          <Button variant="outline" className="gap-2">
+            <Users className="h-4 w-4" />
+            {t('employees.title')}
+            <ArrowRight className="h-4 w-4" />
+          </Button>
+        </Link>
+        <Link to="/medical-visits">
+          <Button variant="outline" className="gap-2">
+            <Calendar className="h-4 w-4" />
+            {t('medicalVisits.title')}
+            <ArrowRight className="h-4 w-4" />
+          </Button>
+        </Link>
+        <Link to="/caces">
+          <Button variant="outline" className="gap-2">
+            <ShieldAlert className="h-4 w-4" />
+            {t('caces.title')}
+            <ArrowRight className="h-4 w-4" />
+          </Button>
+        </Link>
+        <Link to="/documents">
+          <Button variant="outline" className="gap-2">
+            <FileText className="h-4 w-4" />
+            {t('documents.title')}
+            <ArrowRight className="h-4 w-4" />
+          </Button>
+        </Link>
+        <Link to="/alerts">
+          <Button variant="outline" className="gap-2">
+            <AlertCircle className="h-4 w-4" />
+            {t('alerts.title')}
+            <ArrowRight className="h-4 w-4" />
+          </Button>
+        </Link>
+      </div>
+
+      {/* Table */}
+      <div className="rounded-lg border">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Type</TableHead>
+              <TableHead>Employé</TableHead>
+              <TableHead>Détails</TableHead>
+              <TableHead>Date</TableHead>
+              <TableHead>{t('alerts.status')}</TableHead>
+              <TableHead className="text-right">{t('employees.actions')}</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {upcomingDeadlines.map((deadline) => (
+              <TableRow key={deadline.id} className="hover:bg-muted/50">
+                <TableCell className="font-medium">{deadline.type}</TableCell>
+                <TableCell className="text-gray-700">{deadline.employee}</TableCell>
+                <TableCell className="text-gray-700">{deadline.category || deadline.visitType}</TableCell>
+                <TableCell className="text-gray-700">{deadline.date}</TableCell>
+                <TableCell>{getStatusBadge(deadline.severity)}</TableCell>
+                <TableCell className="text-right">
+                  <div className="flex justify-end gap-2">
+                    <Button variant="ghost" size="icon">
+                      <FileText className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </TableCell>
+              </TableRow>
             ))}
-          </div>
-        </CardContent>
-      </Card>
-    </div>
-  )
-}
-
-// Metric Card Component
-const MetricCard = ({
-  title,
-  value,
-  subtitle,
-  icon,
-  color,
-}: {
-  title: string
-  value: number
-  subtitle?: string
-  icon: React.ReactNode
-  color: 'blue' | 'green' | 'yellow' | 'gray'
-}) => {
-  const colorClasses = {
-    blue: 'bg-blue-500',
-    green: 'bg-green-500',
-    yellow: 'bg-yellow-500',
-    gray: 'bg-gray-500',
-  }
-
-  return (
-    <div className="rounded-lg border border-border p-4">
-      <div className="flex items-start gap-4">
-        <div className={`${colorClasses[color]} p-2.5 rounded-lg text-white`}>
-          {icon}
-        </div>
-        <div className="flex-1">
-          <p className="text-sm font-medium text-gray-600">{title}</p>
-          <p className="text-3xl font-bold text-gray-900 mt-2">{value}</p>
-          {subtitle && <p className="text-sm text-gray-500 mt-1">{subtitle}</p>}
-        </div>
-      </div>
-    </div>
-  )
-}
-
-// Alert Card Component
-const AlertCard = ({
-  title,
-  count,
-  severity,
-  icon,
-}: {
-  title: string
-  count: number
-  severity: 'critical' | 'warning' | 'info'
-  icon: React.ReactNode
-}) => {
-  const iconClasses = {
-    critical: 'text-red-600',
-    warning: 'text-yellow-600',
-    info: 'text-blue-600',
-  }
-
-  const countClasses = {
-    critical: 'bg-red-600 text-white',
-    warning: 'bg-yellow-600 text-white',
-    info: 'bg-blue-600 text-white',
-  }
-
-  return (
-    <div className="cursor-pointer rounded-lg border border-border p-4 transition-colors hover:bg-gray-50">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className={iconClasses[severity]}>{icon}</div>
-          <div>
-            <p className="font-semibold text-gray-900">{title}</p>
-          </div>
-        </div>
-        <div className={`${countClasses[severity]} px-3 py-1 rounded-full text-lg font-bold`}>
-          {count}
-        </div>
+          </TableBody>
+        </Table>
       </div>
     </div>
   )
