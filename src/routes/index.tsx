@@ -1,118 +1,226 @@
 import { createFileRoute } from '@tanstack/react-router'
-import {
-  Zap,
-  Server,
-  Route as RouteIcon,
-  Shield,
-  Waves,
-  Sparkles,
-} from 'lucide-react'
+import { Users, ShieldAlert, Stethoscope, FileText, Sparkles, Bell, AlertTriangle, Calendar, UserPlus } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { SidebarInset, SidebarTrigger } from '@/components/ui/sidebar'
+import { useTranslation } from 'react-i18next'
+import { Link } from '@tanstack/react-router'
 
-export const Route = createFileRoute('/')({ component: App })
+export const Route = createFileRoute('/')({ component: DashboardLayout })
 
-function App() {
-  const features = [
-    {
-      icon: <Zap className="w-12 h-12 text-cyan-400" />,
-      title: 'Powerful Server Functions',
-      description:
-        'Write server-side code that seamlessly integrates with your client components. Type-safe, secure, and simple.',
-    },
-    {
-      icon: <Server className="w-12 h-12 text-cyan-400" />,
-      title: 'Flexible Server Side Rendering',
-      description:
-        'Full-document SSR, streaming, and progressive enhancement out of the box. Control exactly what renders where.',
-    },
-    {
-      icon: <RouteIcon className="w-12 h-12 text-cyan-400" />,
-      title: 'API Routes',
-      description:
-        'Build type-safe API endpoints alongside your application. No separate backend needed.',
-    },
-    {
-      icon: <Shield className="w-12 h-12 text-cyan-400" />,
-      title: 'Strongly Typed Everything',
-      description:
-        'End-to-end type safety from server to client. Catch errors before they reach production.',
-    },
-    {
-      icon: <Waves className="w-12 h-12 text-cyan-400" />,
-      title: 'Full Streaming Support',
-      description:
-        'Stream data from server to client progressively. Perfect for AI applications and real-time updates.',
-    },
-    {
-      icon: <Sparkles className="w-12 h-12 text-cyan-400" />,
-      title: 'Next Generation Ready',
-      description:
-        'Built from the ground up for modern web applications. Deploy anywhere JavaScript runs.',
-    },
+const DashboardLayout = () => {
+  const { t } = useTranslation()
+
+  // Mock data
+  const stats = {
+    totalEmployees: 42,
+    activeEmployees: 38,
+    expiredCaces: 3,
+    overdueVisits: 5,
+  }
+
+  const recentAlerts = [
+    { id: 1, type: 'CACES expiré', employee: 'Jean Dupont', severity: 'critical', date: '2025-02-10' },
+    { id: 2, type: 'Visite en retard', employee: 'Marie Martin', severity: 'critical', date: '2025-02-01' },
+    { id: 3, type: 'CACES expiration proche', employee: 'Pierre Bernard', severity: 'warning', date: '2025-02-15' },
+  ]
+
+  const upcomingEvents = [
+    { id: 1, type: 'Visite médicale', employee: 'Sophie Petit', date: '2025-02-20' },
+    { id: 2, type: 'CACES expiration', employee: 'Luc Dubois', date: '2025-03-01' },
+    { id: 3, type: 'Visite médicale', employee: 'Jean Dupont', date: '2025-03-05' },
   ]
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900">
-      <section className="relative py-20 px-6 text-center overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/10 via-blue-500/10 to-purple-500/10"></div>
-        <div className="relative max-w-5xl mx-auto">
-          <div className="flex items-center justify-center gap-6 mb-6">
-            <img
-              src="/tanstack-circle-logo.png"
-              alt="TanStack Logo"
-              className="w-24 h-24 md:w-32 md:h-32"
-            />
-            <h1 className="text-6xl md:text-7xl font-black text-white [letter-spacing:-0.08em]">
-              <span className="text-gray-300">TANSTACK</span>{' '}
-              <span className="bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
-                START
-              </span>
-            </h1>
-          </div>
-          <p className="text-2xl md:text-3xl text-gray-300 mb-4 font-light">
-            The framework for next generation AI applications
-          </p>
-          <p className="text-lg text-gray-400 max-w-3xl mx-auto mb-8">
-            Full-stack framework powered by TanStack Router for React and Solid.
-            Build modern applications with server functions, streaming, and type
-            safety.
-          </p>
-          <div className="flex flex-col items-center gap-4">
-            <a
-              href="https://tanstack.com/start"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-8 py-3 bg-cyan-500 hover:bg-cyan-600 text-white font-semibold rounded-lg transition-colors shadow-lg shadow-cyan-500/50"
-            >
-              Documentation
-            </a>
-            <p className="text-gray-400 text-sm mt-2">
-              Begin your TanStack Start journey by editing{' '}
-              <code className="px-2 py-1 bg-slate-700 rounded text-cyan-400">
-                /src/routes/index.tsx
-              </code>
-            </p>
-          </div>
+    <SidebarInset>
+      <header className="flex h-14 shrink-0 items-center gap-2 border-b px-4 sticky top-0 bg-background z-10">
+        <SidebarTrigger className="-ml-1" />
+        <div className="flex items-center gap-2"><Sparkles className="h-5 w-5 text-gray-600" /><h2 className="text-lg font-semibold">{t('dashboard.title')}</h2></div>
+        <div className="ml-auto flex items-center gap-2">
+          <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium bg-green-50 text-green-700 border border-green-200"><div className="w-2 h-2 rounded-full bg-green-500" /><span>{t('dashboard.editMode')}</span></div>
         </div>
-      </section>
+      </header>
+      <div className="flex flex-1 flex-col gap-4 p-4 py-6">
+        <div className="min-h-full space-y-3">
+          {/* Header */}
+          <div className="mb-2">
+            <Card className="p-3 bg-background shadow-sm rounded-md">
+              <div className="flex items-start gap-3">
+                <div className="mt-0.5">
+                  <Sparkles className="h-4 w-4 text-gray-600" />
+                </div>
+                <div className="flex-1">
+                  <p className="text-gray-700">
+                    <span className="font-medium">{t('dashboard.title')}</span> - Vue d'ensemble de votre entreprise et alertes importantes
+                  </p>
+                </div>
+              </div>
+            </Card>
+          </div>
 
-      <section className="py-16 px-6 max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {features.map((feature, index) => (
-            <div
-              key={index}
-              className="bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-xl p-6 hover:border-cyan-500/50 transition-all duration-300 hover:shadow-lg hover:shadow-cyan-500/10"
-            >
-              <div className="mb-4">{feature.icon}</div>
-              <h3 className="text-xl font-semibold text-white mb-3">
-                {feature.title}
-              </h3>
-              <p className="text-gray-400 leading-relaxed">
-                {feature.description}
-              </p>
-            </div>
-          ))}
+          {/* Key Metrics */}
+          <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-4">
+            <Card className="p-4 bg-background">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-0">
+                <CardTitle className="text-sm font-medium">{t('dashboard.totalEmployees')}</CardTitle>
+                <Users className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent className="p-0">
+                <div className="text-2xl font-bold">{stats.totalEmployees}</div>
+                <p className="text-xs text-muted-foreground">{stats.activeEmployees} actifs</p>
+              </CardContent>
+            </Card>
+            <Card className="p-4 bg-background">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-0">
+                <CardTitle className="text-sm font-medium">{t('alerts.critical')}</CardTitle>
+                <ShieldAlert className="h-4 w-4 text-red-500" />
+              </CardHeader>
+              <CardContent className="p-0">
+                <div className="text-2xl font-bold">{stats.expiredCaces}</div>
+                <p className="text-xs text-muted-foreground">{t('caces.expired')}</p>
+              </CardContent>
+            </Card>
+            <Card className="p-4 bg-background">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-0">
+                <CardTitle className="text-sm font-medium">{t('medicalVisits.overdue')}</CardTitle>
+                <Stethoscope className="h-4 w-4 text-red-500" />
+              </CardHeader>
+              <CardContent className="p-0">
+                <div className="text-2xl font-bold">{stats.overdueVisits}</div>
+                <p className="text-xs text-muted-foreground">{t('medicalVisits.overdue')}</p>
+              </CardContent>
+            </Card>
+            <Card className="p-4 bg-background">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-0">
+                <CardTitle className="text-sm font-medium">{t('documents.title')}</CardTitle>
+                <FileText className="h-4 w-4 text-blue-500" />
+              </CardHeader>
+              <CardContent className="p-0">
+                <div className="text-2xl font-bold">156</div>
+                <p className="text-xs text-muted-foreground">Total documents</p>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Content Grid */}
+          <div className="grid gap-3 lg:grid-cols-2">
+            {/* Recent Alerts */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <AlertTriangle className="h-5 w-5 text-red-500" />
+                  Alertes récentes
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  {recentAlerts.map((alert) => (
+                    <div key={alert.id} className="flex items-start gap-3 p-3 rounded-lg border bg-background hover:bg-muted/50 transition-colors">
+                      <div className={`mt-0.5 ${alert.severity === 'critical' ? 'text-red-500' : 'text-yellow-500'}`}>
+                        {alert.severity === 'critical' ? <ShieldAlert className="h-4 w-4" /> : <AlertTriangle className="h-4 w-4" />}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium truncate">{alert.type}</p>
+                        <p className="text-xs text-muted-foreground">{alert.employee}</p>
+                      </div>
+                      <Badge variant={alert.severity === 'critical' ? 'destructive' : 'secondary'} className="flex-shrink-0">
+                        {alert.severity === 'critical' ? 'Critique' : 'Avertissement'}
+                      </Badge>
+                    </div>
+                  ))}
+                </div>
+                <Link to="/alerts">
+                  <Button variant="outline" className="w-full mt-4">
+                    Voir toutes les alertes
+                  </Button>
+                </Link>
+              </CardContent>
+            </Card>
+
+            {/* Upcoming Events */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Calendar className="h-5 w-5 text-blue-500" />
+                  Événements à venir
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  {upcomingEvents.map((event) => (
+                    <div key={event.id} className="flex items-start gap-3 p-3 rounded-lg border bg-background hover:bg-muted/50 transition-colors">
+                      <div className="mt-0.5 text-blue-500">
+                        <Calendar className="h-4 w-4" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium truncate">{event.type}</p>
+                        <p className="text-xs text-muted-foreground">{event.employee}</p>
+                      </div>
+                      <div className="text-xs text-muted-foreground flex-shrink-0">
+                        {event.date}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div className="grid grid-cols-2 gap-2 mt-4">
+                  <Link to="/medical-visits">
+                    <Button variant="outline" className="w-full">
+                      Visites
+                    </Button>
+                  </Link>
+                  <Link to="/caces">
+                    <Button variant="outline" className="w-full">
+                      CACES
+                    </Button>
+                  </Link>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Quick Actions */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Actions rapides</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex flex-wrap gap-2">
+                <Link to="/employees">
+                  <Button variant="outline" className="gap-2">
+                    <Users className="h-4 w-4" />
+                    {t('employees.title')}
+                  </Button>
+                </Link>
+                <Link to="/medical-visits">
+                  <Button variant="outline" className="gap-2">
+                    <Stethoscope className="h-4 w-4" />
+                    {t('medicalVisits.title')}
+                  </Button>
+                </Link>
+                <Link to="/caces">
+                  <Button variant="outline" className="gap-2">
+                    <ShieldAlert className="h-4 w-4" />
+                    {t('caces.title')}
+                  </Button>
+                </Link>
+                <Link to="/documents">
+                  <Button variant="outline" className="gap-2">
+                    <FileText className="h-4 w-4" />
+                    {t('documents.title')}
+                  </Button>
+                </Link>
+                <Link to="/alerts">
+                  <Button variant="outline" className="gap-2">
+                    <Bell className="h-4 w-4" />
+                    {t('alerts.title')}
+                  </Button>
+                </Link>
+              </div>
+            </CardContent>
+          </Card>
         </div>
-      </section>
-    </div>
+      </div>
+    </SidebarInset>
   )
 }
