@@ -115,7 +115,14 @@
     "date": "Date",
     "actions": "Actions",
     "download": "Download",
-    "delete": "Delete"
+    "delete": "Delete",
+    "tooltip": {
+      "typeContrat": "Employment contract document",
+      "typeCACES": "Certificate of aptitude for safe driving",
+      "typeVisitemédicale": "Mandatory medical visit document",
+      "typeIdentification": "Official identification document",
+      "fileType": "{{type}} file type"
+    }
   },
   "caces": {
     "title": "CACES",

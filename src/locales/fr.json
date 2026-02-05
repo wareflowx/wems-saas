@@ -115,7 +115,14 @@
     "date": "Date",
     "actions": "Actions",
     "download": "Télécharger",
-    "delete": "Supprimer"
+    "delete": "Supprimer",
+    "tooltip": {
+      "typeContrat": "Document de contrat de travail",
+      "typeCACES": "Certificat d'aptitude à la conduite en sécurité",
+      "typeVisitemédicale": "Document de visite médicale obligatoire",
+      "typeIdentification": "Document d'identification officiel",
+      "fileType": "Fichier de type {{type}}"
+    }
   },
   "caces": {
     "title": "CACES",

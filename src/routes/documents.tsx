@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { Search, Filter, Upload, File, Download, Trash2, Eye, FileIcon, FileSpreadsheet, FileImage, FileText as FileIcon2, Sparkles, FileText, ChevronUp, ChevronDown, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, SearchX } from 'lucide-react'
+import { Search, Filter, Upload, File, Download, Trash2, Eye, FileIcon, FileSpreadsheet, FileImage, FileText as FileIcon2, Sparkles, FileText, ChevronUp, ChevronDown, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, SearchX, Edit } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -22,6 +22,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { useState, useMemo } from 'react'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 
 export const Route = createFileRoute('/documents')({
   component: DocumentsLayout,
@@ -116,6 +117,55 @@ const DocumentsLayout = () => {
   const getSortIcon = (column: string) => {
     if (sortColumn !== column) return null
     return sortDirection === 'asc' ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />
+  }
+
+  const [editingDocument, setEditingDocument] = useState<any>(null)
+
+  const getTypeBadge = (type: string) => {
+    const typeColors: { [key: string]: string } = {
+      'Contrat': 'bg-blue-600/10 border border-blue-600/20 text-blue-700',
+      'CACES': 'bg-purple-600/10 border border-purple-600/20 text-purple-700',
+      'Visite médicale': 'bg-green-600/10 border border-green-600/20 text-green-700',
+      'Identification': 'bg-orange-600/10 border border-orange-600/20 text-orange-700',
+    }
+    const colors = typeColors[type] || 'bg-gray-600/10 border border-gray-600/20 text-gray-700'
+
+    const badge = (
+      <span className={`inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium ${colors}`}>
+        {type}
+      </span>
+    )
+
+    const tooltipKey = `documents.tooltip.type${type.replace(/\s+/g, '')}`
+
+    return (
+      <Tooltip>
+        <TooltipTrigger>{badge}</TooltipTrigger>
+        <TooltipContent className="max-w-xs"><p>{t(tooltipKey)}</p></TooltipContent>
+      </Tooltip>
+    )
+  }
+
+  const getCategoryBadge = (category: string) => {
+    const categoryColors: { [key: string]: string } = {
+      'pdf': 'bg-red-600/10 border border-red-600/20 text-red-700',
+      'image': 'bg-blue-600/10 border border-blue-600/20 text-blue-700',
+      'spreadsheet': 'bg-green-600/10 border border-green-600/20 text-green-700',
+    }
+    const colors = categoryColors[category] || 'bg-gray-600/10 border border-gray-600/20 text-gray-700'
+
+    const badge = (
+      <span className={`inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium ${colors}`}>
+        {category.toUpperCase()}
+      </span>
+    )
+
+    return (
+      <Tooltip>
+        <TooltipTrigger>{badge}</TooltipTrigger>
+        <TooltipContent className="max-w-xs"><p>{t('documents.tooltip.fileType', { type: category.toUpperCase() })}</p></TooltipContent>
+      </Tooltip>
+    )
   }
 
   // KPIs
@@ -308,6 +358,19 @@ const DocumentsLayout = () => {
                       variant="ghost"
                       size="sm"
                       className="-ml-4 h-8 hover:bg-muted font-medium"
+                      onClick={() => handleSort('category')}
+                    >
+                      <div className="flex items-center gap-1">
+                        Catégorie
+                        {getSortIcon('category')}
+                      </div>
+                    </Button>
+                  </TableHead>
+                  <TableHead>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="-ml-4 h-8 hover:bg-muted font-medium"
                       onClick={() => handleSort('uploadDate')}
                     >
                       <div className="flex items-center gap-1">
@@ -335,7 +398,7 @@ const DocumentsLayout = () => {
               <TableBody>
                 {paginatedDocuments.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={6} className="h-64">
+                    <TableCell colSpan={7} className="h-64">
                       <div className="flex flex-col items-center justify-center h-full text-muted-foreground p-8">
                         <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mb-4">
                           <SearchX className="h-8 w-8 opacity-50" />
@@ -358,15 +421,25 @@ const DocumentsLayout = () => {
                           </div>
                         </div>
                       </TableCell>
-                      <TableCell><Badge>{doc.type}</Badge></TableCell>
+                      <TableCell>{getTypeBadge(doc.type)}</TableCell>
                       <TableCell className="text-gray-700">{doc.employee}</TableCell>
+                      <TableCell>{getCategoryBadge(doc.category)}</TableCell>
                       <TableCell className="text-gray-700">{doc.uploadDate}</TableCell>
                       <TableCell className="text-gray-700">{doc.size}</TableCell>
                       <TableCell>
                         <div className="flex items-center justify-end gap-2">
-                          <Button variant="ghost" size="icon"><Eye className="h-4 w-4" /></Button>
-                          <Button variant="ghost" size="icon"><Download className="h-4 w-4" /></Button>
-                          <Button variant="ghost" size="icon"><Trash2 className="h-4 w-4 text-red-600" /></Button>
+                          <Button variant="ghost" size="icon" onClick={() => setEditingDocument(doc)}>
+                            <Edit className="h-4 w-4" />
+                          </Button>
+                          <Button variant="ghost" size="icon">
+                            <Eye className="h-4 w-4" />
+                          </Button>
+                          <Button variant="ghost" size="icon">
+                            <Download className="h-4 w-4" />
+                          </Button>
+                          <Button variant="ghost" size="icon">
+                            <Trash2 className="h-4 w-4 text-red-600" />
+                          </Button>
                         </div>
                       </TableCell>
                     </TableRow>
