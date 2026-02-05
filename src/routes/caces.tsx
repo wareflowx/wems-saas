@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { Search, Filter, Plus, ShieldAlert, Sparkles, SearchX, FileText } from 'lucide-react'
+import { Search, Filter, Plus, ShieldAlert, Sparkles, SearchX, Download } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -32,6 +32,7 @@ const CACESLayout = () => {
   const [search, setSearch] = useState('')
   const [categoryFilter, setCategoryFilter] = useState<string>('all')
   const [statusFilter, setStatusFilter] = useState<string>('all')
+  const [employeeFilter, setEmployeeFilter] = useState<string>('all')
 
   const caces = [
     { id: 1, employee: 'Jean Dupont', employeeId: 1, category: '1A', dateObtained: '2020-03-15', expirationDate: '2025-03-15', daysLeft: -10, status: 'expired' },
@@ -49,7 +50,7 @@ const CACESLayout = () => {
     validCaces: caces.filter(c => c.status === 'valid').length,
   }
 
-  // Get unique categories and statuses
+  // Get unique categories, statuses and employees
   const uniqueCategories = useMemo(() => {
     const categories = new Set(caces.map(c => c.category))
     return Array.from(categories)
@@ -58,6 +59,11 @@ const CACESLayout = () => {
   const uniqueStatuses = useMemo(() => {
     const statuses = new Set(caces.map(c => c.status))
     return Array.from(statuses)
+  }, [caces])
+
+  const uniqueEmployees = useMemo(() => {
+    const employees = new Set(caces.map(c => cace.employee))
+    return Array.from(employees)
   }, [caces])
 
   // Filter CACES
@@ -70,10 +76,11 @@ const CACESLayout = () => {
 
       const matchesCategory = categoryFilter === 'all' || cace.category === categoryFilter
       const matchesStatus = statusFilter === 'all' || cace.status === statusFilter
+      const matchesEmployee = employeeFilter === 'all' || cace.employee === employeeFilter
 
-      return matchesSearch && matchesCategory && matchesStatus
+      return matchesSearch && matchesCategory && matchesStatus && matchesEmployee
     })
-  }, [caces, search, categoryFilter, statusFilter])
+  }, [caces, search, categoryFilter, statusFilter, employeeFilter])
 
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -227,6 +234,19 @@ const CACESLayout = () => {
                 <SelectItem value="valid">{t('caces.valid')}</SelectItem>
               </SelectContent>
             </Select>
+            <Select value={employeeFilter} onValueChange={setEmployeeFilter}>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder={t('caces.employee')} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">{t('dashboard.allEmployees')}</SelectItem>
+                {uniqueEmployees.map((employee) => (
+                  <SelectItem key={employee} value={employee}>
+                    {employee}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
             <Button className="gap-2 ml-auto">
               <Plus className="h-4 w-4" />{t('caces.addCaces')}
             </Button>
@@ -280,7 +300,7 @@ const CACESLayout = () => {
                       <TableCell>
                         <div className="flex items-center justify-end gap-2">
                           <Button variant="ghost" size="icon">
-                            <FileText className="h-4 w-4" />
+                            <Download className="h-4 w-4" />
                           </Button>
                         </div>
                       </TableCell>
