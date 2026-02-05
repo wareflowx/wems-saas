@@ -55,6 +55,7 @@
   },
   "employees": {
     "title": "Employees",
+    "description": "Manage your employees, their information and documents",
     "search": "Search...",
     "addEmployee": "Add employee",
     "deleteEmployee": "Delete employee",

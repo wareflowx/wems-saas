@@ -55,6 +55,7 @@
   },
   "employees": {
     "title": "Employés",
+    "description": "Gérez vos salariés, leurs informations et leurs documents",
     "search": "Rechercher...",
     "addEmployee": "Ajouter un employé",
     "deleteEmployee": "Supprimer l'employé",

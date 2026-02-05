@@ -472,7 +472,7 @@ const EmployeesLayout = () => {
                   </div>
                   <div className="flex-1">
                     <p className="text-gray-700">
-                      <span className="font-medium">{t('employees.title')}</span> - Gérez vos salariés, leurs informations et leurs documents
+                      <span className="font-medium">{t('employees.title')}</span> - {t('employees.description')}
                     </p>
                   </div>
                 </div>
