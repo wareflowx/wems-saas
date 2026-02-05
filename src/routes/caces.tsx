@@ -176,52 +176,44 @@ const CACESLayout = () => {
 
           {/* Key Metrics */}
           <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-4">
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium text-muted-foreground">{t('caces.totalCaces')}</CardTitle>
-                <div className="rounded-md bg-primary/10 p-2">
-                  <ShieldAlert className="h-4 w-4 text-primary" />
-                </div>
+            <Card className="p-4 bg-background">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-0">
+                <CardTitle className="text-sm font-medium">{t('caces.totalCaces')}</CardTitle>
+                <ShieldAlert className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
-              <CardContent>
-                <div className="text-3xl font-bold">{kpis.totalCaces}</div>
-                <p className="mt-1 text-sm text-muted-foreground">{kpis.validCaces} {t('caces.valid')}</p>
+              <CardContent className="p-0">
+                <div className="text-2xl font-bold">{kpis.totalCaces}</div>
+                <p className="text-xs text-muted-foreground">{kpis.validCaces} {t('caces.valid')}</p>
               </CardContent>
             </Card>
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium text-muted-foreground">{t('caces.expired')}</CardTitle>
-                <div className="rounded-md bg-red-500/10 p-2">
-                  <ShieldAlert className="h-4 w-4 text-red-600" />
-                </div>
+            <Card className="p-4 bg-background">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-0">
+                <CardTitle className="text-sm font-medium">{t('caces.expired')}</CardTitle>
+                <ShieldAlert className="h-4 w-4 text-red-500" />
               </CardHeader>
-              <CardContent>
-                <div className="text-3xl font-bold">{kpis.expiredCaces}</div>
-                <p className="mt-1 text-sm text-muted-foreground">{((kpis.expiredCaces / kpis.totalCaces) * 100).toFixed(0)}{t('common.ofTotal')}</p>
+              <CardContent className="p-0">
+                <div className="text-2xl font-bold">{kpis.expiredCaces}</div>
+                <p className="text-xs text-muted-foreground">{((kpis.expiredCaces / kpis.totalCaces) * 100).toFixed(0)}{t('common.ofTotal')}</p>
               </CardContent>
             </Card>
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium text-muted-foreground">{t('caces.expiringSoon')}</CardTitle>
-                <div className="rounded-md bg-yellow-600/10 p-2">
-                  <Filter className="h-4 w-4 text-yellow-700" />
-                </div>
+            <Card className="p-4 bg-background">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-0">
+                <CardTitle className="text-sm font-medium">{t('caces.expiringSoon')}</CardTitle>
+                <Filter className="h-4 w-4 text-yellow-500" />
               </CardHeader>
-              <CardContent>
-                <div className="text-3xl font-bold">{kpis.warningCaces}</div>
-                <p className="mt-1 text-sm text-muted-foreground">{((kpis.warningCaces / kpis.totalCaces) * 100).toFixed(0)}{t('common.ofTotal')}</p>
+              <CardContent className="p-0">
+                <div className="text-2xl font-bold">{kpis.warningCaces}</div>
+                <p className="text-xs text-muted-foreground">{((kpis.warningCaces / kpis.totalCaces) * 100).toFixed(0)}{t('common.ofTotal')}</p>
               </CardContent>
             </Card>
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium text-muted-foreground">{t('caces.valid')}</CardTitle>
-                <div className="rounded-md bg-green-600/10 p-2">
-                  <ShieldAlert className="h-4 w-4 text-green-700" />
-                </div>
+            <Card className="p-4 bg-background">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-0">
+                <CardTitle className="text-sm font-medium">{t('caces.valid')}</CardTitle>
+                <ShieldAlert className="h-4 w-4 text-green-500" />
               </CardHeader>
-              <CardContent>
-                <div className="text-3xl font-bold">{kpis.validCaces}</div>
-                <p className="mt-1 text-sm text-muted-foreground">{((kpis.validCaces / kpis.totalCaces) * 100).toFixed(0)}{t('common.ofTotal')}</p>
+              <CardContent className="p-0">
+                <div className="text-2xl font-bold">{kpis.validCaces}</div>
+                <p className="text-xs text-muted-foreground">{((kpis.validCaces / kpis.totalCaces) * 100).toFixed(0)}{t('common.ofTotal')}</p>
               </CardContent>
             </Card>
           </div>
