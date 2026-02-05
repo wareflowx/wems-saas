@@ -1,27 +1,21 @@
 import { createFileRoute } from '@tanstack/react-router'
 import {
-  AlertCircle,
   AlertTriangle,
-  Calendar,
   CheckCircle2,
   Clock,
   FileText,
   ShieldAlert,
-  Users,
   Sparkles,
-  ArrowRight,
   Search,
-  Filter,
+  Stethoscope,
 } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import {
   SidebarInset,
   SidebarTrigger,
 } from '@/components/ui/sidebar'
 import { useTranslation } from 'react-i18next'
-import { Link } from '@tanstack/react-router'
 import {
   Table,
   TableBody,
@@ -247,45 +241,6 @@ const DashboardContent = ({
             <p className="text-xs text-muted-foreground">{((alerts.cacesExpiringSoon) / (alerts.cacesExpired + alerts.cacesExpiringSoon + alerts.medicalVisitsOverdue + alerts.medicalVisitsUpcoming) * 100).toFixed(0)}% du total</p>
           </CardContent>
         </Card>
-      </div>
-
-      {/* Quick Links */}
-      <div className="flex flex-wrap gap-2">
-        <Link to="/employees">
-          <Button variant="outline" className="gap-2">
-            <Users className="h-4 w-4" />
-            {t('employees.title')}
-            <ArrowRight className="h-4 w-4" />
-          </Button>
-        </Link>
-        <Link to="/medical-visits">
-          <Button variant="outline" className="gap-2">
-            <Calendar className="h-4 w-4" />
-            {t('medicalVisits.title')}
-            <ArrowRight className="h-4 w-4" />
-          </Button>
-        </Link>
-        <Link to="/caces">
-          <Button variant="outline" className="gap-2">
-            <ShieldAlert className="h-4 w-4" />
-            {t('caces.title')}
-            <ArrowRight className="h-4 w-4" />
-          </Button>
-        </Link>
-        <Link to="/documents">
-          <Button variant="outline" className="gap-2">
-            <FileText className="h-4 w-4" />
-            {t('documents.title')}
-            <ArrowRight className="h-4 w-4" />
-          </Button>
-        </Link>
-        <Link to="/alerts">
-          <Button variant="outline" className="gap-2">
-            <AlertCircle className="h-4 w-4" />
-            {t('alerts.title')}
-            <ArrowRight className="h-4 w-4" />
-          </Button>
-        </Link>
       </div>
 
       {/* Search and Filters */}
