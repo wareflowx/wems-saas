@@ -72,6 +72,12 @@
     "actions": "Actions",
     "view": "Voir"
   },
+  "positions": {
+    "operator": "Opérateur",
+    "technician": "Technicien",
+    "accountant": "Comptable",
+    "hrManager": "Responsable RH"
+  },
   "employeeDetail": {
     "title": "Fiche employé",
     "edit": "Modifier",

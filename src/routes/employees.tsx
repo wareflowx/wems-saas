@@ -75,7 +75,7 @@ const EmployeesLayout = () => {
       firstName: "Jean",
       lastName: "Dupont",
       contract: "CDI",
-      jobTitle: "Opérateur",
+      jobTitle: "operator",
       workLocation: "Site A",
       status: "active",
       startDate: "2023-01-15",
@@ -85,7 +85,7 @@ const EmployeesLayout = () => {
       firstName: "Marie",
       lastName: "Martin",
       contract: "CDD",
-      jobTitle: "Comptable",
+      jobTitle: "accountant",
       workLocation: "Site B",
       status: "active",
       startDate: "2022-06-01",
@@ -95,7 +95,7 @@ const EmployeesLayout = () => {
       firstName: "Pierre",
       lastName: "Bernard",
       contract: "Intérim",
-      jobTitle: "Technicien",
+      jobTitle: "technician",
       workLocation: "Site A",
       status: "on_leave",
       startDate: "2021-03-10",
@@ -105,7 +105,7 @@ const EmployeesLayout = () => {
       firstName: "Sophie",
       lastName: "Petit",
       contract: "CDI",
-      jobTitle: "Responsable RH",
+      jobTitle: "hrManager",
       workLocation: "Site C",
       status: "active",
       startDate: "2020-09-20",
@@ -115,7 +115,7 @@ const EmployeesLayout = () => {
       firstName: "Luc",
       lastName: "Dubois",
       contract: "CDD",
-      jobTitle: "Opérateur",
+      jobTitle: "operator",
       workLocation: "Site A",
       status: "active",
       startDate: "2024-01-08",
@@ -263,15 +263,15 @@ const EmployeesLayout = () => {
 
   const getPositionBadge = (position: string) => {
     const positionColors: { [key: string]: string } = {
-      'Opérateur': 'bg-emerald-500/10 border border-emerald-500/20 text-emerald-500',
-      'Technicien': 'bg-amber-500/10 border border-amber-500/20 text-amber-500',
-      'Comptable': 'bg-indigo-500/10 border border-indigo-500/20 text-indigo-500',
-      'Responsable RH': 'bg-rose-500/10 border border-rose-500/20 text-rose-500',
+      'operator': 'bg-emerald-500/10 border border-emerald-500/20 text-emerald-500',
+      'technician': 'bg-amber-500/10 border border-amber-500/20 text-amber-500',
+      'accountant': 'bg-indigo-500/10 border border-indigo-500/20 text-indigo-500',
+      'hrManager': 'bg-rose-500/10 border border-rose-500/20 text-rose-500',
     };
     const colors = positionColors[position] || 'bg-gray-500/10 border border-gray-500/20 text-gray-500';
     return (
       <span className={`inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium ${colors}`}>
-        {position}
+        {t(`positions.${position}`)}
       </span>
     );
   };

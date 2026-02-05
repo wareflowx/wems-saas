@@ -72,6 +72,12 @@
     "actions": "Actions",
     "view": "View"
   },
+  "positions": {
+    "operator": "Operator",
+    "technician": "Technician",
+    "accountant": "Accountant",
+    "hrManager": "HR Manager"
+  },
   "employeeDetail": {
     "title": "Employee file",
     "edit": "Edit",
