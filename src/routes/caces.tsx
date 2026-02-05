@@ -62,7 +62,7 @@ const CACESLayout = () => {
   }, [caces])
 
   const uniqueEmployees = useMemo(() => {
-    const employees = new Set(caces.map(c => cace.employee))
+    const employees = new Set(caces.map(c => c.employee))
     return Array.from(employees)
   }, [caces])
 
