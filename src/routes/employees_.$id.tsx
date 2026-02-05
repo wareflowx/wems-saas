@@ -77,12 +77,12 @@ const EmployeeDetailLayout = () => {
         </header>
         <Tabs defaultValue="information" className="flex-1 flex flex-col">
           <div className="border-b bg-background px-4">
-            <TabsList className="grid w-full grid-cols-5 h-14 bg-transparent border-0 rounded-none">
-              <TabsTrigger value="information" className="rounded-none data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:bg-transparent">{t('employeeDetail.information')}</TabsTrigger>
-              <TabsTrigger value="documents" className="rounded-none data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:bg-transparent">{t('employeeDetail.documents')}</TabsTrigger>
-              <TabsTrigger value="caces" className="rounded-none data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:bg-transparent">{t('employeeDetail.caces')}</TabsTrigger>
-              <TabsTrigger value="visits" className="rounded-none data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:bg-transparent">{t('employeeDetail.visits')}</TabsTrigger>
-              <TabsTrigger value="history" className="rounded-none data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:bg-transparent">{t('employeeDetail.history')}</TabsTrigger>
+            <TabsList className="grid w-full grid-cols-5 h-14 bg-transparent border-0">
+              <TabsTrigger value="information">{t('employeeDetail.information')}</TabsTrigger>
+              <TabsTrigger value="documents">{t('employeeDetail.documents')}</TabsTrigger>
+              <TabsTrigger value="caces">{t('employeeDetail.caces')}</TabsTrigger>
+              <TabsTrigger value="visits">{t('employeeDetail.visits')}</TabsTrigger>
+              <TabsTrigger value="history">{t('employeeDetail.history')}</TabsTrigger>
             </TabsList>
           </div>
         <div className="flex flex-1 flex-col gap-4 p-4 py-6">
