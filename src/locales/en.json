@@ -116,6 +116,9 @@
     "actions": "Actions",
     "download": "Download",
     "delete": "Delete",
+    "category": "Category",
+    "uploadDate": "Upload date",
+    "size": "Size",
     "tooltip": {
       "typeContrat": "Employment contract document",
       "typeCACES": "Certificate of aptitude for safe driving",

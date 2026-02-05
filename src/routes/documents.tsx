@@ -1,4 +1,4 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, Link } from '@tanstack/react-router'
 import { Search, Filter, Upload, File, Download, Trash2, Eye, FileIcon, FileSpreadsheet, FileImage, FileText as FileIcon2, Sparkles, FileText, ChevronUp, ChevronDown, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, SearchX, Edit } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -40,10 +40,10 @@ const DocumentsLayout = () => {
   const itemsPerPage = 10
 
   const documents = [
-    { id: 1, name: 'Contrat_CDID_Dupont.pdf', type: 'Contrat', employee: 'Jean Dupont', uploadDate: '2024-01-15', size: '2.4 MB', category: 'pdf' },
-    { id: 2, name: 'CACES_1A_Certificat.pdf', type: 'CACES', employee: 'Marie Martin', uploadDate: '2023-11-20', size: '1.8 MB', category: 'pdf' },
-    { id: 3, name: 'Visite_Medicale_Initial.pdf', type: 'Visite médicale', employee: 'Pierre Bernard', uploadDate: '2024-01-10', size: '945 KB', category: 'pdf' },
-    { id: 4, name: 'Photo_Identification.jpg', type: 'Identification', employee: 'Sophie Petit', uploadDate: '2023-09-15', size: '2.1 MB', category: 'image' },
+    { id: 1, name: 'Contrat_CDID_Dupont.pdf', type: 'Contrat', employee: 'Jean Dupont', employeeId: 1, uploadDate: '2024-01-15', size: '2.4 MB', category: 'pdf' },
+    { id: 2, name: 'CACES_1A_Certificat.pdf', type: 'CACES', employee: 'Marie Martin', employeeId: 2, uploadDate: '2023-11-20', size: '1.8 MB', category: 'pdf' },
+    { id: 3, name: 'Visite_Medicale_Initial.pdf', type: 'Visite médicale', employee: 'Pierre Bernard', employeeId: 3, uploadDate: '2024-01-10', size: '945 KB', category: 'pdf' },
+    { id: 4, name: 'Photo_Identification.jpg', type: 'Identification', employee: 'Sophie Petit', employeeId: 4, uploadDate: '2023-09-15', size: '2.1 MB', category: 'image' },
   ]
 
   // Get unique types, categories and employees
@@ -177,12 +177,18 @@ const DocumentsLayout = () => {
   }
 
   const getFileIcon = (category: string) => {
-    switch (category) {
-      case 'pdf': return <FileIcon2 className="h-5 w-5 text-red-600" />
-      case 'spreadsheet': return <FileSpreadsheet className="h-5 w-5 text-green-600" />
-      case 'image': return <FileImage className="h-5 w-5 text-blue-600" />
-      default: return <FileIcon className="h-5 w-5 text-gray-600" />
+    const iconConfig = {
+      'pdf': { icon: <FileIcon2 className="h-5 w-5" />, bgColor: 'bg-red-100', textColor: 'text-red-600' },
+      'spreadsheet': { icon: <FileSpreadsheet className="h-5 w-5" />, bgColor: 'bg-green-100', textColor: 'text-green-600' },
+      'image': { icon: <FileImage className="h-5 w-5" />, bgColor: 'bg-blue-100', textColor: 'text-blue-600' },
     }
+    const config = iconConfig[category as keyof typeof iconConfig] || { icon: <FileIcon className="h-5 w-5" />, bgColor: 'bg-gray-100', textColor: 'text-gray-600' }
+
+    return (
+      <div className={`p-2.5 rounded-lg ${config.bgColor} ${config.textColor}`}>
+        {config.icon}
+      </div>
+    )
   }
 
   return (
@@ -348,7 +354,7 @@ const DocumentsLayout = () => {
                       onClick={() => handleSort('employee')}
                     >
                       <div className="flex items-center gap-1">
-                        {t('caces.employee')}
+                        {t('documents.employee')}
                         {getSortIcon('employee')}
                       </div>
                     </Button>
@@ -361,7 +367,7 @@ const DocumentsLayout = () => {
                       onClick={() => handleSort('category')}
                     >
                       <div className="flex items-center gap-1">
-                        Catégorie
+                        {t('documents.category')}
                         {getSortIcon('category')}
                       </div>
                     </Button>
@@ -374,7 +380,7 @@ const DocumentsLayout = () => {
                       onClick={() => handleSort('uploadDate')}
                     >
                       <div className="flex items-center gap-1">
-                        {t('caces.date')}
+                        {t('documents.uploadDate')}
                         {getSortIcon('uploadDate')}
                       </div>
                     </Button>
@@ -387,7 +393,7 @@ const DocumentsLayout = () => {
                       onClick={() => handleSort('size')}
                     >
                       <div className="flex items-center gap-1">
-                        Taille
+                        {t('documents.size')}
                         {getSortIcon('size')}
                       </div>
                     </Button>
@@ -415,14 +421,21 @@ const DocumentsLayout = () => {
                     <TableRow key={doc.id} className="hover:bg-muted/50">
                       <TableCell>
                         <div className="flex items-center gap-3">
-                          <div className="p-2 bg-gray-100 rounded-lg">{getFileIcon(doc.category)}</div>
+                          {getFileIcon(doc.category)}
                           <div>
                             <p className="font-medium text-gray-900">{doc.name}</p>
                           </div>
                         </div>
                       </TableCell>
                       <TableCell>{getTypeBadge(doc.type)}</TableCell>
-                      <TableCell className="text-gray-700">{doc.employee}</TableCell>
+                      <TableCell>
+                        <Link
+                          to={`/employees_/${doc.employeeId}`}
+                          className="text-gray-700 underline hover:opacity-80 transition-opacity"
+                        >
+                          {doc.employee}
+                        </Link>
+                      </TableCell>
                       <TableCell>{getCategoryBadge(doc.category)}</TableCell>
                       <TableCell className="text-gray-700">{doc.uploadDate}</TableCell>
                       <TableCell className="text-gray-700">{doc.size}</TableCell>

@@ -116,6 +116,9 @@
     "actions": "Actions",
     "download": "Télécharger",
     "delete": "Supprimer",
+    "category": "Catégorie",
+    "uploadDate": "Date d'ajout",
+    "size": "Taille",
     "tooltip": {
       "typeContrat": "Document de contrat de travail",
       "typeCACES": "Certificat d'aptitude à la conduite en sécurité",
