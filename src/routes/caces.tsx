@@ -90,19 +90,19 @@ const CACESLayout = () => {
     switch (status) {
       case 'expired':
         return (
-          <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-red-500/10 border border-red-500/20 text-red-500">
+          <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-red-500/10 border border-red-500/20 text-red-600">
             {t('caces.expired')}
           </span>
         )
       case 'warning':
         return (
-          <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-yellow-500/10 border border-yellow-500/20 text-yellow-500">
+          <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-yellow-600/10 border border-yellow-600/20 text-yellow-700">
             {t('caces.expiringSoon')}
           </span>
         )
       default:
         return (
-          <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-green-500/10 border border-green-500/20 text-green-500">
+          <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-green-600/10 border border-green-600/20 text-green-700">
             {t('caces.valid')}
           </span>
         )
@@ -135,7 +135,7 @@ const CACESLayout = () => {
     }
     if (daysLeft <= 30) {
       return (
-        <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-yellow-500/10 border border-yellow-500/20 text-yellow-600">
+        <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-yellow-600/10 border border-yellow-600/20 text-yellow-700">
           {daysLeft} {t('caces.daysLeft')}
         </span>
       )
