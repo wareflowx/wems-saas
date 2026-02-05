@@ -74,7 +74,7 @@ const EmployeesLayout = () => {
       id: 1,
       firstName: "Jean",
       lastName: "Dupont",
-      department: "Production",
+      contract: "CDI",
       jobTitle: "Opérateur",
       status: "active",
       startDate: "2023-01-15",
@@ -83,7 +83,7 @@ const EmployeesLayout = () => {
       id: 2,
       firstName: "Marie",
       lastName: "Martin",
-      department: "Administration",
+      contract: "CDD",
       jobTitle: "Comptable",
       status: "active",
       startDate: "2022-06-01",
@@ -92,7 +92,7 @@ const EmployeesLayout = () => {
       id: 3,
       firstName: "Pierre",
       lastName: "Bernard",
-      department: "Production",
+      contract: "Intérim",
       jobTitle: "Technicien",
       status: "on_leave",
       startDate: "2021-03-10",
@@ -101,7 +101,7 @@ const EmployeesLayout = () => {
       id: 4,
       firstName: "Sophie",
       lastName: "Petit",
-      department: "RH",
+      contract: "CDI",
       jobTitle: "Responsable RH",
       status: "active",
       startDate: "2020-09-20",
@@ -110,7 +110,7 @@ const EmployeesLayout = () => {
       id: 5,
       firstName: "Luc",
       lastName: "Dubois",
-      department: "Production",
+      contract: "CDD",
       jobTitle: "Opérateur",
       status: "active",
       startDate: "2024-01-08",
@@ -178,10 +178,10 @@ const EmployeesLayout = () => {
     setReadNotifications(new Set(allIds));
   };
 
-  // Get unique departments and statuses
-  const uniqueDepartments = useMemo(() => {
-    const departments = new Set(employees.map((e) => e.department));
-    return Array.from(departments);
+  // Get unique contracts and statuses
+  const uniqueContracts = useMemo(() => {
+    const contracts = new Set(employees.map((e) => e.contract));
+    return Array.from(contracts);
   }, [employees]);
 
   const uniqueStatuses = useMemo(() => {
@@ -200,12 +200,12 @@ const EmployeesLayout = () => {
           .toLowerCase()
           .includes(search.toLowerCase());
 
-      const matchesDepartment =
-        departmentFilter === "all" || employee.department === departmentFilter;
+      const matchesContract =
+        departmentFilter === "all" || employee.contract === departmentFilter;
       const matchesStatus =
         statusFilter === "all" || employee.status === statusFilter;
 
-      return matchesSearch && matchesDepartment && matchesStatus;
+      return matchesSearch && matchesContract && matchesStatus;
     });
   }, [employees, search, departmentFilter, statusFilter]);
 
@@ -242,16 +242,16 @@ const EmployeesLayout = () => {
     }
   };
 
-  const getDepartmentBadge = (department: string) => {
-    const departmentColors: { [key: string]: string } = {
-      'Production': 'bg-blue-500/10 border border-blue-500/20 text-blue-500',
-      'Administration': 'bg-purple-500/10 border border-purple-500/20 text-purple-500',
-      'RH': 'bg-pink-500/10 border border-pink-500/20 text-pink-500',
+  const getContractBadge = (contract: string) => {
+    const contractColors: { [key: string]: string } = {
+      'CDI': 'bg-blue-500/10 border border-blue-500/20 text-blue-500',
+      'CDD': 'bg-orange-500/10 border border-orange-500/20 text-orange-500',
+      'Intérim': 'bg-teal-500/10 border border-teal-500/20 text-teal-500',
     };
-    const colors = departmentColors[department] || 'bg-gray-500/10 border border-gray-500/20 text-gray-500';
+    const colors = contractColors[contract] || 'bg-gray-500/10 border border-gray-500/20 text-gray-500';
     return (
       <span className={`inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium ${colors}`}>
-        {department}
+        {contract}
       </span>
     );
   };
@@ -566,13 +566,13 @@ const EmployeesLayout = () => {
                 onValueChange={setDepartmentFilter}
               >
                 <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder={t("employees.department")} />
+                  <SelectValue placeholder={t("employeeDetail.contractType")} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">{t("common.allDepartments")}</SelectItem>
-                  {uniqueDepartments.map((department) => (
-                    <SelectItem key={department} value={department}>
-                      {department}
+                  <SelectItem value="all">{t("common.allContracts")}</SelectItem>
+                  {uniqueContracts.map((contract) => (
+                    <SelectItem key={contract} value={contract}>
+                      {contract}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -607,7 +607,7 @@ const EmployeesLayout = () => {
                 <TableHeader>
                   <TableRow>
                     <TableHead>{t("employeeDetail.fullName")}</TableHead>
-                    <TableHead>{t("employees.department")}</TableHead>
+                    <TableHead>{t("employeeDetail.contractType")}</TableHead>
                     <TableHead>{t("employees.position")}</TableHead>
                     <TableHead>{t("employeeDetail.status")}</TableHead>
                     <TableHead>{t("employeeDetail.startDate")}</TableHead>
@@ -647,7 +647,7 @@ const EmployeesLayout = () => {
                             </p>
                           </Link>
                         </TableCell>
-                        <TableCell>{getDepartmentBadge(employee.department)}</TableCell>
+                        <TableCell>{getContractBadge(employee.contract)}</TableCell>
                         <TableCell>{getPositionBadge(employee.jobTitle)}</TableCell>
                         <TableCell>{getStatusBadge(employee.status)}</TableCell>
                         <TableCell className="text-gray-700">
