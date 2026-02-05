@@ -2,7 +2,6 @@ import { createFileRoute } from '@tanstack/react-router'
 import { Users, ShieldAlert, Stethoscope, FileText, Sparkles, Bell, AlertTriangle, ArrowRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
 import { SidebarInset, SidebarTrigger } from '@/components/ui/sidebar'
 import { useTranslation } from 'react-i18next'
 import { Link } from '@tanstack/react-router'
@@ -37,9 +36,9 @@ const DashboardLayout = () => {
   }
 
   const getAlertBadge = (severity: string, daysLeft?: number) => {
-    if (severity === 'critical') return <Badge variant="destructive">{t('alerts.critical')}</Badge>
-    if (severity === 'warning') return <Badge className="bg-yellow-600">{t('alerts.warning')}</Badge>
-    return <Badge variant="outline">{t('alerts.info')}</Badge>
+    if (severity === 'critical') return <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-red-500/10 border border-red-500/20 text-red-500">{t('alerts.critical')}</span>
+    if (severity === 'warning') return <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-yellow-500/10 border border-yellow-500/20 text-yellow-500">{t('alerts.warning')}</span>
+    return <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-blue-500/10 border border-blue-500/20 text-blue-500">{t('alerts.info')}</span>
   }
 
   return (
