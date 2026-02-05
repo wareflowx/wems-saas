@@ -10,9 +10,12 @@ import {
   Users,
   Sparkles,
   ArrowRight,
+  Search,
+  Filter,
 } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
 import {
   SidebarInset,
   SidebarTrigger,
@@ -27,6 +30,14 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import { useState, useMemo } from 'react'
 
 export const Route = createFileRoute('/home')({
   component: DashboardLayout,
@@ -34,6 +45,9 @@ export const Route = createFileRoute('/home')({
 
 const DashboardLayout = () => {
   const { t } = useTranslation()
+  const [search, setSearch] = useState('')
+  const [typeFilter, setTypeFilter] = useState<string>('all')
+  const [severityFilter, setSeverityFilter] = useState<string>('all')
 
   return (
     <SidebarInset>
@@ -48,13 +62,37 @@ const DashboardLayout = () => {
         </div>
       </header>
       <div className="flex flex-1 flex-col gap-4 p-4 py-6">
-        <DashboardContent t={t} />
+        <DashboardContent
+          t={t}
+          search={search}
+          typeFilter={typeFilter}
+          severityFilter={severityFilter}
+          setSearch={setSearch}
+          setTypeFilter={setTypeFilter}
+          setSeverityFilter={setSeverityFilter}
+        />
       </div>
     </SidebarInset>
   )
 }
 
-const DashboardContent = ({ t }: { t: (key: string) => string }) => {
+const DashboardContent = ({
+  t,
+  search,
+  typeFilter,
+  severityFilter,
+  setSearch,
+  setTypeFilter,
+  setSeverityFilter
+}: {
+  t: (key: string) => string
+  search: string
+  typeFilter: string
+  severityFilter: string
+  setSearch: (value: string) => void
+  setTypeFilter: (value: string) => void
+  setSeverityFilter: (value: string) => void
+}) => {
   // TODO: Replace with real data from database
   const metrics = {
     totalEmployees: 42,
@@ -70,13 +108,30 @@ const DashboardContent = ({ t }: { t: (key: string) => string }) => {
     medicalVisitsUpcoming: 8,
   }
 
-  const upcomingDeadlines = [
+  const allDeadlines = [
     { id: 1, type: 'CACES expiration proche', employee: 'Jean Dupont', employeeId: 1, category: '1A', daysLeft: 3, severity: 'warning', date: '2025-02-18' },
     { id: 2, type: 'CACES expiration proche', employee: 'Marie Martin', employeeId: 2, category: '3', daysLeft: 5, severity: 'warning', date: '2025-02-20' },
     { id: 3, type: 'CACES expiré', employee: 'Pierre Bernard', employeeId: 3, category: '5', severity: 'critical', date: '2025-02-01' },
     { id: 4, type: 'Visite médicale planifiée', employee: 'Sophie Petit', employeeId: 4, visitType: 'Visite périodique', severity: 'info', date: '2025-02-22' },
     { id: 5, type: 'Visite en retard', employee: 'Luc Dubois', employeeId: 5, visitType: 'Visite de reprise', severity: 'critical', date: '2025-01-28' },
   ]
+
+  const upcomingDeadlines = useMemo(() => {
+    return allDeadlines.filter((deadline) => {
+      const matchesSearch =
+        search === '' ||
+        deadline.employee.toLowerCase().includes(search.toLowerCase()) ||
+        deadline.type.toLowerCase().includes(search.toLowerCase())
+
+      const matchesType = typeFilter === 'all' ||
+        (typeFilter === 'caces' && deadline.type.includes('CACES')) ||
+        (typeFilter === 'medical' && deadline.type.includes('Visite'))
+
+      const matchesSeverity = severityFilter === 'all' || deadline.severity === severityFilter
+
+      return matchesSearch && matchesType && matchesSeverity
+    })
+  }, [allDeadlines, search, typeFilter, severityFilter])
 
   const getStatusBadge = (severity: string) => {
     if (severity === 'critical') return <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-red-500/10 border border-red-500/20 text-red-500">{t('alerts.critical')}</span>
@@ -195,6 +250,40 @@ const DashboardContent = ({ t }: { t: (key: string) => string }) => {
             <ArrowRight className="h-4 w-4" />
           </Button>
         </Link>
+      </div>
+
+      {/* Search and Filters */}
+      <div className="flex flex-wrap gap-2">
+        <div className="relative flex-1 min-w-[200px]">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Input
+            placeholder={t('employees.search')}
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="pl-9"
+          />
+        </div>
+        <Select value={typeFilter} onValueChange={setTypeFilter}>
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Type" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">Tous les types</SelectItem>
+            <SelectItem value="caces">{t('caces.title')}</SelectItem>
+            <SelectItem value="medical">{t('medicalVisits.title')}</SelectItem>
+          </SelectContent>
+        </Select>
+        <Select value={severityFilter} onValueChange={setSeverityFilter}>
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Sévérité" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">Toutes les sévérités</SelectItem>
+            <SelectItem value="critical">{t('alerts.critical')}</SelectItem>
+            <SelectItem value="warning">{t('alerts.warning')}</SelectItem>
+            <SelectItem value="info">{t('alerts.info')}</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
 
       {/* Table */}

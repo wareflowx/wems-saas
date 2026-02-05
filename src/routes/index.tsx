@@ -1,6 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { Users, ShieldAlert, Stethoscope, FileText, Sparkles, Bell, AlertTriangle, ArrowRight } from 'lucide-react'
+import { Users, ShieldAlert, Stethoscope, FileText, Sparkles, Bell, AlertTriangle, ArrowRight, Search } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { SidebarInset, SidebarTrigger } from '@/components/ui/sidebar'
 import { useTranslation } from 'react-i18next'
@@ -13,20 +14,48 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import { useState, useMemo } from 'react'
 
 export const Route = createFileRoute('/')({ component: DashboardLayout })
 
 const DashboardLayout = () => {
   const { t } = useTranslation()
+  const [search, setSearch] = useState('')
+  const [typeFilter, setTypeFilter] = useState<string>('all')
+  const [severityFilter, setSeverityFilter] = useState<string>('all')
 
   // Mock data
-  const recentAlerts = [
+  const allAlerts = [
     { id: 1, type: 'CACES expiré', employee: 'Jean Dupont', employeeId: 1, category: '1A', severity: 'critical', date: '2025-02-10' },
     { id: 2, type: 'Visite en retard', employee: 'Marie Martin', employeeId: 2, visitType: 'Visite de reprise', severity: 'critical', date: '2025-02-01' },
     { id: 3, type: 'CACES expiration proche', employee: 'Pierre Bernard', employeeId: 3, category: '3', severity: 'warning', daysLeft: 5, date: '2025-02-15' },
     { id: 4, type: 'CACES expiration proche', employee: 'Sophie Petit', employeeId: 4, category: '5', severity: 'warning', daysLeft: 12, date: '2025-02-22' },
     { id: 5, type: 'Visite planifiée', employee: 'Luc Dubois', employeeId: 5, visitType: 'Visite périodique', severity: 'info', date: '2025-03-01' },
   ]
+
+  const recentAlerts = useMemo(() => {
+    return allAlerts.filter((alert) => {
+      const matchesSearch =
+        search === '' ||
+        alert.employee.toLowerCase().includes(search.toLowerCase()) ||
+        alert.type.toLowerCase().includes(search.toLowerCase())
+
+      const matchesType = typeFilter === 'all' ||
+        (typeFilter === 'caces' && alert.type.includes('CACES')) ||
+        (typeFilter === 'medical' && alert.type.includes('Visite'))
+
+      const matchesSeverity = severityFilter === 'all' || alert.severity === severityFilter
+
+      return matchesSearch && matchesType && matchesSeverity
+    })
+  }, [allAlerts, search, typeFilter, severityFilter])
 
   const kpis = {
     totalEmployees: 42,
@@ -161,6 +190,40 @@ const DashboardLayout = () => {
                 <ArrowRight className="h-4 w-4" />
               </Button>
             </Link>
+          </div>
+
+          {/* Search and Filters */}
+          <div className="flex flex-wrap gap-2">
+            <div className="relative flex-1 min-w-[200px]">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder={t('employees.search')}
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="pl-9"
+              />
+            </div>
+            <Select value={typeFilter} onValueChange={setTypeFilter}>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Type" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Tous les types</SelectItem>
+                <SelectItem value="caces">{t('caces.title')}</SelectItem>
+                <SelectItem value="medical">{t('medicalVisits.title')}</SelectItem>
+              </SelectContent>
+            </Select>
+            <Select value={severityFilter} onValueChange={setSeverityFilter}>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Sévérité" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Toutes les sévérités</SelectItem>
+                <SelectItem value="critical">{t('alerts.critical')}</SelectItem>
+                <SelectItem value="warning">{t('alerts.warning')}</SelectItem>
+                <SelectItem value="info">{t('alerts.info')}</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
 
           {/* Table */}
