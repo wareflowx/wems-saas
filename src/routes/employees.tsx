@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { Search, Filter, Plus, Trash2, Eye, Edit, UserPlus, Users, ChevronLeft, ChevronRight, Sparkles, Bell, AlertCircle, AlertTriangle, ShieldAlert, Calendar } from 'lucide-react'
+import { Search, Filter, Plus, Trash2, Eye, Edit, UserPlus, Users, ChevronLeft, ChevronRight, Sparkles, Bell, AlertCircle, AlertTriangle, ShieldAlert, Calendar, Check, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -64,6 +64,8 @@ const EmployeesLayout = () => {
   }
 
   // Notifications
+  const [readNotifications, setReadNotifications] = useState<Set<number>>(new Set())
+
   const notifications = {
     critical: [
       { id: 1, employee: 'Jean Dupont', type: 'CACES expiré', category: '1A', time: '2 jours' },
@@ -73,6 +75,15 @@ const EmployeesLayout = () => {
       { id: 3, employee: 'Pierre Bernard', type: 'CACES expire bientôt', category: '3', daysLeft: 5, time: '5 jours' },
       { id: 4, employee: 'Sophie Petit', type: 'CACES expire bientôt', category: '2', daysLeft: 7, time: '7 jours' },
     ]
+  }
+
+  const markAsRead = (id: number) => {
+    setReadNotifications(prev => new Set([...prev, id]))
+  }
+
+  const markAllAsRead = () => {
+    const allIds = [...notifications.critical, ...notifications.warning].map(n => n.id)
+    setReadNotifications(new Set(allIds))
   }
 
   // Get unique departments and statuses
@@ -157,24 +168,26 @@ const EmployeesLayout = () => {
               <div className="p-3 border-b">
                 <div className="flex items-center justify-between">
                   <DropdownMenuLabel className="p-0 text-sm font-semibold">Notifications</DropdownMenuLabel>
-                  <span className="text-xs text-muted-foreground">{notifications.critical.length + notifications.warning.length} nouvelles</span>
+                  <span className="text-xs text-muted-foreground">
+                    {notifications.critical.length + notifications.warning.length - readNotifications.size} nouvelles
+                  </span>
                 </div>
               </div>
 
               <div className="max-h-80 overflow-y-auto">
-                {notifications.critical.length > 0 && (
+                {notifications.critical.filter(n => !readNotifications.has(n.id)).length > 0 && (
                   <div className="border-b">
                     <div className="px-3 py-1.5 bg-red-50 border-b border-red-100">
                       <p className="text-[11px] font-semibold text-red-700 flex items-center gap-1.5">
                         <AlertCircle className="h-3 w-3" />
-                        Critiques ({notifications.critical.length})
+                        Critiques ({notifications.critical.filter(n => !readNotifications.has(n.id)).length})
                       </p>
                     </div>
                     <div className="divide-y divide-border">
-                      {notifications.critical.map((notification) => (
+                      {notifications.critical.filter(n => !readNotifications.has(n.id)).map((notification) => (
                         <DropdownMenuItem
                           key={notification.id}
-                          className="flex items-center gap-2 px-3 py-2 hover:bg-red-50/30 cursor-pointer border-0"
+                          className="flex items-center gap-2 px-3 py-2 hover:bg-red-50/30 cursor-pointer border-0 group"
                         >
                           <div className="h-6 w-6 rounded-full bg-red-100 flex items-center justify-center flex-shrink-0">
                             <ShieldAlert className="h-3 w-3 text-red-600" />
@@ -183,13 +196,18 @@ const EmployeesLayout = () => {
                             <p className="text-xs font-medium truncate">{notification.employee}</p>
                             <p className="text-[11px] text-muted-foreground truncate">{notification.type}</p>
                           </div>
-                          <div className="flex items-center gap-1.5 flex-shrink-0">
-                            {notification.category && (
-                              <Badge variant="destructive" className="text-[9px] px-1 py-0 h-4">
-                                CACES {notification.category}
-                              </Badge>
-                            )}
-                            <span className="text-[9px] text-muted-foreground">{notification.time}</span>
+                          <div className="flex items-center gap-1 flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="h-6 w-6"
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                markAsRead(notification.id)
+                              }}
+                            >
+                              <Check className="h-3 w-3 text-green-600" />
+                            </Button>
                           </div>
                         </DropdownMenuItem>
                       ))}
@@ -197,19 +215,19 @@ const EmployeesLayout = () => {
                   </div>
                 )}
 
-                {notifications.warning.length > 0 && (
+                {notifications.warning.filter(n => !readNotifications.has(n.id)).length > 0 && (
                   <div>
                     <div className="px-3 py-1.5 bg-yellow-50 border-b border-yellow-100">
                       <p className="text-[11px] font-semibold text-yellow-700 flex items-center gap-1.5">
                         <AlertTriangle className="h-3 w-3" />
-                        Avertissements ({notifications.warning.length})
+                        Avertissements ({notifications.warning.filter(n => !readNotifications.has(n.id)).length})
                       </p>
                     </div>
                     <div className="divide-y divide-border">
-                      {notifications.warning.map((notification) => (
+                      {notifications.warning.filter(n => !readNotifications.has(n.id)).map((notification) => (
                         <DropdownMenuItem
                           key={notification.id}
-                          className="flex items-center gap-2 px-3 py-2 hover:bg-yellow-50/30 cursor-pointer border-0"
+                          className="flex items-center gap-2 px-3 py-2 hover:bg-yellow-50/30 cursor-pointer border-0 group"
                         >
                           <div className="h-6 w-6 rounded-full bg-yellow-100 flex items-center justify-center flex-shrink-0">
                             <Calendar className="h-3 w-3 text-yellow-600" />
@@ -218,11 +236,18 @@ const EmployeesLayout = () => {
                             <p className="text-xs font-medium truncate">{notification.employee}</p>
                             <p className="text-[11px] text-muted-foreground truncate">{notification.type}</p>
                           </div>
-                          <div className="flex items-center gap-1.5 flex-shrink-0">
-                            <Badge variant="outline" className="text-[9px] px-1 py-0 h-4 border-yellow-500 text-yellow-700">
-                              {notification.daysLeft}j
-                            </Badge>
-                            <span className="text-[9px] text-muted-foreground">{notification.time}</span>
+                          <div className="flex items-center gap-1 flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="h-6 w-6"
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                markAsRead(notification.id)
+                              }}
+                            >
+                              <Check className="h-3 w-3 text-green-600" />
+                            </Button>
                           </div>
                         </DropdownMenuItem>
                       ))}
@@ -230,21 +255,24 @@ const EmployeesLayout = () => {
                   </div>
                 )}
 
-                {notifications.critical.length === 0 && notifications.warning.length === 0 && (
+                {notifications.critical.filter(n => !readNotifications.has(n.id)).length === 0 &&
+                 notifications.warning.filter(n => !readNotifications.has(n.id)).length === 0 && (
                   <div className="py-8 px-3 text-center">
                     <div className="h-10 w-10 rounded-full bg-muted flex items-center justify-center mx-auto mb-2">
-                      <Bell className="h-5 w-5 text-muted-foreground" />
+                      <Check className="h-5 w-5 text-muted-foreground" />
                     </div>
-                    <p className="text-sm font-medium">Aucune notification</p>
-                    <p className="text-xs text-muted-foreground mt-1">Vous êtes à jour !</p>
+                    <p className="text-sm font-medium">Tout est lu !</p>
+                    <p className="text-xs text-muted-foreground mt-1">Aucune notification nouvelle</p>
                   </div>
                 )}
               </div>
 
-              {notifications.critical.length > 0 || notifications.warning.length > 0 ? (
-                <div className="p-2 border-t bg-muted/30">
-                  <Button variant="ghost" size="sm" className="w-full justify-center text-xs">
-                    Voir toutes les notifications
+              {notifications.critical.filter(n => !readNotifications.has(n.id)).length > 0 ||
+               notifications.warning.filter(n => !readNotifications.has(n.id)).length > 0 ? (
+                <div className="p-2 border-t bg-muted/30 flex gap-2">
+                  <Button variant="ghost" size="sm" className="flex-1 justify-center text-xs gap-1" onClick={markAllAsRead}>
+                    <Check className="h-3 w-3" />
+                    Tout marquer comme lu
                   </Button>
                 </div>
               ) : null}
