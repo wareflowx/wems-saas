@@ -635,20 +635,14 @@ const EmployeesLayout = () => {
                         <TableCell>
                           <Link
                             to={`/employees_/${employee.id}`}
-                            className="flex items-center gap-3 hover:opacity-80 transition-opacity"
+                            className="hover:opacity-80 transition-opacity"
                           >
-                            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center text-white font-semibold">
-                              {employee.firstName[0]}
-                              {employee.lastName[0]}
-                            </div>
-                            <div>
-                              <p className="font-medium text-gray-900">
-                                {employee.firstName} {employee.lastName}
-                              </p>
-                              <p className="text-sm text-gray-500">
-                                {t("common.employeeId")}{employee.id.toString().padStart(4, "0")}
-                              </p>
-                            </div>
+                            <p className="font-medium text-gray-900">
+                              {employee.firstName} {employee.lastName}
+                            </p>
+                            <p className="text-sm text-gray-500">
+                              {t("common.employeeId")}{employee.id.toString().padStart(4, "0")}
+                            </p>
                           </Link>
                         </TableCell>
                         <TableCell>{getDepartmentBadge(employee.department)}</TableCell>
