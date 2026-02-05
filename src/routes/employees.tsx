@@ -5,7 +5,6 @@ import {
   Filter,
   Plus,
   Trash2,
-  Eye,
   Edit,
   UserPlus,
   Users,
@@ -656,9 +655,6 @@ const EmployeesLayout = () => {
                         </TableCell>
                         <TableCell>
                           <div className="flex items-center justify-end gap-2">
-                            <Button variant="ghost" size="icon">
-                              <Eye className="h-4 w-4" />
-                            </Button>
                             <Button variant="ghost" size="icon">
                               <Edit className="h-4 w-4" />
                             </Button>
