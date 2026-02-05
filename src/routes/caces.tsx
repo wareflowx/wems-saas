@@ -24,6 +24,7 @@ import {
 import { Link } from '@tanstack/react-router'
 import { AddCacesDialog } from '@/components/caces/AddCacesDialog'
 import { EditCacesDialog } from '@/components/caces/EditCacesDialog'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 
 export const Route = createFileRoute('/caces')({
   component: CACESLayout,
@@ -136,26 +137,46 @@ const CACESLayout = () => {
   }
 
   const getStatusBadge = (status: string) => {
-    switch (status) {
-      case 'expired':
-        return (
-          <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-red-500/10 border border-red-500/20 text-red-600">
-            {t('caces.expired')}
-          </span>
-        )
-      case 'warning':
-        return (
-          <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-yellow-600/10 border border-yellow-600/20 text-yellow-700">
-            {t('caces.expiringSoon')}
-          </span>
-        )
-      default:
-        return (
-          <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-green-600/10 border border-green-600/20 text-green-700">
-            {t('caces.valid')}
-          </span>
-        )
+    const badgeContent = () => {
+      switch (status) {
+        case 'expired':
+          return (
+            <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-red-500/10 border border-red-500/20 text-red-600">
+              {t('caces.expired')}
+            </span>
+          )
+        case 'warning':
+          return (
+            <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-yellow-600/10 border border-yellow-600/20 text-yellow-700">
+              {t('caces.expiringSoon')}
+            </span>
+          )
+        default:
+          return (
+            <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-green-600/10 border border-green-600/20 text-green-700">
+              {t('caces.valid')}
+            </span>
+          )
+      }
     }
+
+    const tooltipContent = () => {
+      switch (status) {
+        case 'expired':
+          return t('caces.tooltip.statusExpired')
+        case 'warning':
+          return t('caces.tooltip.statusExpiringSoon')
+        default:
+          return t('caces.tooltip.statusValid')
+      }
+    }
+
+    return (
+      <Tooltip>
+        <TooltipTrigger>{badgeContent()}</TooltipTrigger>
+        <TooltipContent><p>{tooltipContent()}</p></TooltipContent>
+      </Tooltip>
+    )
   }
 
   const getCategoryBadge = (category: string) => {
@@ -167,32 +188,58 @@ const CACESLayout = () => {
       '7': 'bg-teal-500/10 border border-teal-500/20 text-teal-500',
     }
     const colors = categoryColors[category] || 'bg-gray-500/10 border border-gray-500/20 text-gray-500'
-    return (
+
+    const badge = (
       <span className={`inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium ${colors}`}>
         CACES {category}
       </span>
     )
+
+    const tooltipKey = `caces.tooltip.category${category}` as const
+
+    return (
+      <Tooltip>
+        <TooltipTrigger>{badge}</TooltipTrigger>
+        <TooltipContent><p>{t(tooltipKey)}</p></TooltipContent>
+      </Tooltip>
+    )
   }
 
   const getDaysBadge = (daysLeft: number) => {
-    if (daysLeft < 0) {
+    const badgeContent = () => {
+      if (daysLeft < 0) {
+        return (
+          <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-red-500/10 border border-red-500/20 text-red-600">
+            {Math.abs(daysLeft)} {t('caces.daysOverdue')}
+          </span>
+        )
+      }
+      if (daysLeft <= 30) {
+        return (
+          <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-yellow-600/10 border border-yellow-600/20 text-yellow-700">
+            {daysLeft} {t('caces.daysLeft')}
+          </span>
+        )
+      }
       return (
-        <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-red-500/10 border border-red-500/20 text-red-600">
-          {Math.abs(daysLeft)} {t('caces.daysOverdue')}
-        </span>
-      )
-    }
-    if (daysLeft <= 30) {
-      return (
-        <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-yellow-600/10 border border-yellow-600/20 text-yellow-700">
+        <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-green-600/10 border border-green-600/20 text-green-700">
           {daysLeft} {t('caces.daysLeft')}
         </span>
       )
     }
+
+    const tooltipContent = () => {
+      if (daysLeft < 0) {
+        return t('caces.tooltip.daysOverdue')
+      }
+      return t('caces.tooltip.daysLeft')
+    }
+
     return (
-      <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-green-600/10 border border-green-600/20 text-green-700">
-        {daysLeft} {t('caces.daysLeft')}
-      </span>
+      <Tooltip>
+        <TooltipTrigger>{badgeContent()}</TooltipTrigger>
+        <TooltipContent><p>{tooltipContent()}</p></TooltipContent>
+      </Tooltip>
     )
   }
 

@@ -147,7 +147,19 @@
     "view": "View",
     "allCategories": "All categories",
     "allStatuses": "All statuses",
-    "showing": "Showing {{from}} to {{to}} of {{total}}"
+    "showing": "Showing {{from}} to {{to}} of {{total}}",
+    "tooltip": {
+      "category1a": "CACES 1A - Loading equipment for finished products (flexible and rigid) and rider-operated lifting equipment",
+      "category1b": "CACES 1B - Loading equipment for solid products, trenches, foundations, and water supply",
+      "category3": "CACES 3 - Road construction and finishing equipment",
+      "category5": "CACES 5 - Earthmoving equipment for mines and quarries",
+      "category7": "CACES 7 - Maritime and fluvial works equipment",
+      "statusValid": "This CACES is up to date and valid",
+      "statusExpired": "This CACES has expired. Renewal is required.",
+      "statusExpiringSoon": "This CACES expires in less than 30 days. Plan its renewal.",
+      "daysLeft": "Number of days before this CACES expires",
+      "daysOverdue": "Number of days overdue since this CACES expired"
+    }
   },
   "medicalVisits": {
     "title": "Medical Visits",

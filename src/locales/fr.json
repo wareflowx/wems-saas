@@ -147,7 +147,19 @@
     "view": "Voir",
     "allCategories": "Toutes les catégories",
     "allStatuses": "Tous les statuts",
-    "showing": "Affichage de {{from}} à {{to}} sur {{total}}"
+    "showing": "Affichage de {{from}} à {{to}} sur {{total}}",
+    "tooltip": {
+      "category1a": "CACES 1A - Engins de chargement de produits finis (flexibles et rigides) et engin de manutention à conducteur porté",
+      "category1b": "CACES 1B - Engins de chargement de produits solides, de tranchées, de fondations et d'adduction d'eau",
+      "category3": "CACES 3 - Engins de travaux routiers et de finition",
+      "category5": "CACES 5 - Engins de terrassement pour travaux de mines et carrières",
+      "category7": "CACES 7 - Engins de travaux maritimes et fluviaux",
+      "statusValid": "Ce CACES est à jour et valide",
+      "statusExpired": "Ce CACES est expiré. Un renouvellement est nécessaire.",
+      "statusExpiringSoon": "Ce CACES expire dans moins de 30 jours. Planifiez son renouvellement.",
+      "daysLeft": "Nombre de jours avant l'expiration de ce CACES",
+      "daysOverdue": "Nombre de jours de retard depuis l'expiration de ce CACES"
+    }
   },
   "medicalVisits": {
     "title": "Visites médicales",
