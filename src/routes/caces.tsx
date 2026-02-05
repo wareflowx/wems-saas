@@ -174,7 +174,7 @@ const CACESLayout = () => {
     return (
       <Tooltip>
         <TooltipTrigger>{badgeContent()}</TooltipTrigger>
-        <TooltipContent><p>{tooltipContent()}</p></TooltipContent>
+        <TooltipContent className="max-w-xs"><p>{tooltipContent()}</p></TooltipContent>
       </Tooltip>
     )
   }
@@ -200,7 +200,7 @@ const CACESLayout = () => {
     return (
       <Tooltip>
         <TooltipTrigger>{badge}</TooltipTrigger>
-        <TooltipContent><p>{t(tooltipKey)}</p></TooltipContent>
+        <TooltipContent className="max-w-xs"><p>{t(tooltipKey)}</p></TooltipContent>
       </Tooltip>
     )
   }
@@ -238,7 +238,7 @@ const CACESLayout = () => {
     return (
       <Tooltip>
         <TooltipTrigger>{badgeContent()}</TooltipTrigger>
-        <TooltipContent><p>{tooltipContent()}</p></TooltipContent>
+        <TooltipContent className="max-w-xs"><p>{tooltipContent()}</p></TooltipContent>
       </Tooltip>
     )
   }
