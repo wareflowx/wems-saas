@@ -160,7 +160,7 @@ const CACESLayout = () => {
         <div className="min-h-full space-y-3">
           {/* Header */}
           <div className="mb-2">
-            <Card className="p-3 bg-background shadow-sm rounded-md">
+            <Card className="gap-4 p-3 bg-background shadow-sm rounded-md">
               <div className="flex items-start gap-3">
                 <div className="mt-0.5">
                   <Sparkles className="h-4 w-4 text-gray-600" />
@@ -175,8 +175,8 @@ const CACESLayout = () => {
           </div>
 
           {/* Key Metrics */}
-          <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-4">
-            <Card className="p-4 bg-background">
+          <div className="grid gap-2 md:grid-cols-2 lg:grid-cols-4">
+            <Card className="gap-4 p-4 bg-background">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-0">
                 <CardTitle className="text-sm font-medium">{t('caces.totalCaces')}</CardTitle>
                 <ShieldAlert className="h-4 w-4 text-muted-foreground" />
@@ -186,7 +186,7 @@ const CACESLayout = () => {
                 <p className="text-xs text-muted-foreground">{kpis.validCaces} {t('caces.valid')}</p>
               </CardContent>
             </Card>
-            <Card className="p-4 bg-background">
+            <Card className="gap-4 p-4 bg-background">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-0">
                 <CardTitle className="text-sm font-medium">{t('caces.expired')}</CardTitle>
                 <ShieldAlert className="h-4 w-4 text-red-500" />
@@ -196,7 +196,7 @@ const CACESLayout = () => {
                 <p className="text-xs text-muted-foreground">{((kpis.expiredCaces / kpis.totalCaces) * 100).toFixed(0)}{t('common.ofTotal')}</p>
               </CardContent>
             </Card>
-            <Card className="p-4 bg-background">
+            <Card className="gap-4 p-4 bg-background">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-0">
                 <CardTitle className="text-sm font-medium">{t('caces.expiringSoon')}</CardTitle>
                 <Filter className="h-4 w-4 text-yellow-500" />
@@ -206,7 +206,7 @@ const CACESLayout = () => {
                 <p className="text-xs text-muted-foreground">{((kpis.warningCaces / kpis.totalCaces) * 100).toFixed(0)}{t('common.ofTotal')}</p>
               </CardContent>
             </Card>
-            <Card className="p-4 bg-background">
+            <Card className="gap-4 p-4 bg-background">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-0">
                 <CardTitle className="text-sm font-medium">{t('caces.valid')}</CardTitle>
                 <ShieldAlert className="h-4 w-4 text-green-500" />
