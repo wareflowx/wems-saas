@@ -167,7 +167,7 @@ const DashboardLayout = () => {
                 {recentAlerts.map((alert) => (
                   <TableRow key={alert.id} className="hover:bg-muted/50">
                     <TableCell className="font-medium">{alert.type}</TableCell>
-                    <TableCell className="text-gray-700">{alert.employee}</TableCell>
+                    <TableCell className="text-gray-700 underline">{alert.employee}</TableCell>
                     <TableCell className="text-gray-700">{alert.date}</TableCell>
                     <TableCell>{getAlertBadge(alert.severity)}</TableCell>
                     <TableCell className="text-right">

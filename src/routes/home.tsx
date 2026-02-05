@@ -202,7 +202,7 @@ const DashboardContent = ({ t }: { t: (key: string) => string }) => {
             {upcomingDeadlines.map((deadline) => (
               <TableRow key={deadline.id} className="hover:bg-muted/50">
                 <TableCell className="font-medium">{deadline.type}</TableCell>
-                <TableCell className="text-gray-700">{deadline.employee}</TableCell>
+                <TableCell className="text-gray-700 underline">{deadline.employee}</TableCell>
                 <TableCell className="text-gray-700">{deadline.category || deadline.visitType}</TableCell>
                 <TableCell className="text-gray-700">{deadline.date}</TableCell>
                 <TableCell>{getStatusBadge(deadline.severity)}</TableCell>
