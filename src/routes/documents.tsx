@@ -24,6 +24,7 @@ import {
 import { useState, useMemo } from 'react'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { DeleteDocumentDialog } from '@/components/documents/DeleteDocumentDialog'
+import { AddDocumentDialog } from '@/components/documents/AddDocumentDialog'
 
 export const Route = createFileRoute('/documents')({
   component: DocumentsLayout,
@@ -122,6 +123,7 @@ const DocumentsLayout = () => {
 
   const [editingDocument, setEditingDocument] = useState<any>(null)
   const [deletingDocument, setDeletingDocument] = useState<any>(null)
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false)
 
   const getTypeBadge = (type: string) => {
     const typeColors: { [key: string]: string } = {
@@ -314,7 +316,7 @@ const DocumentsLayout = () => {
                 ))}
               </SelectContent>
             </Select>
-            <Button className="gap-2 ml-auto"><Upload className="h-4 w-4" />{t('documents.addDocument')}</Button>
+            <Button className="gap-2 ml-auto" onClick={() => setIsAddDialogOpen(true)}><Upload className="h-4 w-4" />{t('documents.addDocument')}</Button>
           </div>
 
           {/* Table */}
@@ -537,6 +539,10 @@ const DocumentsLayout = () => {
           )}
         </div>
       </div>
+      <AddDocumentDialog
+        open={isAddDialogOpen}
+        onOpenChange={setIsAddDialogOpen}
+      />
       <DeleteDocumentDialog
         open={deletingDocument !== null}
         onOpenChange={(open) => !open && setDeletingDocument(null)}
