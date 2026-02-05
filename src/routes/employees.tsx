@@ -256,7 +256,7 @@ const EmployeesLayout = () => {
 
   const getPositionBadge = (position: string) => {
     const positionColors: { [key: string]: string } = {
-      'Opérateur': 'bg-emerald-500/10 border border-emerald-500/20 text-emerald-500',
+      'Opérateur': 'bg-green-500/10 border border-green-500/20 text-green-500',
       'Technicien': 'bg-amber-500/10 border border-amber-500/20 text-amber-500',
       'Comptable': 'bg-indigo-500/10 border border-indigo-500/20 text-indigo-500',
       'Responsable RH': 'bg-rose-500/10 border border-rose-500/20 text-rose-500',
