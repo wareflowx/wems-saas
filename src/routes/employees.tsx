@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { Search, Filter, Plus, Trash2, Eye, Edit, UserPlus, Users, ChevronLeft, ChevronRight } from 'lucide-react'
+import { Search, Filter, Plus, Trash2, Eye, Edit, UserPlus, Users, ChevronLeft, ChevronRight, Sparkles } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -126,6 +126,21 @@ const EmployeesLayout = () => {
       </header>
       <div className="flex flex-1 flex-col gap-4 p-4 py-6">
         <div className="min-h-full space-y-3">
+            {/* Header */}
+            <div className="mb-2">
+              <div className="relative group rounded-lg border border-border p-3">
+                <div className="flex items-start gap-3">
+                  <div className="mt-0.5">
+                    <Sparkles className="h-4 w-4 text-gray-600" />
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-gray-700">
+                      <span className="font-medium">{t('employees.title')}</span> - {kpis.totalEmployees} {t('dashboard.totalEmployees')}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
             <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-4">
               <Card className="p-4 bg-background">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-0">
