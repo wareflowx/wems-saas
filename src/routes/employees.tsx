@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { Search, Filter, Plus, Trash2, Eye, Edit, UserPlus, Users, ChevronLeft, ChevronRight, Sparkles } from 'lucide-react'
+import { Search, Filter, Plus, Trash2, Eye, Edit, UserPlus, Users, ChevronLeft, ChevronRight, Sparkles, Bell, AlertCircle, AlertTriangle, ShieldAlert, Calendar } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -22,6 +22,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
 import { CreateEmployeeDialog } from '@/components/employees/CreateEmployeeDialog'
 import { Link } from '@tanstack/react-router'
 
@@ -52,6 +61,18 @@ const EmployeesLayout = () => {
     activeEmployees: employees.filter(e => e.status === 'active').length,
     onLeaveEmployees: employees.filter(e => e.status === 'on_leave').length,
     newHiresThisMonth: 3
+  }
+
+  // Notifications
+  const notifications = {
+    critical: [
+      { id: 1, employee: 'Jean Dupont', type: 'CACES expiré', category: '1A', time: '2 jours' },
+      { id: 2, employee: 'Marie Martin', type: 'Visite médicale manquée', date: '2026-02-01', time: '4 jours' },
+    ],
+    warning: [
+      { id: 3, employee: 'Pierre Bernard', type: 'CACES expire bientôt', category: '3', daysLeft: 5, time: '5 jours' },
+      { id: 4, employee: 'Sophie Petit', type: 'CACES expire bientôt', category: '2', daysLeft: 7, time: '7 jours' },
+    ]
   }
 
   // Get unique departments and statuses
@@ -121,6 +142,72 @@ const EmployeesLayout = () => {
         <SidebarTrigger className="-ml-1" />
         <div className="flex items-center gap-2"><Users className="h-5 w-5 text-gray-600" /><h2 className="text-lg font-semibold">{t('employees.title')}</h2></div>
         <div className="ml-auto flex items-center gap-2">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" size="icon" className="relative">
+                <Bell className="h-4 w-4" />
+                {notifications.critical.length > 0 && (
+                  <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white">
+                    {notifications.critical.length}
+                  </span>
+                )}
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-80">
+              <DropdownMenuLabel>Notifications</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              {notifications.critical.length > 0 && (
+                <DropdownMenuGroup>
+                  <DropdownMenuLabel className="text-xs text-red-600 font-semibold flex items-center gap-2">
+                    <AlertCircle className="h-3 w-3" />
+                    Critiques ({notifications.critical.length})
+                  </DropdownMenuLabel>
+                  {notifications.critical.map((notification) => (
+                    <DropdownMenuItem key={notification.id} className="flex flex-col items-start gap-1 p-3">
+                      <div className="flex items-center gap-2 w-full">
+                        <ShieldAlert className="h-4 w-4 text-red-600 flex-shrink-0" />
+                        <div className="flex-1 min-w-0">
+                          <p className="font-medium text-sm truncate">{notification.employee}</p>
+                          <p className="text-xs text-gray-600">{notification.type}</p>
+                          {notification.category && (
+                            <p className="text-xs text-gray-500">CACES {notification.category}</p>
+                          )}
+                        </div>
+                      </div>
+                      <p className="text-xs text-gray-500 ml-6">{notification.time}</p>
+                    </DropdownMenuItem>
+                  ))}
+                  <DropdownMenuSeparator />
+                </DropdownMenuGroup>
+              )}
+              {notifications.warning.length > 0 && (
+                <DropdownMenuGroup>
+                  <DropdownMenuLabel className="text-xs text-yellow-600 font-semibold flex items-center gap-2">
+                    <AlertTriangle className="h-3 w-3" />
+                    Avertissements ({notifications.warning.length})
+                  </DropdownMenuLabel>
+                  {notifications.warning.map((notification) => (
+                    <DropdownMenuItem key={notification.id} className="flex flex-col items-start gap-1 p-3">
+                      <div className="flex items-center gap-2 w-full">
+                        <Calendar className="h-4 w-4 text-yellow-600 flex-shrink-0" />
+                        <div className="flex-1 min-w-0">
+                          <p className="font-medium text-sm truncate">{notification.employee}</p>
+                          <p className="text-xs text-gray-600">{notification.type}</p>
+                          <p className="text-xs text-gray-500">CACES {notification.category} • {notification.daysLeft} jours</p>
+                        </div>
+                      </div>
+                      <p className="text-xs text-gray-500 ml-6">{notification.time}</p>
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuGroup>
+              )}
+              {notifications.critical.length === 0 && notifications.warning.length === 0 && (
+                <div className="py-4 text-center text-sm text-gray-500">
+                  Aucune notification
+                </div>
+              )}
+            </DropdownMenuContent>
+          </DropdownMenu>
           <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium bg-green-50 text-green-700 border border-green-200"><div className="w-2 h-2 rounded-full bg-green-500" /><span>{t('dashboard.editMode')}</span></div>
         </div>
       </header>
