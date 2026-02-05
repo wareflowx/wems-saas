@@ -242,11 +242,11 @@ const EmployeesLayout = () => {
 
   const getDepartmentBadge = (department: string) => {
     const departmentColors: { [key: string]: string } = {
-      'Production': 'bg-blue-500/10 border border-blue-500 text-blue-500',
-      'Administration': 'bg-purple-500/10 border border-purple-500 text-purple-500',
-      'RH': 'bg-pink-500/10 border border-pink-500 text-pink-500',
+      'Production': 'bg-blue-500/10 border border-blue-500/20 text-blue-500',
+      'Administration': 'bg-purple-500/10 border border-purple-500/20 text-purple-500',
+      'RH': 'bg-pink-500/10 border border-pink-500/20 text-pink-500',
     };
-    const colors = departmentColors[department] || 'bg-gray-500/10 border border-gray-500 text-gray-500';
+    const colors = departmentColors[department] || 'bg-gray-500/10 border border-gray-500/20 text-gray-500';
     return (
       <span className={`inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium ${colors}`}>
         {department}
@@ -256,12 +256,12 @@ const EmployeesLayout = () => {
 
   const getPositionBadge = (position: string) => {
     const positionColors: { [key: string]: string } = {
-      'Opérateur': 'bg-emerald-500/10 border border-emerald-500 text-emerald-500',
-      'Technicien': 'bg-amber-500/10 border border-amber-500 text-amber-500',
-      'Comptable': 'bg-indigo-500/10 border border-indigo-500 text-indigo-500',
-      'Responsable RH': 'bg-rose-500/10 border border-rose-500 text-rose-500',
+      'Opérateur': 'bg-emerald-500/10 border border-emerald-500/20 text-emerald-500',
+      'Technicien': 'bg-amber-500/10 border border-amber-500/20 text-amber-500',
+      'Comptable': 'bg-indigo-500/10 border border-indigo-500/20 text-indigo-500',
+      'Responsable RH': 'bg-rose-500/10 border border-rose-500/20 text-rose-500',
     };
-    const colors = positionColors[position] || 'bg-gray-500/10 border border-gray-500 text-gray-500';
+    const colors = positionColors[position] || 'bg-gray-500/10 border border-gray-500/20 text-gray-500';
     return (
       <span className={`inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium ${colors}`}>
         {position}
