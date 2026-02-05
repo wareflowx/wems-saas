@@ -71,11 +71,11 @@ const DashboardContent = ({ t }: { t: (key: string) => string }) => {
   }
 
   const upcomingDeadlines = [
-    { id: 1, type: 'CACES expiration proche', employee: 'Jean Dupont', category: '1A', daysLeft: 3, severity: 'warning', date: '2025-02-18' },
-    { id: 2, type: 'CACES expiration proche', employee: 'Marie Martin', category: '3', daysLeft: 5, severity: 'warning', date: '2025-02-20' },
-    { id: 3, type: 'CACES expiré', employee: 'Pierre Bernard', category: '5', severity: 'critical', date: '2025-02-01' },
-    { id: 4, type: 'Visite médicale planifiée', employee: 'Sophie Petit', visitType: 'Visite périodique', severity: 'info', date: '2025-02-22' },
-    { id: 5, type: 'Visite en retard', employee: 'Luc Dubois', visitType: 'Visite de reprise', severity: 'critical', date: '2025-01-28' },
+    { id: 1, type: 'CACES expiration proche', employee: 'Jean Dupont', employeeId: 1, category: '1A', daysLeft: 3, severity: 'warning', date: '2025-02-18' },
+    { id: 2, type: 'CACES expiration proche', employee: 'Marie Martin', employeeId: 2, category: '3', daysLeft: 5, severity: 'warning', date: '2025-02-20' },
+    { id: 3, type: 'CACES expiré', employee: 'Pierre Bernard', employeeId: 3, category: '5', severity: 'critical', date: '2025-02-01' },
+    { id: 4, type: 'Visite médicale planifiée', employee: 'Sophie Petit', employeeId: 4, visitType: 'Visite périodique', severity: 'info', date: '2025-02-22' },
+    { id: 5, type: 'Visite en retard', employee: 'Luc Dubois', employeeId: 5, visitType: 'Visite de reprise', severity: 'critical', date: '2025-01-28' },
   ]
 
   const getStatusBadge = (severity: string) => {
@@ -202,7 +202,11 @@ const DashboardContent = ({ t }: { t: (key: string) => string }) => {
             {upcomingDeadlines.map((deadline) => (
               <TableRow key={deadline.id} className="hover:bg-muted/50">
                 <TableCell className="font-medium">{deadline.type}</TableCell>
-                <TableCell className="text-gray-700 underline">{deadline.employee}</TableCell>
+                <TableCell>
+                  <Link to={`/employees_/${deadline.employeeId}`} className="text-gray-700 underline hover:opacity-80 transition-opacity">
+                    {deadline.employee}
+                  </Link>
+                </TableCell>
                 <TableCell className="text-gray-700">{deadline.category || deadline.visitType}</TableCell>
                 <TableCell className="text-gray-700">{deadline.date}</TableCell>
                 <TableCell>{getStatusBadge(deadline.severity)}</TableCell>

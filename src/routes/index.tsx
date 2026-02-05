@@ -21,11 +21,11 @@ const DashboardLayout = () => {
 
   // Mock data
   const recentAlerts = [
-    { id: 1, type: 'CACES expiré', employee: 'Jean Dupont', severity: 'critical', date: '2025-02-10' },
-    { id: 2, type: 'Visite en retard', employee: 'Marie Martin', severity: 'critical', date: '2025-02-01' },
-    { id: 3, type: 'CACES expiration proche', employee: 'Pierre Bernard', severity: 'warning', daysLeft: 5, date: '2025-02-15' },
-    { id: 4, type: 'CACES expiration proche', employee: 'Sophie Petit', severity: 'warning', daysLeft: 12, date: '2025-02-22' },
-    { id: 5, type: 'Visite planifiée', employee: 'Luc Dubois', severity: 'info', date: '2025-03-01' },
+    { id: 1, type: 'CACES expiré', employee: 'Jean Dupont', employeeId: 1, severity: 'critical', date: '2025-02-10' },
+    { id: 2, type: 'Visite en retard', employee: 'Marie Martin', employeeId: 2, severity: 'critical', date: '2025-02-01' },
+    { id: 3, type: 'CACES expiration proche', employee: 'Pierre Bernard', employeeId: 3, severity: 'warning', daysLeft: 5, date: '2025-02-15' },
+    { id: 4, type: 'CACES expiration proche', employee: 'Sophie Petit', employeeId: 4, severity: 'warning', daysLeft: 12, date: '2025-02-22' },
+    { id: 5, type: 'Visite planifiée', employee: 'Luc Dubois', employeeId: 5, severity: 'info', date: '2025-03-01' },
   ]
 
   const kpis = {
@@ -167,7 +167,11 @@ const DashboardLayout = () => {
                 {recentAlerts.map((alert) => (
                   <TableRow key={alert.id} className="hover:bg-muted/50">
                     <TableCell className="font-medium">{alert.type}</TableCell>
-                    <TableCell className="text-gray-700 underline">{alert.employee}</TableCell>
+                    <TableCell>
+                      <Link to={`/employees_/${alert.employeeId}`} className="text-gray-700 underline hover:opacity-80 transition-opacity">
+                        {alert.employee}
+                      </Link>
+                    </TableCell>
                     <TableCell className="text-gray-700">{alert.date}</TableCell>
                     <TableCell>{getAlertBadge(alert.severity)}</TableCell>
                     <TableCell className="text-right">
