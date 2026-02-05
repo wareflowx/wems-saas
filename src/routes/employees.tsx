@@ -23,6 +23,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { CreateEmployeeDialog } from '@/components/employees/CreateEmployeeDialog'
+import { Link } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/employees')({
   component: EmployeesLayout,
@@ -220,15 +221,15 @@ const EmployeesLayout = () => {
                 </TableHeader>
                 <TableBody>
                   {paginatedEmployees.map((employee) => (
-                    <TableRow key={employee.id}>
+                    <TableRow key={employee.id} className="hover:bg-muted/50">
                       <TableCell>
-                        <div className="flex items-center gap-3">
+                        <Link to={`/employees/${employee.id}`} className="flex items-center gap-3 hover:opacity-80 transition-opacity">
                           <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center text-white font-semibold">{employee.firstName[0]}{employee.lastName[0]}</div>
                           <div>
                             <p className="font-medium text-gray-900">{employee.firstName} {employee.lastName}</p>
                             <p className="text-sm text-gray-500">ID: EMP-{employee.id.toString().padStart(4, '0')}</p>
                           </div>
-                        </div>
+                        </Link>
                       </TableCell>
                       <TableCell className="text-gray-700">{employee.department}</TableCell>
                       <TableCell className="text-gray-700">{employee.jobTitle}</TableCell>

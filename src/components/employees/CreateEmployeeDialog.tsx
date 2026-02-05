@@ -111,40 +111,42 @@ export function CreateEmployeeDialog({ open, onOpenChange, onSuccess }: CreateEm
         </DialogHeader>
 
         {/* Progress Steps */}
-        <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center justify-between mb-6 w-full">
           {steps.map((step, index) => (
             <div key={step.id} className="flex items-center flex-1">
-              <div className="flex flex-col items-center">
-                <div
-                  className={`flex items-center justify-center w-8 h-8 rounded-full border-2 ${
-                    currentStep > step.id
-                      ? 'bg-primary border-primary text-primary-foreground'
-                      : currentStep === step.id
-                      ? 'bg-primary border-primary text-primary-foreground'
-                      : 'bg-background border-muted-foreground text-muted-foreground'
-                  }`}
-                >
-                  {step.id < currentStep ? (
-                    <Check className="h-4 w-4" />
-                  ) : (
-                    <step.icon className="h-4 w-4" />
-                  )}
+              <div className="flex flex-col items-center w-full">
+                <div className="flex items-center w-full">
+                  <div
+                    className={`flex items-center justify-center w-8 h-8 rounded-full border-2 flex-shrink-0 ${
+                      currentStep > step.id
+                        ? 'bg-primary border-primary text-primary-foreground'
+                        : currentStep === step.id
+                        ? 'bg-primary border-primary text-primary-foreground'
+                        : 'bg-background border-muted-foreground text-muted-foreground'
+                    }`}
+                  >
+                    {step.id < currentStep ? (
+                      <Check className="h-4 w-4" />
+                    ) : (
+                      <step.icon className="h-4 w-4" />
+                    )}
+                  </div>
+                  <span
+                    className={`text-xs mt-1 ml-2 ${
+                      currentStep === step.id ? 'text-foreground font-medium' : 'text-muted-foreground'
+                    }`}
+                  >
+                    {step.title}
+                  </span>
                 </div>
-                <span
-                  className={`text-xs mt-1 ${
-                    currentStep === step.id ? 'text-foreground font-medium' : 'text-muted-foreground'
-                  }`}
-                >
-                  {step.title}
-                </span>
+                {index < steps.length - 1 && (
+                  <div
+                    className={`flex-1 h-0.5 mx-4 ${
+                      currentStep > step.id ? 'bg-primary' : 'bg-muted'
+                    }`}
+                  />
+                )}
               </div>
-              {index < steps.length - 1 && (
-                <div
-                  className={`flex-1 h-0.5 mx-2 ${
-                    currentStep > step.id ? 'bg-primary' : 'bg-muted'
-                  }`}
-                />
-              )}
             </div>
           ))}
         </div>
