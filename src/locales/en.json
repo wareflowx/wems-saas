@@ -124,6 +124,8 @@
     "filter": "Filter",
     "addCaces": "Add CACES",
     "addCacesDescription": "Add a new CACES certificate for an employee",
+    "editCaces": "Edit CACES",
+    "editCacesDescription": "Edit CACES certificate information",
     "employee": "Employee",
     "selectEmployee": "Select an employee",
     "category": "Category",

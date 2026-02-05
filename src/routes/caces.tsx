@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { Search, Filter, Plus, ShieldAlert, Sparkles, SearchX, Download } from 'lucide-react'
+import { Search, Filter, Plus, ShieldAlert, Sparkles, SearchX, Download, Edit } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -23,6 +23,7 @@ import {
 } from '@/components/ui/select'
 import { Link } from '@tanstack/react-router'
 import { AddCacesDialog } from '@/components/caces/AddCacesDialog'
+import { EditCacesDialog } from '@/components/caces/EditCacesDialog'
 
 export const Route = createFileRoute('/caces')({
   component: CACESLayout,
@@ -35,6 +36,7 @@ const CACESLayout = () => {
   const [statusFilter, setStatusFilter] = useState<string>('all')
   const [employeeFilter, setEmployeeFilter] = useState<string>('all')
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false)
+  const [editingCaces, setEditingCaces] = useState<any>(null)
 
   const caces = [
     { id: 1, employee: 'Jean Dupont', employeeId: 1, category: '1A', dateObtained: '2020-03-15', expirationDate: '2025-03-15', daysLeft: -10, status: 'expired' },
@@ -301,6 +303,9 @@ const CACESLayout = () => {
                       <TableCell>{getStatusBadge(cacesItem.status)}</TableCell>
                       <TableCell>
                         <div className="flex items-center justify-end gap-2">
+                          <Button variant="ghost" size="icon" onClick={() => setEditingCaces(cacesItem)}>
+                            <Edit className="h-4 w-4" />
+                          </Button>
                           <Button variant="ghost" size="icon">
                             <Download className="h-4 w-4" />
                           </Button>
@@ -317,6 +322,11 @@ const CACESLayout = () => {
       <AddCacesDialog
         open={isAddDialogOpen}
         onOpenChange={setIsAddDialogOpen}
+      />
+      <EditCacesDialog
+        open={editingCaces !== null}
+        onOpenChange={(open) => !open && setEditingCaces(null)}
+        caces={editingCaces}
       />
     </SidebarInset>
   )
