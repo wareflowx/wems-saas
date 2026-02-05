@@ -224,6 +224,15 @@
     "sessionTimeout": "Session timeout",
     "passwordPolicy": "Password policy"
   },
+  "notifications": {
+    "title": "Notifications",
+    "new": "new",
+    "critical": "Critical",
+    "warning": "Warnings",
+    "allRead": "All caught up!",
+    "noNew": "No new notifications",
+    "markAllRead": "Mark all as read"
+  },
   "common": {
     "search": "Search...",
     "filter": "Filter",
@@ -246,6 +255,11 @@
     "loading": "Loading...",
     "noData": "No data available",
     "error": "Error",
-    "success": "Success"
+    "success": "Success",
+    "ofTotal": "% of total",
+    "allDepartments": "All departments",
+    "allStatuses": "All statuses",
+    "employeeId": "ID: EMP-",
+    "employees": "employees"
   }
 }

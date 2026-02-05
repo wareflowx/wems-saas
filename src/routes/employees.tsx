@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import {
   Search,
+  SearchX,
   Filter,
   Plus,
   Trash2,
@@ -239,6 +240,35 @@ const EmployeesLayout = () => {
     }
   };
 
+  const getDepartmentBadge = (department: string) => {
+    const departmentColors: { [key: string]: string } = {
+      'Production': 'bg-blue-500/10 border-blue-500/20 text-blue-500',
+      'Administration': 'bg-purple-500/10 border-purple-500/20 text-purple-500',
+      'RH': 'bg-pink-500/10 border-pink-500/20 text-pink-500',
+    };
+    const colors = departmentColors[department] || 'bg-gray-500/10 border-gray-500/20 text-gray-500';
+    return (
+      <span className={`inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium ${colors}`}>
+        {department}
+      </span>
+    );
+  };
+
+  const getPositionBadge = (position: string) => {
+    const positionColors: { [key: string]: string } = {
+      'Opérateur': 'bg-emerald-500/10 border-emerald-500/20 text-emerald-500',
+      'Technicien': 'bg-amber-500/10 border-amber-500/20 text-amber-500',
+      'Comptable': 'bg-indigo-500/10 border-indigo-500/20 text-indigo-500',
+      'Responsable RH': 'bg-rose-500/10 border-rose-500/20 text-rose-500',
+    };
+    const colors = positionColors[position] || 'bg-gray-500/10 border-gray-500/20 text-gray-500';
+    return (
+      <span className={`inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium ${colors}`}>
+        {position}
+      </span>
+    );
+  };
+
   return (
     <>
       <SidebarInset>
@@ -265,13 +295,13 @@ const EmployeesLayout = () => {
                 <div className="p-3 border-b">
                   <div className="flex items-center justify-between">
                     <DropdownMenuLabel className="p-0 text-sm font-semibold">
-                      Notifications
+                      {t("notifications.title")}
                     </DropdownMenuLabel>
                     <span className="text-xs text-muted-foreground">
                       {notifications.critical.length +
                         notifications.warning.length -
                         readNotifications.size}{" "}
-                      nouvelles
+                      {t("notifications.new")}
                     </span>
                   </div>
                 </div>
@@ -284,7 +314,7 @@ const EmployeesLayout = () => {
                       <div className="px-3 py-1.5 bg-red-50 border-b border-red-100">
                         <p className="text-[11px] font-semibold text-red-700 flex items-center gap-1.5">
                           <AlertCircle className="h-3 w-3" />
-                          Critiques (
+                          {t("notifications.critical")} (
                           {
                             notifications.critical.filter(
                               (n) => !readNotifications.has(n.id),
@@ -338,7 +368,7 @@ const EmployeesLayout = () => {
                       <div className="px-3 py-1.5 bg-yellow-50 border-b border-yellow-100">
                         <p className="text-[11px] font-semibold text-yellow-700 flex items-center gap-1.5">
                           <AlertTriangle className="h-3 w-3" />
-                          Avertissements (
+                          {t("notifications.warning")} (
                           {
                             notifications.warning.filter(
                               (n) => !readNotifications.has(n.id),
@@ -395,9 +425,9 @@ const EmployeesLayout = () => {
                         <div className="h-10 w-10 rounded-full bg-muted flex items-center justify-center mx-auto mb-2">
                           <Check className="h-5 w-5 text-muted-foreground" />
                         </div>
-                        <p className="text-sm font-medium">Tout est lu !</p>
+                        <p className="text-sm font-medium">{t("notifications.allRead")}</p>
                         <p className="text-xs text-muted-foreground mt-1">
-                          Aucune notification nouvelle
+                          {t("notifications.noNew")}
                         </p>
                       </div>
                     )}
@@ -417,7 +447,7 @@ const EmployeesLayout = () => {
                       onClick={markAllAsRead}
                     >
                       <Check className="h-3 w-3" />
-                      Tout marquer comme lu
+                      {t("notifications.markAllRead")}
                     </Button>
                   </div>
                 ) : null}
@@ -477,7 +507,7 @@ const EmployeesLayout = () => {
                       (kpis.activeEmployees / kpis.totalEmployees) *
                       100
                     ).toFixed(0)}
-% du total
+                    {t("common.ofTotal")}
                   </p>
                 </CardContent>
               </Card>
@@ -497,7 +527,7 @@ const EmployeesLayout = () => {
                       (kpis.onLeaveEmployees / kpis.totalEmployees) *
                       100
                     ).toFixed(0)}
-% du total
+                    {t("common.ofTotal")}
                   </p>
                 </CardContent>
               </Card>
@@ -537,7 +567,7 @@ const EmployeesLayout = () => {
                   <SelectValue placeholder={t("employees.department")} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All Departments</SelectItem>
+                  <SelectItem value="all">{t("common.allDepartments")}</SelectItem>
                   {uniqueDepartments.map((department) => (
                     <SelectItem key={department} value={department}>
                       {department}
@@ -550,7 +580,7 @@ const EmployeesLayout = () => {
                   <SelectValue placeholder={t("employeeDetail.status")} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All Statuses</SelectItem>
+                  <SelectItem value="all">{t("common.allStatuses")}</SelectItem>
                   {uniqueStatuses.map((status) => (
                     <SelectItem key={status} value={status}>
                       {status === "active"
@@ -585,52 +615,64 @@ const EmployeesLayout = () => {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {paginatedEmployees.map((employee) => (
-                    <TableRow key={employee.id} className="hover:bg-muted/50">
-                      <TableCell>
-                        <Link
-                          to={`/employees_/${employee.id}`}
-                          className="flex items-center gap-3 hover:opacity-80 transition-opacity"
-                        >
-                          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center text-white font-semibold">
-                            {employee.firstName[0]}
-                            {employee.lastName[0]}
+                  {paginatedEmployees.length === 0 ? (
+                    <TableRow>
+                      <TableCell colSpan={6} className="h-64">
+                        <div className="flex flex-col items-center justify-center h-full text-muted-foreground p-8">
+                          <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mb-4">
+                            <SearchX className="h-8 w-8 opacity-50" />
                           </div>
-                          <div>
-                            <p className="font-medium text-gray-900">
-                              {employee.firstName} {employee.lastName}
-                            </p>
-                            <p className="text-sm text-gray-500">
-                              ID: EMP-{employee.id.toString().padStart(4, "0")}
-                            </p>
-                          </div>
-                        </Link>
-                      </TableCell>
-                      <TableCell className="text-gray-700">
-                        {employee.department}
-                      </TableCell>
-                      <TableCell className="text-gray-700">
-                        {employee.jobTitle}
-                      </TableCell>
-                      <TableCell>{getStatusBadge(employee.status)}</TableCell>
-                      <TableCell className="text-gray-700">
-                        {employee.startDate}
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex items-center justify-end gap-2">
-                          <Button variant="ghost" size="icon">
-                            <Eye className="h-4 w-4" />
-                          </Button>
-                          <Button variant="ghost" size="icon">
-                            <Edit className="h-4 w-4" />
-                          </Button>
-                          <Button variant="ghost" size="icon">
-                            <Trash2 className="h-4 w-4 text-red-600" />
-                          </Button>
+                          <p className="text-lg font-medium">{t("common.noData")}</p>
+                          <p className="text-sm mt-2 max-w-md text-center">
+                            {t("dashboard.noDataFound")}
+                          </p>
                         </div>
                       </TableCell>
                     </TableRow>
-                  ))}
+                  ) : (
+                    paginatedEmployees.map((employee) => (
+                      <TableRow key={employee.id} className="hover:bg-muted/50">
+                        <TableCell>
+                          <Link
+                            to={`/employees_/${employee.id}`}
+                            className="flex items-center gap-3 hover:opacity-80 transition-opacity"
+                          >
+                            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center text-white font-semibold">
+                              {employee.firstName[0]}
+                              {employee.lastName[0]}
+                            </div>
+                            <div>
+                              <p className="font-medium text-gray-900">
+                                {employee.firstName} {employee.lastName}
+                              </p>
+                              <p className="text-sm text-gray-500">
+                                {t("common.employeeId")}{employee.id.toString().padStart(4, "0")}
+                              </p>
+                            </div>
+                          </Link>
+                        </TableCell>
+                        <TableCell>{getDepartmentBadge(employee.department)}</TableCell>
+                        <TableCell>{getPositionBadge(employee.jobTitle)}</TableCell>
+                        <TableCell>{getStatusBadge(employee.status)}</TableCell>
+                        <TableCell className="text-gray-700">
+                          {employee.startDate}
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex items-center justify-end gap-2">
+                            <Button variant="ghost" size="icon">
+                              <Eye className="h-4 w-4" />
+                            </Button>
+                            <Button variant="ghost" size="icon">
+                              <Edit className="h-4 w-4" />
+                            </Button>
+                            <Button variant="ghost" size="icon">
+                              <Trash2 className="h-4 w-4 text-red-600" />
+                            </Button>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  )}
                 </TableBody>
               </Table>
             </div>
@@ -638,7 +680,7 @@ const EmployeesLayout = () => {
               <p className="text-sm text-muted-foreground">
                 {t("common.view")} de {startIndex + 1} à{" "}
                 {Math.min(endIndex, filteredEmployees.length)} sur{" "}
-                {filteredEmployees.length} employés
+                {filteredEmployees.length} {t("common.employees")}
               </p>
               <div className="flex items-center gap-2">
                 <Button

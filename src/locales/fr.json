@@ -224,6 +224,15 @@
     "sessionTimeout": "Délai d'expiration de session",
     "passwordPolicy": "Politique de mot de passe"
   },
+  "notifications": {
+    "title": "Notifications",
+    "new": "nouvelles",
+    "critical": "Critiques",
+    "warning": "Avertissements",
+    "allRead": "Tout est lu !",
+    "noNew": "Aucune notification nouvelle",
+    "markAllRead": "Tout marquer comme lu"
+  },
   "common": {
     "search": "Rechercher...",
     "filter": "Filtrer",
@@ -246,6 +255,11 @@
     "loading": "Chargement...",
     "noData": "Aucune donnée disponible",
     "error": "Erreur",
-    "success": "Succès"
+    "success": "Succès",
+    "ofTotal": "% du total",
+    "allDepartments": "Tous les départements",
+    "allStatuses": "Tous les statuts",
+    "employeeId": "ID: EMP-",
+    "employees": "employés"
   }
 }
