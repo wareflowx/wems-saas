@@ -42,7 +42,8 @@
     "cacesRenewed": "CACES renouvelé pour",
     "hoursAgo": "heures de suite",
     "dayAgo": "jour de suite",
-    "editMode": "Mode édition"
+    "editMode": "Mode édition",
+    "noDataFound": "Aucune donnée ne correspond à vos critères de recherche"
   },
   "employees": {
     "title": "Employés",

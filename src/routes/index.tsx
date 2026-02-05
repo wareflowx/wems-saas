@@ -291,11 +291,15 @@ const DashboardLayout = () => {
               <TableBody>
                 {recentAlerts.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={6} className="h-24 text-center">
-                      <div className="flex flex-col items-center justify-center text-muted-foreground">
-                        <SearchX className="h-8 w-8 mb-2 opacity-50" />
-                        <p>Aucun résultat trouvé</p>
-                        <p className="text-xs mt-1">Essayez d'ajuster vos filtres</p>
+                    <TableCell colSpan={6} className="h-64">
+                      <div className="flex flex-col items-center justify-center h-full text-muted-foreground p-8">
+                        <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mb-4">
+                          <SearchX className="h-8 w-8 opacity-50" />
+                        </div>
+                        <p className="text-lg font-medium">{t('common.noData')}</p>
+                        <p className="text-sm mt-2 max-w-md text-center">
+                          {t('dashboard.noDataFound')}
+                        </p>
                       </div>
                     </TableCell>
                   </TableRow>

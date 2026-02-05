@@ -42,7 +42,8 @@
     "cacesRenewed": "CACES renewed for",
     "hoursAgo": "hours ago",
     "dayAgo": "day ago",
-    "editMode": "Edit mode"
+    "editMode": "Edit mode",
+    "noDataFound": "No data matches your search criteria"
   },
   "employees": {
     "title": "Employees",
