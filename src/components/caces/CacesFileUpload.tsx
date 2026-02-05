@@ -94,7 +94,7 @@ export function CacesFileUpload({ value, onChange, label }: CacesFileUploadProps
         onDrop={handleDrop}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
-        className={`relative border-2 border-dashed rounded-lg p-6 text-center transition-colors ${
+        className={`relative border-2 border-dashed rounded-lg p-4 text-center transition-colors ${
           isDragging
             ? 'border-primary bg-primary/5'
             : 'border-muted-foreground/25 hover:border-muted-foreground/50'
@@ -107,17 +107,17 @@ export function CacesFileUpload({ value, onChange, label }: CacesFileUploadProps
           onChange={handleFileChange}
           accept=".pdf,.jpg,.jpeg,.png"
         />
-        <div className="flex flex-col items-center gap-2">
-          <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center">
-            <Upload className="h-6 w-6 text-muted-foreground" />
+        <div className="flex flex-col items-center gap-1.5">
+          <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center">
+            <Upload className="h-5 w-5 text-muted-foreground" />
           </div>
           <div>
             <p className="text-sm font-medium">{t('caces.uploadDocument')}</p>
-            <p className="text-xs text-muted-foreground mt-1">
+            <p className="text-xs text-muted-foreground mt-0.5">
               {t('caces.uploadDocumentDescription')}
             </p>
           </div>
-          <Button type="button" variant="outline" size="sm" className="mt-2">
+          <Button type="button" variant="outline" size="sm" className="mt-1">
             {t('caces.selectFile')}
           </Button>
         </div>

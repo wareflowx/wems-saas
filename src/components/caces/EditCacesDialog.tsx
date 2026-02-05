@@ -89,7 +89,7 @@ export function EditCacesDialog({
           </DialogDescription>
         </DialogHeader>
 
-        <div className="py-4 space-y-4">
+        <div className="py-2 space-y-3">
           <div className="space-y-2">
             <Label htmlFor="employee" className="text-sm font-medium">
               {t('caces.employee')}
@@ -126,30 +126,32 @@ export function EditCacesDialog({
             </Select>
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="issueDate" className="text-sm font-medium">
-              {t('caces.issueDate')}
-            </Label>
-            <Input
-              id="issueDate"
-              type="date"
-              value={issueDate}
-              onChange={(e) => setIssueDate(e.target.value)}
-              className="w-full"
-            />
-          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <div className="space-y-2">
+              <Label htmlFor="issueDate" className="text-sm font-medium">
+                {t('caces.issueDate')}
+              </Label>
+              <Input
+                id="issueDate"
+                type="date"
+                value={issueDate}
+                onChange={(e) => setIssueDate(e.target.value)}
+                className="w-full"
+              />
+            </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="expiryDate" className="text-sm font-medium">
-              {t('caces.expiryDate')}
-            </Label>
-            <Input
-              id="expiryDate"
-              type="date"
-              value={expiryDate}
-              onChange={(e) => setExpiryDate(e.target.value)}
-              className="w-full"
-            />
+            <div className="space-y-2">
+              <Label htmlFor="expiryDate" className="text-sm font-medium">
+                {t('caces.expiryDate')}
+              </Label>
+              <Input
+                id="expiryDate"
+                type="date"
+                value={expiryDate}
+                onChange={(e) => setExpiryDate(e.target.value)}
+                className="w-full"
+              />
+            </div>
           </div>
 
           <CacesFileUpload
