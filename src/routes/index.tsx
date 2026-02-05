@@ -41,6 +41,12 @@ const DashboardLayout = () => {
     return <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-blue-500/10 border border-blue-500/20 text-blue-500">{t('alerts.info')}</span>
   }
 
+  const getTypeBadge = (type: string) => {
+    if (type.includes('CACES')) return <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-purple-500/10 border border-purple-500/20 text-purple-500">{t('caces.title')}</span>
+    if (type.includes('Visite')) return <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-teal-500/10 border border-teal-500/20 text-teal-500">{t('medicalVisits.title')}</span>
+    return <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-gray-500/10 border border-gray-500/20 text-gray-500">{type}</span>
+  }
+
   return (
     <SidebarInset>
       <header className="flex h-14 shrink-0 items-center gap-2 border-b px-4 sticky top-0 bg-background z-10">
@@ -166,7 +172,7 @@ const DashboardLayout = () => {
               <TableBody>
                 {recentAlerts.map((alert) => (
                   <TableRow key={alert.id} className="hover:bg-muted/50">
-                    <TableCell className="font-medium">{alert.type}</TableCell>
+                    <TableCell>{getTypeBadge(alert.type)}</TableCell>
                     <TableCell>
                       <Link to={`/employees_/${alert.employeeId}`} className="text-gray-700 underline hover:opacity-80 transition-opacity">
                         {alert.employee}

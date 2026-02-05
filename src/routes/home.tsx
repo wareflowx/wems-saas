@@ -84,6 +84,12 @@ const DashboardContent = ({ t }: { t: (key: string) => string }) => {
     return <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-blue-500/10 border border-blue-500/20 text-blue-500">{t('alerts.info')}</span>
   }
 
+  const getTypeBadge = (type: string) => {
+    if (type.includes('CACES')) return <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-purple-500/10 border border-purple-500/20 text-purple-500">{t('caces.title')}</span>
+    if (type.includes('Visite')) return <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-teal-500/10 border border-teal-500/20 text-teal-500">{t('medicalVisits.title')}</span>
+    return <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-gray-500/10 border border-gray-500/20 text-gray-500">{type}</span>
+  }
+
   return (
     <div className="min-h-full space-y-3">
       {/* Header */}
@@ -201,7 +207,7 @@ const DashboardContent = ({ t }: { t: (key: string) => string }) => {
           <TableBody>
             {upcomingDeadlines.map((deadline) => (
               <TableRow key={deadline.id} className="hover:bg-muted/50">
-                <TableCell className="font-medium">{deadline.type}</TableCell>
+                <TableCell>{getTypeBadge(deadline.type)}</TableCell>
                 <TableCell>
                   <Link to={`/employees_/${deadline.employeeId}`} className="text-gray-700 underline hover:opacity-80 transition-opacity">
                     {deadline.employee}
