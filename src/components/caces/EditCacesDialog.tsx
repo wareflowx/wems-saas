@@ -18,6 +18,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { useTranslation } from 'react-i18next'
+import { CacesFileUpload } from './CacesFileUpload'
 
 interface Caces {
   id: number
@@ -25,6 +26,7 @@ interface Caces {
   category: string
   dateObtained: string
   expirationDate: string
+  document?: string
 }
 
 interface EditCacesDialogProps {
@@ -45,6 +47,7 @@ export function EditCacesDialog({
   const [category, setCategory] = useState<string>('')
   const [issueDate, setIssueDate] = useState<string>('')
   const [expiryDate, setExpiryDate] = useState<string>('')
+  const [document, setDocument] = useState<string>('')
 
   // Populate form when caces data changes
   useEffect(() => {
@@ -53,12 +56,13 @@ export function EditCacesDialog({
       setCategory(caces.category)
       setIssueDate(caces.dateObtained)
       setExpiryDate(caces.expirationDate)
+      setDocument(caces.document || '')
     }
   }, [caces])
 
   const handleSubmit = () => {
     // TODO: Implement backend logic
-    console.log('Updating CACES:', { id: caces?.id, employee, category, issueDate, expiryDate })
+    console.log('Updating CACES:', { id: caces?.id, employee, category, issueDate, expiryDate, document })
     onConfirm?.()
     onOpenChange?.(false)
   }
@@ -147,6 +151,12 @@ export function EditCacesDialog({
               className="w-full"
             />
           </div>
+
+          <CacesFileUpload
+            value={document}
+            onChange={setDocument}
+            label={t('caces.document')}
+          />
         </div>
 
         <DialogFooter className="gap-2">

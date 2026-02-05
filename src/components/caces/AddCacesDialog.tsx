@@ -18,6 +18,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { useTranslation } from 'react-i18next'
+import { CacesFileUpload } from './CacesFileUpload'
 
 interface AddCacesDialogProps {
   open?: boolean
@@ -35,10 +36,11 @@ export function AddCacesDialog({
   const [category, setCategory] = useState<string>('')
   const [issueDate, setIssueDate] = useState<string>('')
   const [expiryDate, setExpiryDate] = useState<string>('')
+  const [document, setDocument] = useState<string>('')
 
   const handleSubmit = () => {
     // TODO: Implement backend logic
-    console.log('Adding CACES:', { employee, category, issueDate, expiryDate })
+    console.log('Adding CACES:', { employee, category, issueDate, expiryDate, document })
     onConfirm?.()
     onOpenChange?.(false)
     // Reset form
@@ -46,6 +48,7 @@ export function AddCacesDialog({
     setCategory('')
     setIssueDate('')
     setExpiryDate('')
+    setDocument('')
   }
 
   const isFormValid = employee && category && issueDate && expiryDate
@@ -57,6 +60,7 @@ export function AddCacesDialog({
       setCategory('')
       setIssueDate('')
       setExpiryDate('')
+      setDocument('')
     }
     onOpenChange?.(open)
   }
@@ -143,6 +147,12 @@ export function AddCacesDialog({
               className="w-full"
             />
           </div>
+
+          <CacesFileUpload
+            value={document}
+            onChange={setDocument}
+            label={t('caces.document')}
+          />
         </div>
 
         <DialogFooter className="gap-2">
