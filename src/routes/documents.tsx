@@ -1,10 +1,11 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
-import { Search, Filter, Upload, File, Download, Trash2, Eye, FileIcon, FileSpreadsheet, FileImage, FileText as FileIcon2, Sparkles, FileText, ChevronUp, ChevronDown, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, SearchX, Edit } from 'lucide-react'
+import { Search, Filter, Upload, File, Download, Trash2, Eye, FileIcon, FileSpreadsheet, FileImage, FileText as FileIcon2, Sparkles, FileText, ChevronUp, ChevronDown, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, SearchX, Edit, Activity } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { SidebarInset, SidebarTrigger } from '@/components/ui/sidebar'
+import { PageHeaderCard } from '@/components/ui/page-header-card'
+import { MetricsSection } from '@/components/ui/metrics-section'
 import { useTranslation } from 'react-i18next'
 import {
   Table,
@@ -127,15 +128,16 @@ const DocumentsLayout = () => {
 
   const getTypeBadge = (type: string) => {
     const typeColors: { [key: string]: string } = {
-      'Contrat': 'bg-blue-600/10 border border-blue-600/20 text-blue-700',
-      'CACES': 'bg-purple-600/10 border border-purple-600/20 text-purple-700',
-      'Visite médicale': 'bg-green-600/10 border border-green-600/20 text-green-700',
-      'Identification': 'bg-orange-600/10 border border-orange-600/20 text-orange-700',
+      'Contrat': 'bg-blue-600',
+      'CACES': 'bg-purple-600',
+      'Visite médicale': 'bg-green-600',
+      'Identification': 'bg-orange-600',
     }
-    const colors = typeColors[type] || 'bg-gray-600/10 border border-gray-600/20 text-gray-700'
+    const dotColor = typeColors[type] || 'bg-gray-600'
 
     const badge = (
-      <span className={`inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium ${colors}`}>
+      <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-xs font-medium border border-border">
+        <span className={`w-1.5 h-1.5 rounded-full ${dotColor}`}></span>
         {type}
       </span>
     )
@@ -152,11 +154,11 @@ const DocumentsLayout = () => {
 
   const getCategoryBadge = (category: string) => {
     const categoryColors: { [key: string]: string } = {
-      'pdf': 'bg-red-600/10 border border-red-600/20 text-red-700',
-      'image': 'bg-blue-600/10 border border-blue-600/20 text-blue-700',
-      'spreadsheet': 'bg-green-600/10 border border-green-600/20 text-green-700',
+      'pdf': 'bg-red-600/15 border border-red-600/25 text-red-700',
+      'image': 'bg-blue-600/15 border border-blue-600/25 text-blue-700',
+      'spreadsheet': 'bg-green-600/15 border border-green-600/25 text-green-700',
     }
-    const colors = categoryColors[category] || 'bg-gray-600/10 border border-gray-600/20 text-gray-700'
+    const colors = categoryColors[category] || 'bg-gray-600/15 border border-gray-600/25 text-gray-700'
 
     const badge = (
       <span className={`inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium ${colors}`}>
@@ -182,11 +184,11 @@ const DocumentsLayout = () => {
 
   const getFileIcon = (category: string) => {
     const iconConfig = {
-      'pdf': { icon: <FileIcon2 className="h-4 w-4" />, bg: 'bg-red-600/10', border: 'border-red-600/20', text: 'text-red-700' },
-      'spreadsheet': { icon: <FileSpreadsheet className="h-4 w-4" />, bg: 'bg-green-600/10', border: 'border-green-600/20', text: 'text-green-700' },
-      'image': { icon: <FileImage className="h-4 w-4" />, bg: 'bg-blue-600/10', border: 'border-blue-600/20', text: 'text-blue-700' },
+      'pdf': { icon: <FileIcon2 className="h-4 w-4" />, bg: 'bg-red-600/15', border: 'border-red-600/25', text: 'text-red-700' },
+      'spreadsheet': { icon: <FileSpreadsheet className="h-4 w-4" />, bg: 'bg-green-600/15', border: 'border-green-600/25', text: 'text-green-700' },
+      'image': { icon: <FileImage className="h-4 w-4" />, bg: 'bg-blue-600/15', border: 'border-blue-600/25', text: 'text-blue-700' },
     }
-    const config = iconConfig[category as keyof typeof iconConfig] || { icon: <FileIcon className="h-4 w-4" />, bg: 'bg-gray-600/10', border: 'border-gray-600/20', text: 'text-gray-700' }
+    const config = iconConfig[category as keyof typeof iconConfig] || { icon: <FileIcon className="h-4 w-4" />, bg: 'bg-gray-600/15', border: 'border-gray-600/25', text: 'text-gray-700' }
 
     return (
       <div className={`p-2 rounded-lg border ${config.bg} ${config.border} ${config.text}`}>
@@ -196,135 +198,109 @@ const DocumentsLayout = () => {
   }
 
   return (
-    <SidebarInset>
-      <header className="flex h-14 shrink-0 items-center gap-2 border-b px-4 sticky top-0 bg-background z-10">
-        <SidebarTrigger className="-ml-1" />
-        <div className="flex items-center gap-2"><FileIcon2 className="h-5 w-5 text-gray-600" /><h2 className="text-lg font-semibold">{t('documents.title')}</h2></div>
-        <div className="ml-auto flex items-center gap-2">
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium bg-green-50 text-green-700 border border-green-200"><div className="w-2 h-2 rounded-full bg-green-500" /><span>{t('dashboard.editMode')}</span></div>
-        </div>
-      </header>
-      <div className="flex flex-1 flex-col gap-4 p-4 py-6">
+    <>
+      <div className="flex flex-1 flex-col gap-4 p-4 pt-6">
         <div className="min-h-full space-y-3">
           {/* Header */}
-          <div className="mb-2">
-            <Card className="gap-4 p-3 bg-background shadow-sm rounded-md">
-              <div className="flex items-start gap-3">
-                <div className="mt-0.5">
-                  <Sparkles className="h-4 w-4 text-gray-600" />
-                </div>
-                <div className="flex-1">
-                  <p className="text-gray-700">
-                    <span className="font-medium">{t('documents.title')}</span> - Gérez et consultez tous les documents des employés
-                  </p>
-                </div>
-              </div>
-            </Card>
-          </div>
+          <PageHeaderCard
+            icon={<Sparkles className="h-4 w-4 text-gray-600" />}
+            title={t('documents.title')}
+            description={t('documents.description')}
+          />
 
           {/* Key Metrics */}
-          <div className="grid gap-2 md:grid-cols-2 lg:grid-cols-4">
-            <Card className="gap-4 p-4 bg-background">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-0">
-                <CardTitle className="text-sm font-medium">{t('documents.name')}</CardTitle>
-                <FileText className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent className="p-0">
-                <div className="text-2xl font-bold">{kpis.totalDocuments}</div>
-                <p className="text-xs text-muted-foreground">Total documents</p>
-              </CardContent>
-            </Card>
-            <Card className="gap-4 p-4 bg-background">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-0">
-                <CardTitle className="text-sm font-medium">PDF</CardTitle>
-                <FileIcon2 className="h-4 w-4 text-red-500" />
-              </CardHeader>
-              <CardContent className="p-0">
-                <div className="text-2xl font-bold">{kpis.pdfDocuments}</div>
-                <p className="text-xs text-muted-foreground">{((kpis.pdfDocuments / kpis.totalDocuments) * 100).toFixed(0)}% du total</p>
-              </CardContent>
-            </Card>
-            <Card className="gap-4 p-4 bg-background">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-0">
-                <CardTitle className="text-sm font-medium">Images</CardTitle>
-                <FileImage className="h-4 w-4 text-blue-500" />
-              </CardHeader>
-              <CardContent className="p-0">
-                <div className="text-2xl font-bold">{kpis.imageDocuments}</div>
-                <p className="text-xs text-muted-foreground">{((kpis.imageDocuments / kpis.totalDocuments) * 100).toFixed(0)}% du total</p>
-              </CardContent>
-            </Card>
-            <Card className="gap-4 p-4 bg-background">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-0">
-                <CardTitle className="text-sm font-medium">Ce mois</CardTitle>
-                <Upload className="h-4 w-4 text-green-500" />
-              </CardHeader>
-              <CardContent className="p-0">
-                <div className="text-2xl font-bold">{kpis.thisMonth}</div>
-                <p className="text-xs text-muted-foreground">Nouveaux</p>
-              </CardContent>
-            </Card>
-          </div>
+          <MetricsSection
+            kpis={[
+              {
+                title: t('documents.name'),
+                value: kpis.totalDocuments,
+                description: t('documents.totalDocuments'),
+                icon: <FileText className="h-4 w-4" />
+              },
+              {
+                title: 'PDF',
+                value: kpis.pdfDocuments,
+                description: `${((kpis.pdfDocuments / kpis.totalDocuments) * 100).toFixed(0)}% du total`,
+                icon: <FileIcon2 className="h-4 w-4" />,
+                iconColor: 'text-red-500'
+              },
+              {
+                title: 'Images',
+                value: kpis.imageDocuments,
+                description: `${((kpis.imageDocuments / kpis.totalDocuments) * 100).toFixed(0)}% du total`,
+                icon: <FileImage className="h-4 w-4" />,
+                iconColor: 'text-blue-500'
+              },
+              {
+                title: t('documents.thisMonth'),
+                value: kpis.thisMonth,
+                description: t('documents.newDocuments'),
+                icon: <Upload className="h-4 w-4" />,
+                iconColor: 'text-green-500'
+              }
+            ]}
+          />
 
-          {/* Search and Filters */}
-          <div className="flex flex-wrap gap-2">
-            <div className="relative flex-1 min-w-[200px]">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input
-                placeholder={t('documents.search')}
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="pl-9"
-              />
+          <div className="flex gap-2 flex-col">
+            {/* Search and Filters */}
+            <div className="flex flex-wrap gap-2">
+              <div className="relative flex-1 min-w-[200px]">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input
+                  placeholder={t('documents.search')}
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  className="pl-9 bg-card"
+                />
+              </div>
+              <Select value={typeFilter} onValueChange={setTypeFilter}>
+                <SelectTrigger className="w-[180px] bg-card">
+                  <SelectValue placeholder={t('documents.type')} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">{t('documents.allTypes')}</SelectItem>
+                  {uniqueTypes.map((type) => (
+                    <SelectItem key={type} value={type}>
+                      {type}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+                <SelectTrigger className="w-[180px] bg-card">
+                  <SelectValue placeholder={t('documents.category')} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">{t('documents.allCategories')}</SelectItem>
+                  {uniqueCategories.map((category) => (
+                    <SelectItem key={category} value={category}>
+                      {category.toUpperCase()}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <Select value={employeeFilter} onValueChange={setEmployeeFilter}>
+                <SelectTrigger className="w-[180px] bg-card">
+                  <SelectValue placeholder={t('caces.employee')} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">{t('dashboard.allEmployees')}</SelectItem>
+                  {uniqueEmployees.map((employee) => (
+                    <SelectItem key={employee} value={employee}>
+                      {employee}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <Button className="gap-2 ml-auto" onClick={() => setIsAddDialogOpen(true)}><Upload className="h-4 w-4" />{t('documents.addDocument')}</Button>
             </div>
-            <Select value={typeFilter} onValueChange={setTypeFilter}>
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder={t('documents.type')} />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Tous les types</SelectItem>
-                {uniqueTypes.map((type) => (
-                  <SelectItem key={type} value={type}>
-                    {type}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Catégorie" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Toutes les catégories</SelectItem>
-                {uniqueCategories.map((category) => (
-                  <SelectItem key={category} value={category}>
-                    {category.toUpperCase()}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <Select value={employeeFilter} onValueChange={setEmployeeFilter}>
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder={t('caces.employee')} />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">{t('dashboard.allEmployees')}</SelectItem>
-                {uniqueEmployees.map((employee) => (
-                  <SelectItem key={employee} value={employee}>
-                    {employee}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <Button className="gap-2 ml-auto" onClick={() => setIsAddDialogOpen(true)}><Upload className="h-4 w-4" />{t('documents.addDocument')}</Button>
-          </div>
 
-          {/* Table */}
-          <div className="rounded-lg border">
+            {/* Table */}
+            <div className="rounded-lg border bg-card">
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>
+                  <TableHead className="px-4">
                     <Button
                       variant="ghost"
                       size="sm"
@@ -337,7 +313,7 @@ const DocumentsLayout = () => {
                       </div>
                     </Button>
                   </TableHead>
-                  <TableHead>
+                  <TableHead className="px-4">
                     <Button
                       variant="ghost"
                       size="sm"
@@ -350,7 +326,7 @@ const DocumentsLayout = () => {
                       </div>
                     </Button>
                   </TableHead>
-                  <TableHead>
+                  <TableHead className="px-4">
                     <Button
                       variant="ghost"
                       size="sm"
@@ -363,7 +339,7 @@ const DocumentsLayout = () => {
                       </div>
                     </Button>
                   </TableHead>
-                  <TableHead>
+                  <TableHead className="px-4">
                     <Button
                       variant="ghost"
                       size="sm"
@@ -376,7 +352,7 @@ const DocumentsLayout = () => {
                       </div>
                     </Button>
                   </TableHead>
-                  <TableHead>
+                  <TableHead className="px-4">
                     <Button
                       variant="ghost"
                       size="sm"
@@ -389,7 +365,7 @@ const DocumentsLayout = () => {
                       </div>
                     </Button>
                   </TableHead>
-                  <TableHead>
+                  <TableHead className="px-4">
                     <Button
                       variant="ghost"
                       size="sm"
@@ -423,7 +399,7 @@ const DocumentsLayout = () => {
                 ) : (
                   paginatedDocuments.map((doc) => (
                     <TableRow key={doc.id} className="hover:bg-muted/50">
-                      <TableCell>
+                      <TableCell className="px-4">
                         <div className="flex items-center gap-3">
                           {getFileIcon(doc.category)}
                           <div>
@@ -431,8 +407,8 @@ const DocumentsLayout = () => {
                           </div>
                         </div>
                       </TableCell>
-                      <TableCell>{getTypeBadge(doc.type)}</TableCell>
-                      <TableCell>
+                      <TableCell className="px-4">{getTypeBadge(doc.type)}</TableCell>
+                      <TableCell className="px-4">
                         <Link
                           to={`/employees_/${doc.employeeId}`}
                           className="text-gray-700 underline hover:opacity-80 transition-opacity"
@@ -440,10 +416,10 @@ const DocumentsLayout = () => {
                           {doc.employee}
                         </Link>
                       </TableCell>
-                      <TableCell>{getCategoryBadge(doc.category)}</TableCell>
+                      <TableCell className="px-4">{getCategoryBadge(doc.category)}</TableCell>
                       <TableCell className="text-gray-700">{doc.uploadDate}</TableCell>
                       <TableCell className="text-gray-700">{doc.size}</TableCell>
-                      <TableCell>
+                      <TableCell className="px-4">
                         <div className="flex items-center justify-end gap-2">
                           <Button variant="ghost" size="icon" onClick={() => setEditingDocument(doc)}>
                             <Edit className="h-4 w-4" />
@@ -465,12 +441,17 @@ const DocumentsLayout = () => {
               </TableBody>
             </Table>
           </div>
+          </div>
 
           {/* Pagination */}
           {totalPages > 1 && (
             <div className="flex items-center justify-between">
               <p className="text-sm text-muted-foreground">
-                Affichage de {((currentPage - 1) * itemsPerPage) + 1} à {Math.min(currentPage * itemsPerPage, sortedDocuments.length)} sur {sortedDocuments.length}
+                {t('documents.showing', {
+                  from: ((currentPage - 1) * itemsPerPage) + 1,
+                  to: Math.min(currentPage * itemsPerPage, sortedDocuments.length),
+                  total: sortedDocuments.length
+                })}
               </p>
               <div className="flex items-center gap-2">
                 <Button
@@ -548,6 +529,6 @@ const DocumentsLayout = () => {
         onOpenChange={(open) => !open && setDeletingDocument(null)}
         document={deletingDocument}
       />
-    </SidebarInset>
+    </>
   )
 }

@@ -18,12 +18,12 @@ import {
   Calendar,
   Check,
   X,
+  Activity,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
 import { useTranslation } from "react-i18next";
 import { useState, useMemo, useEffect } from "react";
 import {
@@ -52,6 +52,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { CreateEmployeeDialog } from "@/components/employees/CreateEmployeeDialog";
 import { DeleteEmployeeDialog } from "@/components/employees/DeleteEmployeeDialog";
+import { PageHeaderCard } from "@/components/ui/page-header-card";
+import { MetricsSection } from "@/components/ui/metrics-section";
 import { Link } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/employees")({
@@ -66,7 +68,10 @@ const EmployeesLayout = () => {
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const [employeeToDelete, setEmployeeToDelete] = useState<{id: number, name: string} | null>(null);
+  const [employeeToDelete, setEmployeeToDelete] = useState<{
+    id: number;
+    name: string;
+  } | null>(null);
   const itemsPerPage = 10;
 
   const employees = [
@@ -228,19 +233,19 @@ const EmployeesLayout = () => {
     switch (status) {
       case "active":
         return (
-          <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-green-500/10 border border-green-500/20 text-green-500">
+          <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-green-500/15 border border-green-500/25 text-green-600">
             {t("employees.active")}
           </span>
         );
       case "on_leave":
         return (
-          <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-yellow-500/10 border border-yellow-500/20 text-yellow-500">
+          <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-yellow-500/15 border border-yellow-500/25 text-yellow-600">
             {t("employees.onLeave")}
           </span>
         );
       default:
         return (
-          <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-gray-500/10 border border-gray-500/20 text-gray-500">
+          <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-gray-500/15 border border-gray-500/25 text-gray-600">
             {status}
           </span>
         );
@@ -249,13 +254,17 @@ const EmployeesLayout = () => {
 
   const getContractBadge = (contract: string) => {
     const contractColors: { [key: string]: string } = {
-      'CDI': 'bg-blue-500/10 border border-blue-500/20 text-blue-500',
-      'CDD': 'bg-orange-500/10 border border-orange-500/20 text-orange-500',
-      'Intérim': 'bg-teal-500/10 border border-teal-500/20 text-teal-500',
+      CDI: "bg-blue-500/15 border border-blue-500/25 text-blue-600",
+      CDD: "bg-orange-500/15 border border-orange-500/25 text-orange-600",
+      Intérim: "bg-teal-500/15 border border-teal-500/25 text-teal-600",
     };
-    const colors = contractColors[contract] || 'bg-gray-500/10 border border-gray-500/20 text-gray-500';
+    const colors =
+      contractColors[contract] ||
+      "bg-gray-500/15 border border-gray-500/25 text-gray-600";
     return (
-      <span className={`inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium ${colors}`}>
+      <span
+        className={`inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium ${colors}`}
+      >
         {contract}
       </span>
     );
@@ -263,14 +272,15 @@ const EmployeesLayout = () => {
 
   const getPositionBadge = (position: string) => {
     const positionColors: { [key: string]: string } = {
-      'operator': 'bg-emerald-500/10 border border-emerald-500/20 text-emerald-500',
-      'technician': 'bg-amber-500/10 border border-amber-500/20 text-amber-500',
-      'accountant': 'bg-indigo-500/10 border border-indigo-500/20 text-indigo-500',
-      'hrManager': 'bg-rose-500/10 border border-rose-500/20 text-rose-500',
+      operator: "bg-emerald-500",
+      technician: "bg-amber-500",
+      accountant: "bg-indigo-500",
+      hrManager: "bg-rose-500",
     };
-    const colors = positionColors[position] || 'bg-gray-500/10 border border-gray-500/20 text-gray-500';
+    const dotColor = positionColors[position] || "bg-gray-500";
     return (
-      <span className={`inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium ${colors}`}>
+      <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-xs font-medium border border-border">
+        <span className={`w-1.5 h-1.5 rounded-full ${dotColor}`}></span>
         {t(`positions.${position}`)}
       </span>
     );
@@ -278,13 +288,14 @@ const EmployeesLayout = () => {
 
   const getWorkLocationBadge = (location: string) => {
     const locationColors: { [key: string]: string } = {
-      'Site A': 'bg-cyan-500/10 border border-cyan-500/20 text-cyan-500',
-      'Site B': 'bg-amber-500/10 border border-amber-500/20 text-amber-500',
-      'Site C': 'bg-violet-500/10 border border-violet-500/20 text-violet-500',
+      "Site A": "bg-cyan-500",
+      "Site B": "bg-amber-500",
+      "Site C": "bg-violet-500",
     };
-    const colors = locationColors[location] || 'bg-gray-500/10 border border-gray-500/20 text-gray-500';
+    const dotColor = locationColors[location] || "bg-gray-500";
     return (
-      <span className={`inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium ${colors}`}>
+      <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-xs font-medium border border-border">
+        <span className={`w-1.5 h-1.5 rounded-full ${dotColor}`}></span>
         {location}
       </span>
     );
@@ -292,283 +303,54 @@ const EmployeesLayout = () => {
 
   return (
     <>
-      <SidebarInset>
-        <header className="flex h-14 shrink-0 items-center gap-2 border-b px-4 sticky top-0 bg-background z-10">
-          <SidebarTrigger className="-ml-1" />
-          <div className="flex items-center gap-2">
-            <Users className="h-5 w-5 text-gray-600" />
-            <h2 className="text-lg font-semibold">{t("employees.title")}</h2>
-          </div>
-          <div className="ml-auto flex items-center gap-2">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="icon" className="relative">
-                  <Bell className="h-4 w-4" />
-                  {notifications.critical.length > 0 && (
-                    <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white border-2 border-background">
-                      {notifications.critical.length +
-                        notifications.warning.length}
-                    </span>
-                  )}
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-80 p-0">
-                <div className="p-3 border-b">
-                  <div className="flex items-center justify-between">
-                    <DropdownMenuLabel className="p-0 text-sm font-semibold">
-                      {t("notifications.title")}
-                    </DropdownMenuLabel>
-                    <span className="text-xs text-muted-foreground">
-                      {notifications.critical.length +
-                        notifications.warning.length -
-                        readNotifications.size}{" "}
-                      {t("notifications.new")}
-                    </span>
-                  </div>
-                </div>
+      <div className="flex flex-1 flex-col gap-4 p-4 pt-6">
+        <div className="min-h-full space-y-3">
+          {/* Header */}
+          <PageHeaderCard
+            icon={<Sparkles className="h-4 w-4 text-gray-600" />}
+            title={t("employees.title")}
+            description={t("employees.description")}
+          />
+          {/* Key Metrics */}
+          <MetricsSection
+            kpis={[
+              {
+                title: t("dashboard.totalEmployees"),
+                value: kpis.totalEmployees,
+                description: `${kpis.activeEmployees} ${t("employees.active")}`,
+                icon: <Users className="h-4 w-4" />,
+              },
+              {
+                title: t("employees.active"),
+                value: kpis.activeEmployees,
+                description: `${(
+                  (kpis.activeEmployees / kpis.totalEmployees) *
+                  100
+                ).toFixed(0)}${t("common.ofTotal")}`,
+                icon: <Edit className="h-4 w-4" />,
+                iconColor: "text-green-500",
+              },
+              {
+                title: t("employees.onLeave"),
+                value: kpis.onLeaveEmployees,
+                description: `${(
+                  (kpis.onLeaveEmployees / kpis.totalEmployees) *
+                  100
+                ).toFixed(0)}${t("common.ofTotal")}`,
+                icon: <Filter className="h-4 w-4" />,
+                iconColor: "text-yellow-500",
+              },
+              {
+                title: t("dashboard.newHires"),
+                value: kpis.newHiresThisMonth,
+                description: t("dashboard.thisMonth"),
+                icon: <UserPlus className="h-4 w-4" />,
+                iconColor: "text-green-500",
+              },
+            ]}
+          />
 
-                <div className="max-h-80 overflow-y-auto">
-                  {notifications.critical.filter(
-                    (n) => !readNotifications.has(n.id),
-                  ).length > 0 && (
-                    <div className="border-b">
-                      <div className="px-3 py-1.5 bg-red-50 border-b border-red-100">
-                        <p className="text-[11px] font-semibold text-red-700 flex items-center gap-1.5">
-                          <AlertCircle className="h-3 w-3" />
-                          {t("notifications.critical")} (
-                          {
-                            notifications.critical.filter(
-                              (n) => !readNotifications.has(n.id),
-                            ).length
-                          }
-                          )
-                        </p>
-                      </div>
-                      <div className="divide-y divide-border">
-                        {notifications.critical
-                          .filter((n) => !readNotifications.has(n.id))
-                          .map((notification) => (
-                            <DropdownMenuItem
-                              key={notification.id}
-                              className="flex items-center gap-2 px-3 py-2 hover:bg-red-50/30 cursor-pointer border-0 group"
-                            >
-                              <div className="h-6 w-6 rounded-full bg-red-100 flex items-center justify-center flex-shrink-0">
-                                <ShieldAlert className="h-3 w-3 text-red-600" />
-                              </div>
-                              <div className="flex-1 min-w-0">
-                                <p className="text-xs font-medium truncate">
-                                  {notification.employee}
-                                </p>
-                                <p className="text-[11px] text-muted-foreground truncate">
-                                  {notification.type}
-                                </p>
-                              </div>
-                              <div className="flex items-center gap-1 flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
-                                <Button
-                                  variant="ghost"
-                                  size="icon"
-                                  className="h-6 w-6"
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    markAsRead(notification.id);
-                                  }}
-                                >
-                                  <Check className="h-3 w-3 text-green-600" />
-                                </Button>
-                              </div>
-                            </DropdownMenuItem>
-                          ))}
-                      </div>
-                    </div>
-                  )}
-
-                  {notifications.warning.filter(
-                    (n) => !readNotifications.has(n.id),
-                  ).length > 0 && (
-                    <div>
-                      <div className="px-3 py-1.5 bg-yellow-50 border-b border-yellow-100">
-                        <p className="text-[11px] font-semibold text-yellow-700 flex items-center gap-1.5">
-                          <AlertTriangle className="h-3 w-3" />
-                          {t("notifications.warning")} (
-                          {
-                            notifications.warning.filter(
-                              (n) => !readNotifications.has(n.id),
-                            ).length
-                          }
-                          )
-                        </p>
-                      </div>
-                      <div className="divide-y divide-border">
-                        {notifications.warning
-                          .filter((n) => !readNotifications.has(n.id))
-                          .map((notification) => (
-                            <DropdownMenuItem
-                              key={notification.id}
-                              className="flex items-center gap-2 px-3 py-2 hover:bg-yellow-50/30 cursor-pointer border-0 group"
-                            >
-                              <div className="h-6 w-6 rounded-full bg-yellow-100 flex items-center justify-center flex-shrink-0">
-                                <Calendar className="h-3 w-3 text-yellow-600" />
-                              </div>
-                              <div className="flex-1 min-w-0">
-                                <p className="text-xs font-medium truncate">
-                                  {notification.employee}
-                                </p>
-                                <p className="text-[11px] text-muted-foreground truncate">
-                                  {notification.type}
-                                </p>
-                              </div>
-                              <div className="flex items-center gap-1 flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
-                                <Button
-                                  variant="ghost"
-                                  size="icon"
-                                  className="h-6 w-6"
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    markAsRead(notification.id);
-                                  }}
-                                >
-                                  <Check className="h-3 w-3 text-green-600" />
-                                </Button>
-                              </div>
-                            </DropdownMenuItem>
-                          ))}
-                      </div>
-                    </div>
-                  )}
-
-                  {notifications.critical.filter(
-                    (n) => !readNotifications.has(n.id),
-                  ).length === 0 &&
-                    notifications.warning.filter(
-                      (n) => !readNotifications.has(n.id),
-                    ).length === 0 && (
-                      <div className="py-8 px-3 text-center">
-                        <div className="h-10 w-10 rounded-full bg-muted flex items-center justify-center mx-auto mb-2">
-                          <Check className="h-5 w-5 text-muted-foreground" />
-                        </div>
-                        <p className="text-sm font-medium">{t("notifications.allRead")}</p>
-                        <p className="text-xs text-muted-foreground mt-1">
-                          {t("notifications.noNew")}
-                        </p>
-                      </div>
-                    )}
-                </div>
-
-                {notifications.critical.filter(
-                  (n) => !readNotifications.has(n.id),
-                ).length > 0 ||
-                notifications.warning.filter(
-                  (n) => !readNotifications.has(n.id),
-                ).length > 0 ? (
-                  <div className="p-2 border-t bg-muted/30 flex gap-2">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="flex-1 justify-center text-xs gap-1"
-                      onClick={markAllAsRead}
-                    >
-                      <Check className="h-3 w-3" />
-                      {t("notifications.markAllRead")}
-                    </Button>
-                  </div>
-                ) : null}
-              </DropdownMenuContent>
-            </DropdownMenu>
-            <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium bg-green-50 text-green-700 border border-green-200">
-              <div className="w-2 h-2 rounded-full bg-green-500" />
-              <span>{t("dashboard.editMode")}</span>
-            </div>
-          </div>
-        </header>
-        <div className="flex flex-1 flex-col gap-4 p-4 py-6">
-          <div className="min-h-full space-y-3">
-            {/* Header */}
-            <div className="mb-2">
-              <Card className="p-3 bg-background shadow-sm rounded-md">
-                <div className="flex items-start gap-3">
-                  <div className="mt-0.5">
-                    <Sparkles className="h-4 w-4 text-gray-600" />
-                  </div>
-                  <div className="flex-1">
-                    <p className="text-gray-700">
-                      <span className="font-medium">{t('employees.title')}</span> - {t('employees.description')}
-                    </p>
-                  </div>
-                </div>
-              </Card>
-            </div>
-            <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-4">
-              <Card className="p-4 bg-background">
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-0">
-                  <CardTitle className="text-sm font-medium">
-                    {t("dashboard.totalEmployees")}
-                  </CardTitle>
-                  <Users className="h-4 w-4 text-muted-foreground" />
-                </CardHeader>
-                <CardContent className="p-0">
-                  <div className="text-2xl font-bold">{kpis.totalEmployees}</div>
-                  <p className="text-xs text-muted-foreground">
-                    {kpis.activeEmployees} {t("employees.active")}
-                  </p>
-                </CardContent>
-              </Card>
-              <Card className="p-4 bg-background">
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-0">
-                  <CardTitle className="text-sm font-medium">
-                    {t("employees.active")}
-                  </CardTitle>
-                  <Edit className="h-4 w-4 text-muted-foreground" />
-                </CardHeader>
-                <CardContent className="p-0">
-                  <div className="text-2xl font-bold">
-                    {kpis.activeEmployees}
-                  </div>
-                  <p className="text-xs text-muted-foreground">
-                    {(
-                      (kpis.activeEmployees / kpis.totalEmployees) *
-                      100
-                    ).toFixed(0)}
-                    {t("common.ofTotal")}
-                  </p>
-                </CardContent>
-              </Card>
-              <Card className="p-4 bg-background">
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-0">
-                  <CardTitle className="text-sm font-medium">
-                    {t("employees.onLeave")}
-                  </CardTitle>
-                  <Filter className="h-4 w-4 text-muted-foreground" />
-                </CardHeader>
-                <CardContent className="p-0">
-                  <div className="text-2xl font-bold">
-                    {kpis.onLeaveEmployees}
-                  </div>
-                  <p className="text-xs text-muted-foreground">
-                    {(
-                      (kpis.onLeaveEmployees / kpis.totalEmployees) *
-                      100
-                    ).toFixed(0)}
-                    {t("common.ofTotal")}
-                  </p>
-                </CardContent>
-              </Card>
-              <Card className="p-4 bg-background">
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-0">
-                  <CardTitle className="text-sm font-medium">
-                    {t("dashboard.newHires")}
-                  </CardTitle>
-                  <UserPlus className="h-4 w-4 text-muted-foreground" />
-                </CardHeader>
-                <CardContent className="p-0">
-                  <div className="text-2xl font-bold">
-                    {kpis.newHiresThisMonth}
-                  </div>
-                  <p className="text-xs text-muted-foreground">
-                    {t("dashboard.thisMonth")}
-                  </p>
-                </CardContent>
-              </Card>
-            </div>
+          <div className="flex gap-2 flex-col">
             {/* Search and Filters */}
             <div className="flex flex-wrap gap-2">
               <div className="relative flex-1 min-w-[200px]">
@@ -577,14 +359,14 @@ const EmployeesLayout = () => {
                   placeholder={t("employees.search")}
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  className="pl-9"
+                  className="pl-9 bg-card"
                 />
               </div>
               <Select
                 value={departmentFilter}
                 onValueChange={setDepartmentFilter}
               >
-                <SelectTrigger className="w-[180px]">
+                <SelectTrigger className="w-[180px] bg-card">
                   <SelectValue placeholder={t("employeeDetail.contractType")} />
                 </SelectTrigger>
                 <SelectContent>
@@ -597,7 +379,7 @@ const EmployeesLayout = () => {
                 </SelectContent>
               </Select>
               <Select value={statusFilter} onValueChange={setStatusFilter}>
-                <SelectTrigger className="w-[140px]">
+                <SelectTrigger className="w-[140px] bg-card">
                   <SelectValue placeholder={t("employeeDetail.status")} />
                 </SelectTrigger>
                 <SelectContent>
@@ -621,115 +403,138 @@ const EmployeesLayout = () => {
                 {t("employees.addEmployee")}
               </Button>
             </div>
-            <div className="rounded-lg border">
-              <Table>
-                <TableHeader>
+
+            {/* Table */}
+            <div className="rounded-lg border bg-card">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="px-4">
+                    {t("employeeDetail.fullName")}
+                  </TableHead>
+                  <TableHead className="px-4">
+                    {t("employeeDetail.contractType")}
+                  </TableHead>
+                  <TableHead className="px-4">
+                    {t("employees.position")}
+                  </TableHead>
+                  <TableHead className="px-4">
+                    {t("employees.workLocation")}
+                  </TableHead>
+                  <TableHead className="px-4">
+                    {t("employeeDetail.status")}
+                  </TableHead>
+                  <TableHead className="px-4">
+                    {t("employeeDetail.startDate")}
+                  </TableHead>
+                  <TableHead className="px-4 text-right">
+                    {t("employees.actions")}
+                  </TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {paginatedEmployees.length === 0 ? (
                   <TableRow>
-                    <TableHead>{t("employeeDetail.fullName")}</TableHead>
-                    <TableHead>{t("employeeDetail.contractType")}</TableHead>
-                    <TableHead>{t("employees.position")}</TableHead>
-                    <TableHead>{t("employees.workLocation")}</TableHead>
-                    <TableHead>{t("employeeDetail.status")}</TableHead>
-                    <TableHead>{t("employeeDetail.startDate")}</TableHead>
-                    <TableHead className="text-right">
-                      {t("employees.actions")}
-                    </TableHead>
+                    <TableCell colSpan={7} className="h-64">
+                      <div className="flex flex-col items-center justify-center h-full text-muted-foreground p-8">
+                        <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mb-4">
+                          <SearchX className="h-8 w-8 opacity-50" />
+                        </div>
+                        <p className="text-lg font-medium">
+                          {t("common.noData")}
+                        </p>
+                        <p className="text-sm mt-2 max-w-md text-center">
+                          {t("dashboard.noDataFound")}
+                        </p>
+                      </div>
+                    </TableCell>
                   </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {paginatedEmployees.length === 0 ? (
-                    <TableRow>
-                      <TableCell colSpan={7} className="h-64">
-                        <div className="flex flex-col items-center justify-center h-full text-muted-foreground p-8">
-                          <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mb-4">
-                            <SearchX className="h-8 w-8 opacity-50" />
-                          </div>
-                          <p className="text-lg font-medium">{t("common.noData")}</p>
-                          <p className="text-sm mt-2 max-w-md text-center">
-                            {t("dashboard.noDataFound")}
-                          </p>
+                ) : (
+                  paginatedEmployees.map((employee) => (
+                    <TableRow key={employee.id} className="hover:bg-muted/50">
+                      <TableCell className="px-4">
+                        <Link
+                          to={`/employees_/${employee.id}`}
+                          className="text-gray-700 underline hover:opacity-80 transition-opacity"
+                        >
+                          {employee.firstName} {employee.lastName}
+                        </Link>
+                        <p className="text-sm text-gray-500 mt-0.5">
+                          {t("common.employeeId")}
+                          {employee.id.toString().padStart(4, "0")}
+                        </p>
+                      </TableCell>
+                      <TableCell className="px-4">
+                        {getContractBadge(employee.contract)}
+                      </TableCell>
+                      <TableCell className="px-4">
+                        {getPositionBadge(employee.jobTitle)}
+                      </TableCell>
+                      <TableCell className="px-4">
+                        {getWorkLocationBadge(employee.workLocation)}
+                      </TableCell>
+                      <TableCell className="px-4">
+                        {getStatusBadge(employee.status)}
+                      </TableCell>
+                      <TableCell className="px-4 text-gray-700">
+                        {employee.startDate}
+                      </TableCell>
+                      <TableCell className="px-4">
+                        <div className="flex items-center justify-end gap-2">
+                          <Button variant="ghost" size="icon">
+                            <Edit className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => {
+                              setEmployeeToDelete({
+                                id: employee.id,
+                                name: `${employee.firstName} ${employee.lastName}`,
+                              });
+                              setIsDeleteDialogOpen(true);
+                            }}
+                          >
+                            <Trash2 className="h-4 w-4 text-red-600" />
+                          </Button>
                         </div>
                       </TableCell>
                     </TableRow>
-                  ) : (
-                    paginatedEmployees.map((employee) => (
-                      <TableRow key={employee.id} className="hover:bg-muted/50">
-                        <TableCell>
-                          <Link
-                            to={`/employees_/${employee.id}`}
-                            className="hover:opacity-80 transition-opacity"
-                          >
-                            <p className="font-medium text-gray-900">
-                              {employee.firstName} {employee.lastName}
-                            </p>
-                            <p className="text-sm text-gray-500">
-                              {t("common.employeeId")}{employee.id.toString().padStart(4, "0")}
-                            </p>
-                          </Link>
-                        </TableCell>
-                        <TableCell>{getContractBadge(employee.contract)}</TableCell>
-                        <TableCell>{getPositionBadge(employee.jobTitle)}</TableCell>
-                        <TableCell>{getWorkLocationBadge(employee.workLocation)}</TableCell>
-                        <TableCell>{getStatusBadge(employee.status)}</TableCell>
-                        <TableCell className="text-gray-700">
-                          {employee.startDate}
-                        </TableCell>
-                        <TableCell>
-                          <div className="flex items-center justify-end gap-2">
-                            <Button variant="ghost" size="icon">
-                              <Edit className="h-4 w-4" />
-                            </Button>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              onClick={() => {
-                                setEmployeeToDelete({
-                                  id: employee.id,
-                                  name: `${employee.firstName} ${employee.lastName}`
-                                });
-                                setIsDeleteDialogOpen(true);
-                              }}
-                            >
-                              <Trash2 className="h-4 w-4 text-red-600" />
-                            </Button>
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    ))
-                  )}
-                </TableBody>
-              </Table>
-            </div>
-            <div className="flex items-center justify-between">
-              <p className="text-sm text-muted-foreground">
-                {t("common.view")} de {startIndex + 1} à{" "}
-                {Math.min(endIndex, filteredEmployees.length)} sur{" "}
-                {filteredEmployees.length} {t("common.employees")}
-              </p>
-              <div className="flex items-center gap-2">
-                <Button
-                  variant="outline"
-                  size="icon"
-                  onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-                  disabled={currentPage === 1}
-                >
-                  <ChevronLeft className="h-4 w-4" />
-                </Button>
-                <Button
-                  variant="outline"
-                  size="icon"
-                  onClick={() =>
-                    setCurrentPage((p) => Math.min(totalPages, p + 1))
-                  }
-                  disabled={currentPage === totalPages || totalPages === 0}
-                >
-                  <ChevronRight className="h-4 w-4" />
-                </Button>
-              </div>
+                  ))
+                )}
+              </TableBody>
+            </Table>
+          </div>
+          </div>
+          <div className="flex items-center justify-between">
+            <p className="text-sm text-muted-foreground">
+              {t("common.view")} de {startIndex + 1} à{" "}
+              {Math.min(endIndex, filteredEmployees.length)} sur{" "}
+              {filteredEmployees.length} {t("common.employees")}
+            </p>
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                disabled={currentPage === 1}
+              >
+                <ChevronLeft className="h-4 w-4" />
+              </Button>
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={() =>
+                  setCurrentPage((p) => Math.min(totalPages, p + 1))
+                }
+                disabled={currentPage === totalPages || totalPages === 0}
+              >
+                <ChevronRight className="h-4 w-4" />
+              </Button>
             </div>
           </div>
         </div>
-      </SidebarInset>
+      </div>
       <CreateEmployeeDialog
         open={isCreateDialogOpen}
         onOpenChange={setIsCreateDialogOpen}

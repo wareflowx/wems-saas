@@ -13,11 +13,18 @@
     "alerts": "Alertes",
     "referenceData": "Données de référence",
     "backup": "Sauvegarde",
-    "system": "Système"
+    "system": "Système",
+    "contracts": "Contrats",
+    "quickActions": "Actions rapides",
+    "addPosition": "Ajouter un poste",
+    "addWorkLocation": "Ajouter un lieu de travail"
   },
   "dashboard": {
     "title": "Tableau de bord",
     "subtitle": "Vue d'ensemble de la gestion des salariés",
+    "description": "Vue d'ensemble de votre entreprise et alertes importantes",
+    "kpiTitle": "Indicateurs clés",
+    "kpiDescription": "Métriques essentielles sur votre effectif et les alertes actives",
     "totalEmployees": "Total salariés actifs",
     "newHires": "Nouvelles embauches",
     "thisMonth": "ce mois",
@@ -78,6 +85,43 @@
     "accountant": "Comptable",
     "hrManager": "Responsable RH"
   },
+  "contracts": {
+    "title": "Contrats",
+    "description": "Gérez tous les contrats de vos employés",
+    "total": "Total contrats",
+    "active": "Actifs",
+    "endingSoon": "Fin prochaine",
+    "search": "Rechercher un contrat, un employé, un département...",
+    "type": "Type",
+    "allTypes": "Tous les types",
+    "status": "Statut",
+    "allStatuses": "Tous les statuts",
+    "addContract": "Ajouter un contrat",
+    "contracts": "contrats",
+    "duration": "Durée",
+    "startDate": "Date début",
+    "endDate": "Date fin",
+    "renew": "Renouveler",
+    "cdi": "CDI",
+    "cdd": "CDD",
+    "interim": "Intérim",
+    "alternance": "Alternance",
+    "stage": "Stage",
+    "freelance": "Freelance"
+  },
+  "departments": {
+    "production": "Production",
+    "administration": "Administration",
+    "rh": "RH",
+    "it": "IT",
+    "logistics": "Logistique"
+  },
+  "documentTypes": {
+    "contract": "Contrat",
+    "caces": "CACES",
+    "medicalVisit": "Visite médicale",
+    "identification": "Identification"
+  },
   "employeeDetail": {
     "title": "Fiche employé",
     "edit": "Modifier",
@@ -108,6 +152,7 @@
     "title": "Documents",
     "search": "Rechercher...",
     "filter": "Filtrer",
+    "description": "Gérez et consultez tous les documents des employés",
     "addDocument": "Ajouter un document",
     "addDocumentDescription": "Ajoutez un nouveau document pour un employé",
     "name": "Nom",
@@ -133,6 +178,12 @@
     "uploadDate": "Date d'ajout",
     "size": "Taille",
     "document": "Document",
+    "totalDocuments": "Total documents",
+    "thisMonth": "Ce mois",
+    "newDocuments": "Nouveaux",
+    "allTypes": "Tous les types",
+    "allCategories": "Toutes les catégories",
+    "showing": "Affichage de {{from}} à {{to}} sur {{total}}",
     "tooltip": {
       "typeContrat": "Document de contrat de travail",
       "typeCACES": "Certificat d'aptitude à la conduite en sécurité",
@@ -226,26 +277,42 @@
     "title": "Alertes",
     "search": "Rechercher...",
     "filter": "Filtrer",
+    "description": "Restez informé des alertes critiques et à venir concernant vos employés",
     "all": "Toutes",
     "critical": "Critiques",
     "warning": "Avertissements",
     "info": "Informations",
     "employee": "Employé",
     "type": "Type",
-    "description": "Description",
     "date": "Date",
     "severity": "Sévérité",
     "actions": "Actions",
     "view": "Voir",
     "cacesExpiring": "CACES expirants",
-    "missedVisit": "Visite médicale manquée"
+    "missedVisit": "Visite médicale manquée",
+    "totalAlerts": "Total alertes",
+    "allSeverities": "Toutes les sévérités",
+    "allTypes": "Tous les types",
+    "showing": "Affichage de {{from}} à {{to}} sur {{total}}",
+    "tooltip": {
+      "critical": "Alerte critique nécessitant une attention immédiate",
+      "warning": "Alerte d'avertissement qui devrait être traitée prochainement",
+      "info": "Alerte informationnelle pour référence"
+    }
   },
   "settings": {
     "title": "Paramètres",
     "alerts": "Alertes",
     "referenceData": "Données de référence",
     "backup": "Sauvegarde",
-    "system": "Système"
+    "system": "Système",
+    "createPositionDescription": "Créez un nouveau poste pour vos employés",
+    "positionName": "Nom du poste",
+    "positionNamePlaceholder": "Ex: Technicien, Opérateur...",
+    "color": "Couleur",
+    "createWorkLocationDescription": "Ajoutez un nouveau lieu de travail",
+    "locationName": "Nom du lieu",
+    "locationNamePlaceholder": "Ex: Site A, Usine B..."
   },
   "settingsAlerts": {
     "title": "Paramètres des alertes",
@@ -342,5 +409,18 @@
     "allStatuses": "Tous les statuts",
     "employeeId": "ID: EMP-",
     "employees": "employés"
+  },
+  "placeholders": {
+    "firstName": "Jean",
+    "lastName": "Dupont",
+    "email": "jean.dupont@email.com",
+    "phone": "+33 6 12 34 56 78",
+    "address": "123 Rue de la République, 75001 Paris",
+    "position": "Opérateur"
+  },
+  "steps": {
+    "personal": "Personnel",
+    "professional": "Professionnel",
+    "review": "Révision"
   }
 }

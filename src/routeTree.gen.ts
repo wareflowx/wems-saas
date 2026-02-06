@@ -13,6 +13,7 @@ import { Route as MedicalVisitsRouteImport } from './routes/medical-visits'
 import { Route as HomeRouteImport } from './routes/home'
 import { Route as EmployeesRouteImport } from './routes/employees'
 import { Route as DocumentsRouteImport } from './routes/documents'
+import { Route as ContractsRouteImport } from './routes/contracts'
 import { Route as CacesRouteImport } from './routes/caces'
 import { Route as AlertsRouteImport } from './routes/alerts'
 import { Route as IndexRouteImport } from './routes/index'
@@ -47,6 +48,11 @@ const EmployeesRoute = EmployeesRouteImport.update({
 const DocumentsRoute = DocumentsRouteImport.update({
   id: '/documents',
   path: '/documents',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContractsRoute = ContractsRouteImport.update({
+  id: '/contracts',
+  path: '/contracts',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CacesRoute = CacesRouteImport.update({
@@ -129,6 +135,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/alerts': typeof AlertsRoute
   '/caces': typeof CacesRoute
+  '/contracts': typeof ContractsRoute
   '/documents': typeof DocumentsRoute
   '/employees': typeof EmployeesRoute
   '/home': typeof HomeRoute
@@ -150,6 +157,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/alerts': typeof AlertsRoute
   '/caces': typeof CacesRoute
+  '/contracts': typeof ContractsRoute
   '/documents': typeof DocumentsRoute
   '/employees': typeof EmployeesRoute
   '/home': typeof HomeRoute
@@ -172,6 +180,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/alerts': typeof AlertsRoute
   '/caces': typeof CacesRoute
+  '/contracts': typeof ContractsRoute
   '/documents': typeof DocumentsRoute
   '/employees': typeof EmployeesRoute
   '/home': typeof HomeRoute
@@ -195,6 +204,7 @@ export interface FileRouteTypes {
     | '/'
     | '/alerts'
     | '/caces'
+    | '/contracts'
     | '/documents'
     | '/employees'
     | '/home'
@@ -216,6 +226,7 @@ export interface FileRouteTypes {
     | '/'
     | '/alerts'
     | '/caces'
+    | '/contracts'
     | '/documents'
     | '/employees'
     | '/home'
@@ -237,6 +248,7 @@ export interface FileRouteTypes {
     | '/'
     | '/alerts'
     | '/caces'
+    | '/contracts'
     | '/documents'
     | '/employees'
     | '/home'
@@ -259,6 +271,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AlertsRoute: typeof AlertsRoute
   CacesRoute: typeof CacesRoute
+  ContractsRoute: typeof ContractsRoute
   DocumentsRoute: typeof DocumentsRoute
   EmployeesRoute: typeof EmployeesRoute
   HomeRoute: typeof HomeRoute
@@ -305,6 +318,13 @@ declare module '@tanstack/react-router' {
       path: '/documents'
       fullPath: '/documents'
       preLoaderRoute: typeof DocumentsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contracts': {
+      id: '/contracts'
+      path: '/contracts'
+      fullPath: '/contracts'
+      preLoaderRoute: typeof ContractsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/caces': {
@@ -419,6 +439,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AlertsRoute: AlertsRoute,
   CacesRoute: CacesRoute,
+  ContractsRoute: ContractsRoute,
   DocumentsRoute: DocumentsRoute,
   EmployeesRoute: EmployeesRoute,
   HomeRoute: HomeRoute,

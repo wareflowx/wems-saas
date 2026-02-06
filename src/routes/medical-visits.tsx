@@ -1,10 +1,11 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
-import { Search, Filter, Plus, Calendar, User, FileText, CheckCircle2, Clock, AlertTriangle, Sparkles, Stethoscope, ChevronUp, ChevronDown, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, SearchX, Edit, Trash2, Eye } from 'lucide-react'
+import { Search, Filter, Plus, Calendar, User, FileText, CheckCircle2, Clock, AlertTriangle, Sparkles, Stethoscope, ChevronUp, ChevronDown, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, SearchX, Edit, Trash2, Eye, Activity } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { SidebarInset, SidebarTrigger } from '@/components/ui/sidebar'
+import { PageHeaderCard } from '@/components/ui/page-header-card'
+import { MetricsSection } from '@/components/ui/metrics-section'
 import { useTranslation } from 'react-i18next'
 import {
   Table,
@@ -182,36 +183,43 @@ const MedicalVisitsLayout = () => {
   }
 
   const badgeContent = (label: string, color: string) => (
-    <Badge className={color}>{label}</Badge>
+    <span className={`inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium ${color}`}>{label}</span>
   )
 
   const getTypeBadge = (type: string) => {
     const typeMap = {
       'Visite périodique': {
         label: t('medicalVisits.periodicVisit'),
-        color: 'bg-purple-600/10 border border-purple-600/20 text-purple-700',
+        dotColor: 'bg-purple-600',
         tooltip: t('medicalVisits.tooltip.periodicVisit')
       },
       'Visite de reprise': {
         label: t('medicalVisits.returnVisit'),
-        color: 'bg-orange-600/10 border border-orange-600/20 text-orange-700',
+        dotColor: 'bg-orange-600',
         tooltip: t('medicalVisits.tooltip.returnVisit')
       },
       'Visite initiale': {
         label: t('medicalVisits.initialVisit'),
-        color: 'bg-teal-600/10 border border-teal-600/20 text-teal-700',
+        dotColor: 'bg-teal-600',
         tooltip: t('medicalVisits.tooltip.initialVisit')
       }
     }
     const config = typeMap[type as keyof typeof typeMap] || {
       label: type,
-      color: 'bg-gray-600/10 border border-gray-600/20 text-gray-700',
+      dotColor: 'bg-gray-600',
       tooltip: type
     }
 
+    const badge = (
+      <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-xs font-medium border border-border">
+        <span className={`w-1.5 h-1.5 rounded-full ${config.dotColor}`}></span>
+        {config.label}
+      </span>
+    )
+
     return (
       <Tooltip>
-        <TooltipTrigger>{badgeContent(config.label, config.color)}</TooltipTrigger>
+        <TooltipTrigger>{badge}</TooltipTrigger>
         <TooltipContent className="max-w-xs"><p>{config.tooltip}</p></TooltipContent>
       </Tooltip>
     )
@@ -229,89 +237,62 @@ const MedicalVisitsLayout = () => {
 
   return (
     <TooltipProvider>
-      <SidebarInset>
-        <header className="flex h-14 shrink-0 items-center gap-2 border-b px-4 sticky top-0 bg-background z-10">
-        <SidebarTrigger className="-ml-1" />
-        <div className="flex items-center gap-2"><Stethoscope className="h-5 w-5 text-gray-600" /><h2 className="text-lg font-semibold">{t('medicalVisits.title')}</h2></div>
-        <div className="ml-auto flex items-center gap-2">
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium bg-green-50 text-green-700 border border-green-200"><div className="w-2 h-2 rounded-full bg-green-500" /><span>{t('dashboard.editMode')}</span></div>
-        </div>
-      </header>
-      <div className="flex flex-1 flex-col gap-4 p-4 py-6">
+      <div className="flex flex-1 flex-col gap-4 p-4 pt-6">
         <div className="min-h-full space-y-3">
           {/* Header */}
-          <div className="mb-2">
-            <Card className="gap-4 p-3 bg-background shadow-sm rounded-md">
-              <div className="flex items-start gap-3">
-                <div className="mt-0.5">
-                  <Sparkles className="h-4 w-4 text-gray-600" />
-                </div>
-                <div className="flex-1">
-                  <p className="text-gray-700">
-                    <span className="font-medium">{t('medicalVisits.title')}</span> - Planifiez et suivez les visites médicales obligatoires de vos employés
-                  </p>
-                </div>
-              </div>
-            </Card>
-          </div>
+          <PageHeaderCard
+            icon={<Sparkles className="h-4 w-4 text-gray-600" />}
+            title={t('medicalVisits.title')}
+            description="Planifiez et suivez les visites médicales obligatoires de vos employés"
+          />
 
           {/* Key Metrics */}
-          <div className="grid gap-2 md:grid-cols-2 lg:grid-cols-4">
-            <Card className="gap-4 p-4 bg-background">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-0">
-                <CardTitle className="text-sm font-medium">{t('medicalVisits.total')}</CardTitle>
-                <FileText className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent className="p-0">
-                <div className="text-2xl font-bold">{kpis.totalVisits}</div>
-                <p className="text-xs text-muted-foreground">Total visites</p>
-              </CardContent>
-            </Card>
-            <Card className="gap-4 p-4 bg-background">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-0">
-                <CardTitle className="text-sm font-medium">{t('medicalVisits.overdue')}</CardTitle>
-                <AlertTriangle className="h-4 w-4 text-red-500" />
-              </CardHeader>
-              <CardContent className="p-0">
-                <div className="text-2xl font-bold">{kpis.overdueVisits}</div>
-                <p className="text-xs text-muted-foreground">{((kpis.overdueVisits / kpis.totalVisits) * 100).toFixed(0)}% du total</p>
-              </CardContent>
-            </Card>
-            <Card className="gap-4 p-4 bg-background">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-0">
-                <CardTitle className="text-sm font-medium">{t('medicalVisits.upcoming')}</CardTitle>
-                <Calendar className="h-4 w-4 text-blue-500" />
-              </CardHeader>
-              <CardContent className="p-0">
-                <div className="text-2xl font-bold">{kpis.upcomingVisits}</div>
-                <p className="text-xs text-muted-foreground">{((kpis.upcomingVisits / kpis.totalVisits) * 100).toFixed(0)}% du total</p>
-              </CardContent>
-            </Card>
-            <Card className="gap-4 p-4 bg-background">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-0">
-                <CardTitle className="text-sm font-medium">{t('medicalVisits.completed')}</CardTitle>
-                <CheckCircle2 className="h-4 w-4 text-green-500" />
-              </CardHeader>
-              <CardContent className="p-0">
-                <div className="text-2xl font-bold">{kpis.completedVisits}</div>
-                <p className="text-xs text-muted-foreground">{((kpis.completedVisits / kpis.totalVisits) * 100).toFixed(0)}% du total</p>
-              </CardContent>
-            </Card>
-          </div>
+          <MetricsSection
+            kpis={[
+              {
+                title: t('medicalVisits.total'),
+                value: kpis.totalVisits,
+                description: 'Total visites',
+                icon: <FileText className="h-4 w-4" />
+              },
+              {
+                title: t('medicalVisits.overdue'),
+                value: kpis.overdueVisits,
+                description: `${((kpis.overdueVisits / kpis.totalVisits) * 100).toFixed(0)}% du total`,
+                icon: <AlertTriangle className="h-4 w-4" />,
+                iconColor: 'text-red-500'
+              },
+              {
+                title: t('medicalVisits.upcoming'),
+                value: kpis.upcomingVisits,
+                description: `${((kpis.upcomingVisits / kpis.totalVisits) * 100).toFixed(0)}% du total`,
+                icon: <Calendar className="h-4 w-4" />,
+                iconColor: 'text-blue-500'
+              },
+              {
+                title: t('medicalVisits.completed'),
+                value: kpis.completedVisits,
+                description: `${((kpis.completedVisits / kpis.totalVisits) * 100).toFixed(0)}% du total`,
+                icon: <CheckCircle2 className="h-4 w-4" />,
+                iconColor: 'text-green-500'
+              }
+            ]}
+          />
 
-          {/* Search and Filters */}
-          <div className="flex flex-wrap gap-2">
+          <div className="flex gap-2 flex-col">
+            {/* Search and Filters */}
+            <div className="flex flex-wrap gap-2">
             <div className="relative flex-1 min-w-[200px]">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
                 placeholder={t('common.search')}
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="pl-9"
+                className="pl-9 bg-card"
               />
             </div>
             <Select value={typeFilter} onValueChange={setTypeFilter}>
-              <SelectTrigger className="w-[180px]">
+              <SelectTrigger className="w-[180px] bg-card">
                 <SelectValue placeholder={t('medicalVisits.type')} />
               </SelectTrigger>
               <SelectContent>
@@ -324,7 +305,7 @@ const MedicalVisitsLayout = () => {
               </SelectContent>
             </Select>
             <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="w-[180px]">
+              <SelectTrigger className="w-[180px] bg-card">
                 <SelectValue placeholder={t('medicalVisits.status')} />
               </SelectTrigger>
               <SelectContent>
@@ -335,7 +316,7 @@ const MedicalVisitsLayout = () => {
               </SelectContent>
             </Select>
             <Select value={employeeFilter} onValueChange={setEmployeeFilter}>
-              <SelectTrigger className="w-[180px]">
+              <SelectTrigger className="w-[180px] bg-card">
                 <SelectValue placeholder={t('caces.employee')} />
               </SelectTrigger>
               <SelectContent>
@@ -351,11 +332,11 @@ const MedicalVisitsLayout = () => {
           </div>
 
           {/* Table */}
-          <div className="rounded-lg border">
+          <div className="rounded-lg border bg-card">
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>
+                  <TableHead className="px-4">
                     <Button
                       variant="ghost"
                       size="sm"
@@ -368,7 +349,7 @@ const MedicalVisitsLayout = () => {
                       </div>
                     </Button>
                   </TableHead>
-                  <TableHead>
+                  <TableHead className="px-4">
                     <Button
                       variant="ghost"
                       size="sm"
@@ -381,7 +362,7 @@ const MedicalVisitsLayout = () => {
                       </div>
                     </Button>
                   </TableHead>
-                  <TableHead>
+                  <TableHead className="px-4">
                     <Button
                       variant="ghost"
                       size="sm"
@@ -394,7 +375,7 @@ const MedicalVisitsLayout = () => {
                       </div>
                     </Button>
                   </TableHead>
-                  <TableHead>
+                  <TableHead className="px-4">
                     <Button
                       variant="ghost"
                       size="sm"
@@ -436,9 +417,9 @@ const MedicalVisitsLayout = () => {
                           {visit.employee}
                         </Link>
                       </TableCell>
-                      <TableCell>{getTypeBadge(visit.type)}</TableCell>
+                      <TableCell className="px-4">{getTypeBadge(visit.type)}</TableCell>
                       <TableCell className="text-gray-700">{visit.scheduledDate}</TableCell>
-                      <TableCell>{getStatusBadge(visit.status, visit.daysUntil)}</TableCell>
+                      <TableCell className="px-4">{getStatusBadge(visit.status, visit.daysUntil)}</TableCell>
                       <TableCell className="text-right">
                         <div className="flex justify-end gap-2">
                           <Button variant="ghost" size="icon" onClick={() => handleEdit(visit)}><Edit className="h-4 w-4" /></Button>
@@ -450,6 +431,7 @@ const MedicalVisitsLayout = () => {
                 )}
               </TableBody>
             </Table>
+          </div>
           </div>
 
           {/* Pagination */}
@@ -544,7 +526,6 @@ const MedicalVisitsLayout = () => {
         }}
         visit={selectedVisit}
       />
-    </SidebarInset>
     </TooltipProvider>
   )
 }

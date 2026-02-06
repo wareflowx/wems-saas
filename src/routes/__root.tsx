@@ -3,6 +3,7 @@ import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 import { TanStackDevtools } from '@tanstack/react-devtools'
 import { SidebarProvider, Sidebar } from '@/components/ui/sidebar'
 import { AppSidebar } from '@/components/AppSidebar'
+import { AppLayout } from '@/components/AppLayout'
 import '@/lib/i18n'
 
 import appCss from '../styles.css?url'
@@ -38,7 +39,7 @@ const RootLayout = () => {
       <Sidebar collapsible="icon">
         <AppSidebar />
       </Sidebar>
-      <Outlet />
+      <AppLayout />
     </SidebarProvider>
   )
 }

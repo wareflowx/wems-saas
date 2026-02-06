@@ -13,11 +13,18 @@
     "alerts": "Alerts",
     "referenceData": "Reference Data",
     "backup": "Backup",
-    "system": "System"
+    "system": "System",
+    "contracts": "Contracts",
+    "quickActions": "Quick Actions",
+    "addPosition": "Add Position",
+    "addWorkLocation": "Add Work Location"
   },
   "dashboard": {
     "title": "Dashboard",
     "subtitle": "Overview of employee management",
+    "description": "Overview of your company and important alerts",
+    "kpiTitle": "Key indicators",
+    "kpiDescription": "Essential metrics about your workforce and active alerts",
     "totalEmployees": "Total active employees",
     "newHires": "New hires",
     "thisMonth": "this month",
@@ -78,6 +85,43 @@
     "accountant": "Accountant",
     "hrManager": "HR Manager"
   },
+  "contracts": {
+    "title": "Contracts",
+    "description": "Manage all your employee contracts",
+    "total": "Total contracts",
+    "active": "Active",
+    "endingSoon": "Ending soon",
+    "search": "Search a contract, employee, department...",
+    "type": "Type",
+    "allTypes": "All types",
+    "status": "Status",
+    "allStatuses": "All statuses",
+    "addContract": "Add contract",
+    "contracts": "contracts",
+    "duration": "Duration",
+    "startDate": "Start date",
+    "endDate": "End date",
+    "renew": "Renew",
+    "cdi": "Permanent",
+    "cdd": "Fixed-term",
+    "interim": "Temporary",
+    "alternance": "Apprenticeship",
+    "stage": "Internship",
+    "freelance": "Freelance"
+  },
+  "departments": {
+    "production": "Production",
+    "administration": "Administration",
+    "rh": "HR",
+    "it": "IT",
+    "logistics": "Logistics"
+  },
+  "documentTypes": {
+    "contract": "Contract",
+    "caces": "CACES",
+    "medicalVisit": "Medical visit",
+    "identification": "Identification"
+  },
   "employeeDetail": {
     "title": "Employee file",
     "edit": "Edit",
@@ -108,6 +152,7 @@
     "title": "Documents",
     "search": "Search...",
     "filter": "Filter",
+    "description": "Manage and view all employee documents",
     "addDocument": "Add document",
     "addDocumentDescription": "Add a new document for an employee",
     "name": "Name",
@@ -133,6 +178,12 @@
     "uploadDate": "Upload date",
     "size": "Size",
     "document": "Document",
+    "totalDocuments": "Total documents",
+    "thisMonth": "This month",
+    "newDocuments": "New",
+    "allTypes": "All types",
+    "allCategories": "All categories",
+    "showing": "Showing {{from}} to {{to}} of {{total}}",
     "tooltip": {
       "typeContrat": "Employment contract document",
       "typeCACES": "Certificate of aptitude for safe driving",
@@ -226,26 +277,42 @@
     "title": "Alerts",
     "search": "Search...",
     "filter": "Filter",
+    "description": "Stay informed of critical and upcoming alerts regarding your employees",
     "all": "All",
     "critical": "Critical",
     "warning": "Warnings",
     "info": "Information",
     "employee": "Employee",
     "type": "Type",
-    "description": "Description",
     "date": "Date",
     "severity": "Severity",
     "actions": "Actions",
     "view": "View",
     "cacesExpiring": "Expiring CACES",
-    "missedVisit": "Missed medical visit"
+    "missedVisit": "Missed medical visit",
+    "totalAlerts": "Total alerts",
+    "allSeverities": "All severities",
+    "allTypes": "All types",
+    "showing": "Showing {{from}} to {{to}} of {{total}}",
+    "tooltip": {
+      "critical": "Critical alert requiring immediate attention",
+      "warning": "Warning alert that should be addressed soon",
+      "info": "Informational alert for reference"
+    }
   },
   "settings": {
     "title": "Settings",
     "alerts": "Alerts",
     "referenceData": "Reference Data",
     "backup": "Backup",
-    "system": "System"
+    "system": "System",
+    "createPositionDescription": "Create a new position for your employees",
+    "positionName": "Position name",
+    "positionNamePlaceholder": "Ex: Technician, Operator...",
+    "color": "Color",
+    "createWorkLocationDescription": "Add a new work location",
+    "locationName": "Location name",
+    "locationNamePlaceholder": "Ex: Site A, Factory B..."
   },
   "settingsAlerts": {
     "title": "Alert settings",
@@ -342,5 +409,18 @@
     "allStatuses": "All statuses",
     "employeeId": "ID: EMP-",
     "employees": "employees"
+  },
+  "placeholders": {
+    "firstName": "John",
+    "lastName": "Doe",
+    "email": "john.doe@email.com",
+    "phone": "+33 6 12 34 56 78",
+    "address": "123 Rue de la République, 75001 Paris",
+    "position": "Operator"
+  },
+  "steps": {
+    "personal": "Personal",
+    "professional": "Professional",
+    "review": "Review"
   }
 }

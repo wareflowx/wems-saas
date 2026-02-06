@@ -1,9 +1,10 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { Search, Filter, Plus, ShieldAlert, Sparkles, SearchX, Download, Edit, ChevronUp, ChevronDown, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-react'
+import { Search, Filter, Plus, ShieldAlert, Sparkles, SearchX, Download, Edit, ChevronUp, ChevronDown, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, Activity } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { SidebarInset, SidebarTrigger } from '@/components/ui/sidebar'
+import { PageHeaderCard } from '@/components/ui/page-header-card'
+import { MetricsSection } from '@/components/ui/metrics-section'
 import { useTranslation } from 'react-i18next'
 import { useState, useMemo } from 'react'
 import {
@@ -141,19 +142,19 @@ const CACESLayout = () => {
       switch (status) {
         case 'expired':
           return (
-            <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-red-500/10 border border-red-500/20 text-red-600">
+            <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-red-500/15 border border-red-500/25 text-red-700">
               {t('caces.expired')}
             </span>
           )
         case 'warning':
           return (
-            <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-yellow-600/10 border border-yellow-600/20 text-yellow-700">
+            <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-yellow-600/15 border border-yellow-600/25 text-yellow-700">
               {t('caces.expiringSoon')}
             </span>
           )
         default:
           return (
-            <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-green-600/10 border border-green-600/20 text-green-700">
+            <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-green-600/15 border border-green-600/25 text-green-700">
               {t('caces.valid')}
             </span>
           )
@@ -181,16 +182,17 @@ const CACESLayout = () => {
 
   const getCategoryBadge = (category: string) => {
     const categoryColors: { [key: string]: string } = {
-      '1A': 'bg-blue-500/10 border border-blue-500/20 text-blue-500',
-      '1B': 'bg-indigo-500/10 border border-indigo-500/20 text-indigo-500',
-      '3': 'bg-purple-500/10 border border-purple-500/20 text-purple-500',
-      '5': 'bg-pink-500/10 border border-pink-500/20 text-pink-500',
-      '7': 'bg-teal-500/10 border border-teal-500/20 text-teal-500',
+      '1A': 'bg-blue-500',
+      '1B': 'bg-indigo-500',
+      '3': 'bg-purple-500',
+      '5': 'bg-pink-500',
+      '7': 'bg-teal-500',
     }
-    const colors = categoryColors[category] || 'bg-gray-500/10 border border-gray-500/20 text-gray-500'
+    const dotColor = categoryColors[category] || 'bg-gray-500'
 
     const badge = (
-      <span className={`inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium ${colors}`}>
+      <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-xs font-medium border border-border">
+        <span className={`w-1.5 h-1.5 rounded-full ${dotColor}`}></span>
         CACES {category}
       </span>
     )
@@ -206,26 +208,18 @@ const CACESLayout = () => {
   }
 
   const getDaysBadge = (daysLeft: number) => {
-    const badgeContent = () => {
-      if (daysLeft < 0) {
-        return (
-          <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-red-500/10 border border-red-500/20 text-red-600">
-            {Math.abs(daysLeft)} {t('caces.daysOverdue')}
-          </span>
-        )
-      }
-      if (daysLeft <= 30) {
-        return (
-          <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-yellow-600/10 border border-yellow-600/20 text-yellow-700">
-            {daysLeft} {t('caces.daysLeft')}
-          </span>
-        )
-      }
-      return (
-        <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-green-600/10 border border-green-600/20 text-green-700">
-          {daysLeft} {t('caces.daysLeft')}
-        </span>
-      )
+    let dotColor: string
+    let text: string
+
+    if (daysLeft < 0) {
+      dotColor = 'bg-red-500'
+      text = `${Math.abs(daysLeft)} ${t('caces.daysOverdue')}`
+    } else if (daysLeft <= 30) {
+      dotColor = 'bg-yellow-600'
+      text = `${daysLeft} ${t('caces.daysLeft')}`
+    } else {
+      dotColor = 'bg-green-600'
+      text = `${daysLeft} ${t('caces.daysLeft')}`
     }
 
     const tooltipContent = () => {
@@ -235,144 +229,125 @@ const CACESLayout = () => {
       return t('caces.tooltip.daysLeft')
     }
 
+    const badge = (
+      <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-xs font-medium border border-border">
+        <span className={`w-1.5 h-1.5 rounded-full ${dotColor}`}></span>
+        {text}
+      </span>
+    )
+
     return (
       <Tooltip>
-        <TooltipTrigger>{badgeContent()}</TooltipTrigger>
+        <TooltipTrigger>{badge}</TooltipTrigger>
         <TooltipContent className="max-w-xs"><p>{tooltipContent()}</p></TooltipContent>
       </Tooltip>
     )
   }
 
   return (
-    <SidebarInset>
-      <header className="flex h-14 shrink-0 items-center gap-2 border-b px-4 sticky top-0 bg-background z-10">
-        <SidebarTrigger className="-ml-1" />
-        <div className="flex items-center gap-2"><ShieldAlert className="h-5 w-5 text-gray-600" /><h2 className="text-lg font-semibold">{t('caces.title')}</h2></div>
-        <div className="ml-auto flex items-center gap-2">
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium bg-green-50 text-green-700 border border-green-200"><div className="w-2 h-2 rounded-full bg-green-500" /><span>{t('dashboard.editMode')}</span></div>
-        </div>
-      </header>
-      <div className="flex flex-1 flex-col gap-4 p-4 py-6">
+    <>
+      <div className="flex flex-1 flex-col gap-4 p-4 pt-6">
         <div className="min-h-full space-y-3">
           {/* Header */}
-          <div className="mb-2">
-            <Card className="gap-4 p-3 bg-background shadow-sm rounded-md">
-              <div className="flex items-start gap-3">
-                <div className="mt-0.5">
-                  <Sparkles className="h-4 w-4 text-gray-600" />
-                </div>
-                <div className="flex-1">
-                  <p className="text-gray-700">
-                    <span className="font-medium">{t('caces.title')}</span> - {t('caces.description')}
-                  </p>
-                </div>
-              </div>
-            </Card>
-          </div>
+          <PageHeaderCard
+            icon={<Sparkles className="h-4 w-4 text-gray-600" />}
+            title={t('caces.title')}
+            description={t('caces.description')}
+          />
 
           {/* Key Metrics */}
-          <div className="grid gap-2 md:grid-cols-2 lg:grid-cols-4">
-            <Card className="gap-4 p-4 bg-background">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-0">
-                <CardTitle className="text-sm font-medium">{t('caces.totalCaces')}</CardTitle>
-                <ShieldAlert className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent className="p-0">
-                <div className="text-2xl font-bold">{kpis.totalCaces}</div>
-                <p className="text-xs text-muted-foreground">{kpis.validCaces} {t('caces.valid')}</p>
-              </CardContent>
-            </Card>
-            <Card className="gap-4 p-4 bg-background">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-0">
-                <CardTitle className="text-sm font-medium">{t('caces.expired')}</CardTitle>
-                <ShieldAlert className="h-4 w-4 text-red-500" />
-              </CardHeader>
-              <CardContent className="p-0">
-                <div className="text-2xl font-bold">{kpis.expiredCaces}</div>
-                <p className="text-xs text-muted-foreground">{((kpis.expiredCaces / kpis.totalCaces) * 100).toFixed(0)}{t('common.ofTotal')}</p>
-              </CardContent>
-            </Card>
-            <Card className="gap-4 p-4 bg-background">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-0">
-                <CardTitle className="text-sm font-medium">{t('caces.expiringSoon')}</CardTitle>
-                <Filter className="h-4 w-4 text-yellow-500" />
-              </CardHeader>
-              <CardContent className="p-0">
-                <div className="text-2xl font-bold">{kpis.warningCaces}</div>
-                <p className="text-xs text-muted-foreground">{((kpis.warningCaces / kpis.totalCaces) * 100).toFixed(0)}{t('common.ofTotal')}</p>
-              </CardContent>
-            </Card>
-            <Card className="gap-4 p-4 bg-background">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-0">
-                <CardTitle className="text-sm font-medium">{t('caces.valid')}</CardTitle>
-                <ShieldAlert className="h-4 w-4 text-green-500" />
-              </CardHeader>
-              <CardContent className="p-0">
-                <div className="text-2xl font-bold">{kpis.validCaces}</div>
-                <p className="text-xs text-muted-foreground">{((kpis.validCaces / kpis.totalCaces) * 100).toFixed(0)}{t('common.ofTotal')}</p>
-              </CardContent>
-            </Card>
-          </div>
+          <MetricsSection
+            kpis={[
+              {
+                title: t('caces.totalCaces'),
+                value: kpis.totalCaces,
+                description: `${kpis.validCaces} ${t('caces.valid')}`,
+                icon: <ShieldAlert className="h-4 w-4" />
+              },
+              {
+                title: t('caces.expired'),
+                value: kpis.expiredCaces,
+                description: `${((kpis.expiredCaces / kpis.totalCaces) * 100).toFixed(0)}${t('common.ofTotal')}`,
+                icon: <ShieldAlert className="h-4 w-4" />,
+                iconColor: 'text-red-500'
+              },
+              {
+                title: t('caces.expiringSoon'),
+                value: kpis.warningCaces,
+                description: `${((kpis.warningCaces / kpis.totalCaces) * 100).toFixed(0)}${t('common.ofTotal')}`,
+                icon: <Filter className="h-4 w-4" />,
+                iconColor: 'text-yellow-500'
+              },
+              {
+                title: t('caces.valid'),
+                value: kpis.validCaces,
+                description: `${((kpis.validCaces / kpis.totalCaces) * 100).toFixed(0)}${t('common.ofTotal')}`,
+                icon: <ShieldAlert className="h-4 w-4" />,
+                iconColor: 'text-green-500'
+              }
+            ]}
+          />
 
-          {/* Search and Filters */}
-          <div className="flex flex-wrap gap-2">
-            <div className="relative flex-1 min-w-[200px]">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input
-                placeholder={t('caces.search')}
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="pl-9"
-              />
+          <div className="flex gap-2 flex-col">
+            {/* Search and Filters */}
+            <div className="flex flex-wrap gap-2">
+              <div className="relative flex-1 min-w-[200px]">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input
+                  placeholder={t('caces.search')}
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  className="pl-9 bg-card"
+                />
+              </div>
+              <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+                <SelectTrigger className="w-[180px] bg-card">
+                  <SelectValue placeholder={t('caces.category')} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">{t('caces.allCategories')}</SelectItem>
+                  {uniqueCategories.map((category) => (
+                    <SelectItem key={category} value={category}>
+                      {category}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <Select value={statusFilter} onValueChange={setStatusFilter}>
+                <SelectTrigger className="w-[180px] bg-card">
+                  <SelectValue placeholder={t('caces.status')} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">{t('caces.allStatuses')}</SelectItem>
+                  <SelectItem value="expired">{t('caces.expired')}</SelectItem>
+                  <SelectItem value="warning">{t('caces.expiringSoon')}</SelectItem>
+                  <SelectItem value="valid">{t('caces.valid')}</SelectItem>
+                </SelectContent>
+              </Select>
+              <Select value={employeeFilter} onValueChange={setEmployeeFilter}>
+                <SelectTrigger className="w-[180px] bg-card">
+                  <SelectValue placeholder={t('caces.employee')} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">{t('dashboard.allEmployees')}</SelectItem>
+                  {uniqueEmployees.map((employee) => (
+                    <SelectItem key={employee} value={employee}>
+                      {employee}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <Button className="gap-2 ml-auto" onClick={() => setIsAddDialogOpen(true)}>
+                <Plus className="h-4 w-4" />{t('caces.addCaces')}
+              </Button>
             </div>
-            <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder={t('caces.category')} />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">{t('caces.allCategories')}</SelectItem>
-                {uniqueCategories.map((category) => (
-                  <SelectItem key={category} value={category}>
-                    {category}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder={t('caces.status')} />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">{t('caces.allStatuses')}</SelectItem>
-                <SelectItem value="expired">{t('caces.expired')}</SelectItem>
-                <SelectItem value="warning">{t('caces.expiringSoon')}</SelectItem>
-                <SelectItem value="valid">{t('caces.valid')}</SelectItem>
-              </SelectContent>
-            </Select>
-            <Select value={employeeFilter} onValueChange={setEmployeeFilter}>
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder={t('caces.employee')} />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">{t('dashboard.allEmployees')}</SelectItem>
-                {uniqueEmployees.map((employee) => (
-                  <SelectItem key={employee} value={employee}>
-                    {employee}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <Button className="gap-2 ml-auto" onClick={() => setIsAddDialogOpen(true)}>
-              <Plus className="h-4 w-4" />{t('caces.addCaces')}
-            </Button>
-          </div>
 
-          {/* Table */}
-          <div className="rounded-lg border">
+            {/* Table */}
+            <div className="rounded-lg border bg-card">
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>
+                  <TableHead className="px-4">
                     <Button
                       variant="ghost"
                       size="sm"
@@ -385,7 +360,7 @@ const CACESLayout = () => {
                       </div>
                     </Button>
                   </TableHead>
-                  <TableHead>
+                  <TableHead className="px-4">
                     <Button
                       variant="ghost"
                       size="sm"
@@ -398,7 +373,7 @@ const CACESLayout = () => {
                       </div>
                     </Button>
                   </TableHead>
-                  <TableHead>
+                  <TableHead className="px-4">
                     <Button
                       variant="ghost"
                       size="sm"
@@ -411,7 +386,7 @@ const CACESLayout = () => {
                       </div>
                     </Button>
                   </TableHead>
-                  <TableHead>
+                  <TableHead className="px-4">
                     <Button
                       variant="ghost"
                       size="sm"
@@ -424,7 +399,7 @@ const CACESLayout = () => {
                       </div>
                     </Button>
                   </TableHead>
-                  <TableHead>
+                  <TableHead className="px-4">
                     <Button
                       variant="ghost"
                       size="sm"
@@ -437,7 +412,7 @@ const CACESLayout = () => {
                       </div>
                     </Button>
                   </TableHead>
-                  <TableHead>
+                  <TableHead className="px-4">
                     <Button
                       variant="ghost"
                       size="sm"
@@ -471,7 +446,7 @@ const CACESLayout = () => {
                 ) : (
                   paginatedCaces.map((cacesItem) => (
                     <TableRow key={cacesItem.id} className="hover:bg-muted/50">
-                      <TableCell>
+                      <TableCell className="px-4">
                         <Link
                           to={`/employees_/${cacesItem.employeeId}`}
                           className="text-gray-700 underline hover:opacity-80 transition-opacity"
@@ -479,12 +454,12 @@ const CACESLayout = () => {
                           {cacesItem.employee}
                         </Link>
                       </TableCell>
-                      <TableCell>{getCategoryBadge(cacesItem.category)}</TableCell>
-                      <TableCell className="text-gray-700">{cacesItem.dateObtained}</TableCell>
-                      <TableCell className="text-gray-700">{cacesItem.expirationDate}</TableCell>
-                      <TableCell>{getDaysBadge(cacesItem.daysLeft)}</TableCell>
-                      <TableCell>{getStatusBadge(cacesItem.status)}</TableCell>
-                      <TableCell>
+                      <TableCell className="px-4">{getCategoryBadge(cacesItem.category)}</TableCell>
+                      <TableCell className="px-4 text-gray-700">{cacesItem.dateObtained}</TableCell>
+                      <TableCell className="px-4 text-gray-700">{cacesItem.expirationDate}</TableCell>
+                      <TableCell className="px-4">{getDaysBadge(cacesItem.daysLeft)}</TableCell>
+                      <TableCell className="px-4">{getStatusBadge(cacesItem.status)}</TableCell>
+                      <TableCell className="px-4">
                         <div className="flex items-center justify-end gap-2">
                           <Button variant="ghost" size="icon" onClick={() => setEditingCaces(cacesItem)}>
                             <Edit className="h-4 w-4" />
@@ -499,6 +474,7 @@ const CACESLayout = () => {
                 )}
               </TableBody>
             </Table>
+          </div>
           </div>
 
           {/* Pagination */}
@@ -587,6 +563,6 @@ const CACESLayout = () => {
         onOpenChange={(open) => !open && setEditingCaces(null)}
         caces={editingCaces}
       />
-    </SidebarInset>
+    </>
   )
 }
