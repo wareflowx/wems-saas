@@ -1,6 +1,7 @@
 import { app, BrowserWindow } from 'electron'
 import { join } from 'node:path'
 import { registerIPCHandlers } from './ipc/handlers'
+import { createApplicationMenu } from './menu'
 
 let mainWindow: BrowserWindow | null = null
 
@@ -8,6 +9,9 @@ const isDev = process.env.NODE_ENV === 'development'
 
 // Register IPC handlers
 registerIPCHandlers()
+
+// Create application menu
+createApplicationMenu({ devMode: isDev })
 
 function createMainWindow(): void {
   mainWindow = new BrowserWindow({

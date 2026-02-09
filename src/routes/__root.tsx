@@ -4,6 +4,7 @@ import { TanStackDevtools } from '@tanstack/react-devtools'
 import { SidebarProvider, Sidebar } from '@/components/ui/sidebar'
 import { AppSidebar } from '@/components/AppSidebar'
 import { AppLayout } from '@/components/AppLayout'
+import { TitleBar } from '@/components/electron/TitleBar'
 import '@/lib/i18n'
 
 import appCss from '../styles.css?url'
@@ -35,12 +36,15 @@ const RootDocument = ({ children }: { children: React.ReactNode }) => {
 
 const RootLayout = () => {
   return (
-    <SidebarProvider>
-      <Sidebar collapsible="icon">
-        <AppSidebar />
-      </Sidebar>
-      <AppLayout />
-    </SidebarProvider>
+    <>
+      <TitleBar />
+      <SidebarProvider>
+        <Sidebar collapsible="icon">
+          <AppSidebar />
+        </Sidebar>
+        <AppLayout />
+      </SidebarProvider>
+    </>
   )
 }
 
