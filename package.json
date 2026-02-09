@@ -2,6 +2,7 @@
   "name": "wems-saas",
   "private": true,
   "type": "module",
+  "main": "out/main/index.js",
   "scripts": {
     "dev": "vite dev --port 3000",
     "build": "vite build",
@@ -61,12 +62,12 @@
     "@vitejs/plugin-react": "^5.0.4",
     "electron": "^33.2.1",
     "electron-builder": "^25.1.8",
-    "electron-vite": "^3.0.0",
+    "electron-vite": "^5.0.0",
     "jsdom": "^27.0.0",
     "typescript": "^5.7.2",
     "vite": "^7.1.7",
-    "vitest": "^3.0.5",
     "vite-plugin-electron": "^0.29.0",
+    "vitest": "^3.0.5",
     "web-vitals": "^5.1.0"
   },
   "build": {

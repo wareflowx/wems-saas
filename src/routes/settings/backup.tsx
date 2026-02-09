@@ -16,10 +16,6 @@ import { useTranslation } from "react-i18next";
 import { PageHeaderCard } from "@/components/ui/page-header-card";
 import { DetailBadge } from "@/components/ui/badge";
 
-export const Route = createFileRoute("/settings/backup")({
-  component: SettingsBackupLayout,
-});
-
 const SettingsBackupLayout = () => {
   const { t } = useTranslation();
   return (
@@ -181,3 +177,7 @@ const SettingsBackupLayout = () => {
     </SidebarInset>
   );
 };
+
+export const Route = createFileRoute("/settings/backup")({
+  component: SettingsBackupLayout,
+});

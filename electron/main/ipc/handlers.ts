@@ -1,5 +1,6 @@
 import { app, BrowserWindow, dialog, ipcMain, Notification, shell } from 'electron'
-import { readdir, readFile, writeFile, existsSync, mkdir } from 'node:fs/promises'
+import { readdir, readFile, writeFile, mkdir } from 'node:fs/promises'
+import { existsSync } from 'node:fs'
 import { join } from 'node:path'
 import { ipcChannels } from './channels'
 import { appUpdater } from '../updater'

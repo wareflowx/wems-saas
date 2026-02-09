@@ -27,10 +27,6 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
 import { DeleteDocumentDialog } from '@/components/documents/DeleteDocumentDialog'
 import { AddDocumentDialog } from '@/components/documents/AddDocumentDialog'
 
-export const Route = createFileRoute('/documents')({
-  component: DocumentsLayout,
-})
-
 const DocumentsLayout = () => {
   const { t } = useTranslation()
   const [search, setSearch] = useState('')
@@ -532,3 +528,7 @@ const DocumentsLayout = () => {
     </>
   )
 }
+
+export const Route = createFileRoute('/documents')({
+  component: DocumentsLayout,
+})

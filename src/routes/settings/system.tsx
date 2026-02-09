@@ -17,10 +17,6 @@ import { useState, useEffect } from "react";
 import { PageHeaderCard } from "@/components/ui/page-header-card";
 import { DetailBadge } from "@/components/ui/badge";
 
-export const Route = createFileRoute("/settings/system")({
-  component: SettingsSystemLayout,
-});
-
 const SettingsSystemLayout = () => {
   const { t, i18n } = useTranslation();
   const [language, setLanguage] = useState(i18n.language);
@@ -128,3 +124,7 @@ const SettingsSystemLayout = () => {
     </SidebarInset>
   );
 };
+
+export const Route = createFileRoute("/settings/system")({
+  component: SettingsSystemLayout,
+});

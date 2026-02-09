@@ -23,7 +23,7 @@ function createMainWindow(): void {
     backgroundColor: '#ffffff',
     show: false, // Don't show until ready-to-show
     webPreferences: {
-      preload: join(__dirname, '../preload/index.js'),
+      preload: join(__dirname, '../preload/index.mjs'),
       sandbox: false, // Required for contextBridge in some cases
       contextIsolation: true,
       nodeIntegration: false,
@@ -35,12 +35,17 @@ function createMainWindow(): void {
   appUpdater.setMainWindow(mainWindow)
 
   // Load the app
-  if (isDev && process.env.ELECTRON_RENDERER_URL) {
-    mainWindow.loadURL(process.env.ELECTRON_RENDERER_URL)
+  if (isDev) {
+    mainWindow.loadURL('http://127.0.0.1:8000')
     mainWindow.webContents.openDevTools()
   } else {
     mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
   }
+
+  // Wait for the preload script to be ready
+  mainWindow.webContents.on('did-finish-load', () => {
+    console.log('Preload script loaded')
+  })
 
   // Show window when ready to prevent visual flash
   mainWindow.once('ready-to-show', () => {

@@ -37,10 +37,6 @@ import { AddItemDialog } from "@/components/ui/add-item-dialog";
 import { EditItemDialog } from "@/components/ui/edit-item-dialog";
 import { useState } from "react";
 
-export const Route = createFileRoute("/settings/reference-data")({
-  component: SettingsReferenceDataLayout,
-});
-
 const SettingsReferenceDataLayout = () => {
   const { t } = useTranslation();
   const [deleteDialog, setDeleteDialog] = useState<{
@@ -514,3 +510,7 @@ const SettingsReferenceDataLayout = () => {
     </TooltipProvider>
   );
 };
+
+export const Route = createFileRoute("/settings/reference-data")({
+  component: SettingsReferenceDataLayout,
+});

@@ -27,10 +27,6 @@ import { AddCacesDialog } from '@/components/caces/AddCacesDialog'
 import { EditCacesDialog } from '@/components/caces/EditCacesDialog'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 
-export const Route = createFileRoute('/caces')({
-  component: CACESLayout,
-})
-
 const CACESLayout = () => {
   const { t } = useTranslation()
   const [search, setSearch] = useState('')
@@ -566,3 +562,7 @@ const CACESLayout = () => {
     </>
   )
 }
+
+export const Route = createFileRoute('/caces')({
+  component: CACESLayout,
+})

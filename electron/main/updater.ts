@@ -1,4 +1,5 @@
-import { autoUpdater } from 'electron-updater'
+import electronUpdater from 'electron-updater'
+const { autoUpdater } = electronUpdater
 import { app, BrowserWindow } from 'electron'
 import { join } from 'node:path'
 
@@ -60,7 +61,7 @@ class AppUpdater {
     })
   }
 
-  private send.sendStatus: string, data?: unknown): void {
+  private sendStatus(status: string, data?: unknown): void {
     if (this.mainWindow && !this.mainWindow.isDestroyed()) {
       this.mainWindow.webContents.send('updater:event', { status, data })
     }

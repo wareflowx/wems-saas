@@ -56,10 +56,6 @@ import { PageHeaderCard } from "@/components/ui/page-header-card";
 import { MetricsSection } from "@/components/ui/metrics-section";
 import { Link } from "@tanstack/react-router";
 
-export const Route = createFileRoute("/employees")({
-  component: EmployeesLayout,
-});
-
 const EmployeesLayout = () => {
   const { t } = useTranslation();
   const [currentPage, setCurrentPage] = useState(1);
@@ -554,3 +550,7 @@ const EmployeesLayout = () => {
     </>
   );
 };
+
+export const Route = createFileRoute("/employees")({
+  component: EmployeesLayout,
+});
