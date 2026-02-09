@@ -316,6 +316,7 @@
   },
   "settingsAlerts": {
     "title": "Paramètres des alertes",
+    "description": "Configurez les alertes pour les CACES et visites médicales",
     "cacesExpiryAlerts": "Alertes d'expiration CACES",
     "enableExpiryAlerts": "Activer les alertes d'expiration",
     "daysBeforeExpiry": "Jours avant l'expiration",
@@ -323,10 +324,18 @@
     "enableVisitAlerts": "Activer les alertes de visites",
     "notificationMethods": "Méthodes de notification",
     "email": "Email",
-    "inApp": "Dans l'application"
+    "inApp": "Dans l'application",
+    "criticalAlert": "Alerte critique",
+    "warningAlert": "Alerte warning",
+    "daysBeforeExpiryLabel": "Jours avant expiration",
+    "daysBeforeVisit": "Jours avant visite",
+    "recallFrequency": "Périodicité rappel",
+    "recallFrequencyLabel": "En mois",
+    "enableNotifications": "Activer les notifications"
   },
   "settingsReferenceData": {
     "title": "Données de référence",
+    "description": "Gérez les données de référence de votre entreprise",
     "departments": "Départements",
     "positions": "Postes",
     "contractTypes": "Types de contrat",
@@ -338,7 +347,51 @@
     "addContractType": "Ajouter un type de contrat",
     "addDocumentType": "Ajouter un type de document",
     "addCacesCategory": "Ajouter une catégorie CACES",
-    "addVisitType": "Ajouter un type de visite"
+    "addVisitType": "Ajouter un type de visite",
+    "deleteDepartment": "Supprimer le département",
+    "deletePosition": "Supprimer le poste",
+    "deleteContractType": "Supprimer le type de contrat",
+    "deleteWarning": "Êtes-vous sûr de vouloir supprimer \"{{value}}\" ? Cette action est irréversible.",
+    "addDepartmentDialog": {
+      "title": "Ajouter un département",
+      "description": "Entrez le nom du nouveau département",
+      "label": "Nom du département",
+      "placeholder": "Ex: Marketing, Vente..."
+    },
+    "addPositionDialog": {
+      "title": "Ajouter un poste",
+      "description": "Entrez le nom du nouveau poste",
+      "label": "Nom du poste",
+      "placeholder": "Ex: Technicien, Chef d'équipe..."
+    },
+    "addContractTypeDialog": {
+      "title": "Ajouter un type de contrat",
+      "description": "Entrez le nom du nouveau type de contrat",
+      "label": "Type de contrat",
+      "placeholder": "Ex: Stage, Freelance..."
+    },
+    "editDepartmentDialog": {
+      "title": "Modifier le département",
+      "description": "Modifiez le nom du département",
+      "label": "Nom du département",
+      "placeholder": "Ex: Marketing, Vente..."
+    },
+    "editPositionDialog": {
+      "title": "Modifier le poste",
+      "description": "Modifiez le nom du poste",
+      "label": "Nom du poste",
+      "placeholder": "Ex: Technicien, Chef d'équipe..."
+    },
+    "editContractTypeDialog": {
+      "title": "Modifier le type de contrat",
+      "description": "Modifiez le nom du type de contrat",
+      "label": "Type de contrat",
+      "placeholder": "Ex: Stage, Freelance..."
+    }
+  },
+  "actions": {
+    "edit": "Modifier",
+    "delete": "Supprimer"
   },
   "settingsBackup": {
     "title": "Sauvegarde & Restauration",

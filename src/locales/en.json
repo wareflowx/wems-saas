@@ -316,6 +316,7 @@
   },
   "settingsAlerts": {
     "title": "Alert settings",
+    "description": "Configure alerts for CACES and medical visits",
     "cacesExpiryAlerts": "CACES expiry alerts",
     "enableExpiryAlerts": "Enable expiry alerts",
     "daysBeforeExpiry": "Days before expiry",
@@ -323,10 +324,18 @@
     "enableVisitAlerts": "Enable visit alerts",
     "notificationMethods": "Notification methods",
     "email": "Email",
-    "inApp": "In-app"
+    "inApp": "In-app",
+    "criticalAlert": "Critical alert",
+    "warningAlert": "Warning alert",
+    "daysBeforeExpiryLabel": "Days before expiry",
+    "daysBeforeVisit": "Days before visit",
+    "recallFrequency": "Recall frequency",
+    "recallFrequencyLabel": "In months",
+    "enableNotifications": "Enable notifications"
   },
   "settingsReferenceData": {
     "title": "Reference Data",
+    "description": "Manage your company reference data",
     "departments": "Departments",
     "positions": "Positions",
     "contractTypes": "Contract types",
@@ -338,7 +347,51 @@
     "addContractType": "Add contract type",
     "addDocumentType": "Add document type",
     "addCacesCategory": "Add CACES category",
-    "addVisitType": "Add visit type"
+    "addVisitType": "Add visit type",
+    "deleteDepartment": "Delete department",
+    "deletePosition": "Delete position",
+    "deleteContractType": "Delete contract type",
+    "deleteWarning": "Are you sure you want to delete \"{{value}}\"? This action cannot be undone.",
+    "addDepartmentDialog": {
+      "title": "Add department",
+      "description": "Enter the name of the new department",
+      "label": "Department name",
+      "placeholder": "Ex: Marketing, Sales..."
+    },
+    "addPositionDialog": {
+      "title": "Add position",
+      "description": "Enter the name of the new position",
+      "label": "Position name",
+      "placeholder": "Ex: Technician, Team lead..."
+    },
+    "addContractTypeDialog": {
+      "title": "Add contract type",
+      "description": "Enter the name of the new contract type",
+      "label": "Contract type",
+      "placeholder": "Ex: Internship, Freelance..."
+    },
+    "editDepartmentDialog": {
+      "title": "Edit department",
+      "description": "Edit the department name",
+      "label": "Department name",
+      "placeholder": "Ex: Marketing, Sales..."
+    },
+    "editPositionDialog": {
+      "title": "Edit position",
+      "description": "Edit the position name",
+      "label": "Position name",
+      "placeholder": "Ex: Technician, Team lead..."
+    },
+    "editContractTypeDialog": {
+      "title": "Edit contract type",
+      "description": "Edit the contract type name",
+      "label": "Contract type",
+      "placeholder": "Ex: Internship, Freelance..."
+    }
+  },
+  "actions": {
+    "edit": "Edit",
+    "delete": "Delete"
   },
   "settingsBackup": {
     "title": "Backup & Restore",

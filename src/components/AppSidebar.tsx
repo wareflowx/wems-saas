@@ -34,7 +34,8 @@ import { CreateWorkLocationDialog } from "./settings/CreateWorkLocationDialog";
 export const AppSidebar = () => {
   const { t } = useTranslation();
   const [isPositionDialogOpen, setIsPositionDialogOpen] = useState(false);
-  const [isWorkLocationDialogOpen, setIsWorkLocationDialogOpen] = useState(false);
+  const [isWorkLocationDialogOpen, setIsWorkLocationDialogOpen] =
+    useState(false);
 
   return (
     <>
@@ -184,7 +185,6 @@ export const AppSidebar = () => {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
-      <SidebarFooter />
       <SidebarRail />
       <CreatePositionDialog
         open={isPositionDialogOpen}

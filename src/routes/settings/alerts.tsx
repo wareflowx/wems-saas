@@ -17,14 +17,14 @@ export const Route = createFileRoute("/settings/alerts")({
 const SettingsAlertsLayout = () => {
   const { t } = useTranslation();
   return (
-    <SidebarInset>
+    <SidebarInset className="bg-sidebar">
       <div className="flex flex-1 flex-col gap-4 p-4 pt-6">
         <div className="min-h-full space-y-3">
           {/* Header */}
           <PageHeaderCard
             icon={<Sparkles className="h-4 w-4 text-gray-600" />}
             title={t("settingsAlerts.title")}
-            description="Configurez les alertes pour les CACES et visites médicales"
+            description={t("settingsAlerts.description")}
           />
 
           <div className="flex gap-2 flex-col">
@@ -41,9 +41,9 @@ const SettingsAlertsLayout = () => {
                 <CardContent className="space-y-4">
                   <div className="flex items-center justify-between py-2">
                     <div className="flex-1">
-                      <Label htmlFor="caces-critical">Alerte critique</Label>
+                      <Label htmlFor="caces-critical">{t("settingsAlerts.criticalAlert")}</Label>
                       <p className="text-sm text-muted-foreground">
-                        Jours avant expiration
+                        {t("settingsAlerts.daysBeforeExpiryLabel")}
                       </p>
                     </div>
                     <Input
@@ -55,9 +55,9 @@ const SettingsAlertsLayout = () => {
                   </div>
                   <div className="flex items-center justify-between py-2">
                     <div className="flex-1">
-                      <Label htmlFor="caces-warning">Alerte warning</Label>
+                      <Label htmlFor="caces-warning">{t("settingsAlerts.warningAlert")}</Label>
                       <p className="text-sm text-muted-foreground">
-                        Jours avant expiration
+                        {t("settingsAlerts.daysBeforeExpiryLabel")}
                       </p>
                     </div>
                     <Input
@@ -70,7 +70,7 @@ const SettingsAlertsLayout = () => {
                   <div className="flex items-center justify-between py-2">
                     <div className="flex-1">
                       <Label htmlFor="caces-enabled">
-                        Activer les notifications
+                        {t("settingsAlerts.enableNotifications")}
                       </Label>
                     </div>
                     <Switch id="caces-enabled" defaultChecked />
@@ -90,9 +90,9 @@ const SettingsAlertsLayout = () => {
                 <CardContent className="space-y-4">
                   <div className="flex items-center justify-between py-2">
                     <div className="flex-1">
-                      <Label htmlFor="visit-critical">Alerte critique</Label>
+                      <Label htmlFor="visit-critical">{t("settingsAlerts.criticalAlert")}</Label>
                       <p className="text-sm text-muted-foreground">
-                        Jours avant visite
+                        {t("settingsAlerts.daysBeforeVisit")}
                       </p>
                     </div>
                     <Input
@@ -104,8 +104,8 @@ const SettingsAlertsLayout = () => {
                   </div>
                   <div className="flex items-center justify-between py-2">
                     <div className="flex-1">
-                      <Label htmlFor="visit-warning">Périodicité rappel</Label>
-                      <p className="text-sm text-muted-foreground">En mois</p>
+                      <Label htmlFor="visit-warning">{t("settingsAlerts.recallFrequency")}</Label>
+                      <p className="text-sm text-muted-foreground">{t("settingsAlerts.recallFrequencyLabel")}</p>
                     </div>
                     <Input
                       id="visit-warning"
