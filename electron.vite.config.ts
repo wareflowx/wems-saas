@@ -40,7 +40,8 @@ export default defineConfig({
     },
     resolve: {
       alias: {
-        '@': resolve(__dirname, 'src')
+        '@': resolve(__dirname, 'src'),
+        '@tanstack/react-start': resolve(__dirname, 'src/tanstack-start-stub.ts')
       }
     },
     plugins: [
