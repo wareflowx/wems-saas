@@ -19,6 +19,7 @@ import { PageHeaderCard } from "@/components/ui/page-header-card";
 import { MetricsSection } from "@/components/ui/metrics-section";
 import { useTranslation } from "react-i18next";
 import { Link } from "@tanstack/react-router";
+import { DeadlineDetailSheet } from "@/components/home/DeadlineDetailSheet";
 import {
   Table,
   TableBody,
@@ -44,8 +45,11 @@ const DashboardLayout = () => {
   const [severityFilter, setSeverityFilter] = useState<string>("all");
   const [employeeFilter, setEmployeeFilter] = useState<string>("all");
   const [detailFilter, setDetailFilter] = useState<string>("all");
+  const [selectedDeadline, setSelectedDeadline] = useState<any>(null);
+  const [isSheetOpen, setIsSheetOpen] = useState(false);
 
   return (
+    <>
     <div className="flex flex-1 flex-col gap-4 p-4 pt-6">
         <DashboardContent
           t={t}
@@ -59,8 +63,17 @@ const DashboardLayout = () => {
           setSeverityFilter={setSeverityFilter}
           setEmployeeFilter={setEmployeeFilter}
           setDetailFilter={setDetailFilter}
+          setSelectedDeadline={setSelectedDeadline}
+          setIsSheetOpen={setIsSheetOpen}
         />
     </div>
+
+    <DeadlineDetailSheet
+      open={isSheetOpen}
+      onOpenChange={setIsSheetOpen}
+      deadline={selectedDeadline}
+    />
+    </>
   );
 };
 
@@ -76,6 +89,8 @@ const DashboardContent = ({
   setSeverityFilter,
   setEmployeeFilter,
   setDetailFilter,
+  setSelectedDeadline,
+  setIsSheetOpen,
 }: {
   t: (key: string) => string;
   search: string;
@@ -88,6 +103,8 @@ const DashboardContent = ({
   setSeverityFilter: (value: string) => void;
   setEmployeeFilter: (value: string) => void;
   setDetailFilter: (value: string) => void;
+  setSelectedDeadline: (deadline: any) => void;
+  setIsSheetOpen: (open: boolean) => void;
 }) => {
   // TODO: Replace with real data from database
   const metrics = {
@@ -376,15 +393,12 @@ const DashboardContent = ({
                 <TableHead>{t("dashboard.filterByDetail")}</TableHead>
                 <TableHead>{t("caces.date")}</TableHead>
                 <TableHead>{t("caces.status")}</TableHead>
-                <TableHead className="text-right">
-                  {t("employees.actions")}
-                </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {upcomingDeadlines.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={6} className="h-64">
+                  <TableCell colSpan={5} className="h-64">
                     <div className="flex flex-col items-center justify-center h-full text-muted-foreground p-8">
                       <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mb-4">
                         <SearchX className="h-8 w-8 opacity-50" />
@@ -417,13 +431,6 @@ const DashboardContent = ({
                       {deadline.date}
                     </TableCell>
                     <TableCell>{getStatusBadge(deadline.severity)}</TableCell>
-                    <TableCell className="text-right">
-                      <div className="flex justify-end gap-2">
-                        <Button variant="ghost" size="icon">
-                          <FileText className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    </TableCell>
                   </TableRow>
                 ))
               )}
