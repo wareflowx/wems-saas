@@ -5,9 +5,9 @@
   "main": "dist-electron/main.js",
   "scripts": {
     "dev": "vite dev --port 5555 --host 127.0.0.1",
-    "build": "vite build",
+    "build": "vite build && node scripts/postbuild.js",
     "build:electron": "tsc -p electron/tsconfig.json",
-    "electron:build": "vite build && electron-builder --win",
+    "electron:build": "vite build && node scripts/postbuild.js && electron-builder --win",
     "preview": "vite preview",
     "electron": "electron .",
     "test": "vitest run"
