@@ -2,18 +2,14 @@
   "name": "wems-saas",
   "private": true,
   "type": "module",
-  "main": "out/main/index.js",
+  "main": "dist-electron/main.js",
   "scripts": {
-    "dev": "vite dev --port 3000",
+    "dev": "vite dev --port 5555 --host 127.0.0.1",
     "build": "vite build",
+    "build:electron": "tsc -p electron/tsconfig.json",
     "preview": "vite preview",
-    "test": "vitest run",
-    "electron:dev": "electron-vite dev",
-    "electron:build": "electron-vite build",
-    "electron:preview": "electron-vite preview",
-    "build:win": "npm run electron:build && electron-builder --win",
-    "build:mac": "npm run electron:build && electron-builder --mac",
-    "build:linux": "npm run electron:build && electron-builder --linux"
+    "electron": "electron .",
+    "test": "vitest run"
   },
   "dependencies": {
     "@base-ui/react": "^1.1.0",
@@ -62,7 +58,6 @@
     "@vitejs/plugin-react": "^5.0.4",
     "electron": "^33.2.1",
     "electron-builder": "^25.1.8",
-    "electron-vite": "^5.0.0",
     "jsdom": "^27.0.0",
     "typescript": "^5.7.2",
     "vite": "^7.1.7",
@@ -78,11 +73,12 @@
       "buildResources": "electron/resources"
     },
     "files": [
+      "dist/**/*",
       "dist-electron/**/*",
       "package.json"
     ],
     "extraMetadata": {
-      "main": "dist-electron/main/index.js"
+      "main": "dist-electron/main.js"
     },
     "win": {
       "target": [
