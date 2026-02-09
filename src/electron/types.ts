@@ -59,6 +59,14 @@ export interface ElectronAPI {
     getPlatform: () => NodeJS.Platform
     getArch: () => string
   }
+
+  // Auto-updater
+  updater: {
+    checkForUpdates: () => Promise<void>
+    downloadUpdate: () => Promise<void>
+    quitAndInstall: () => Promise<void>
+    onEvent: (callback: (event: { status: string; data?: unknown }) => void) => () => void
+  }
 }
 
 declare global {

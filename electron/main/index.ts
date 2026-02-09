@@ -2,6 +2,7 @@ import { app, BrowserWindow } from 'electron'
 import { join } from 'node:path'
 import { registerIPCHandlers } from './ipc/handlers'
 import { createApplicationMenu } from './menu'
+import { appUpdater } from './updater'
 
 let mainWindow: BrowserWindow | null = null
 
@@ -29,6 +30,9 @@ function createMainWindow(): void {
       webSecurity: true
     }
   })
+
+  // Set main window for updater
+  appUpdater.setMainWindow(mainWindow)
 
   // Load the app
   if (isDev && process.env.ELECTRON_RENDERER_URL) {

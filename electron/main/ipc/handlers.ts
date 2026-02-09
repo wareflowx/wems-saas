@@ -2,6 +2,7 @@ import { app, BrowserWindow, dialog, ipcMain, Notification, shell } from 'electr
 import { readdir, readFile, writeFile, existsSync, mkdir } from 'node:fs/promises'
 import { join } from 'node:path'
 import { ipcChannels } from './channels'
+import { appUpdater } from '../updater'
 
 /**
  * Register all IPC handlers
@@ -165,5 +166,18 @@ export function registerIPCHandlers(): void {
         body: options.body
       }).show()
     }
+  })
+
+  // Updater handlers
+  ipcMain.handle(ipcChannels.updater.checkForUpdates, () => {
+    return appUpdater.checkForUpdates()
+  })
+
+  ipcMain.handle(ipcChannels.updater.downloadUpdate, () => {
+    return appUpdater.downloadUpdate()
+  })
+
+  ipcMain.handle(ipcChannels.updater.quitAndInstall, () => {
+    return appUpdater.quitAndInstall()
   })
 }

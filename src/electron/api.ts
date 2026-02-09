@@ -71,6 +71,15 @@ export const platformAPI = {
   getArch: () => getElectronAPI().platform.getArch()
 }
 
+// Updater APIs
+export const updaterAPI = {
+  checkForUpdates: () => getElectronAPI().updater.checkForUpdates(),
+  downloadUpdate: () => getElectronAPI().updater.downloadUpdate(),
+  quitAndInstall: () => getElectronAPI().updater.quitAndInstall(),
+  onEvent: (callback: (event: { status: string; data?: unknown }) => void) =>
+    getElectronAPI().updater.onEvent(callback)
+}
+
 // Combined API object
 export const electron = {
   app: appAPI,
@@ -79,6 +88,7 @@ export const electron = {
   dialog: dialogAPI,
   notification: notificationAPI,
   platform: platformAPI,
+  updater: updaterAPI,
   isElectron
 }
 

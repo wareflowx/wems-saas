@@ -38,6 +38,13 @@ export const ipcChannels = {
   // Notification channels (send only, no response expected)
   notification: {
     show: 'notification:show'
+  },
+
+  // Updater channels
+  updater: {
+    checkForUpdates: 'updater:checkForUpdates',
+    downloadUpdate: 'updater:downloadUpdate',
+    quitAndInstall: 'updater:quitAndInstall'
   }
 } as const
 
