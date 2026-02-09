@@ -1,0 +1,49 @@
+name: Release Electron App
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  release:
+    strategy:
+      matrix:
+        os: [windows-latest]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 9
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build Electron app
+        run: pnpm electron:build
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload artifacts to Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            release/*.exe
+            release/*.exe.blockmap
+          draft: false
+          prerelease: true
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
