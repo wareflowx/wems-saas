@@ -4,10 +4,10 @@
   "type": "module",
   "main": "dist-electron/main.js",
   "scripts": {
-    "dev": "vite dev --port 5555 --host 127.0.0.1",
+    "dev": "pnpm run build:electron && vite dev --port 5555 --host 127.0.0.1",
     "build": "vite build && node scripts/postbuild.js",
     "build:electron": "tsc -p electron/tsconfig.json",
-    "electron:build": "vite build && node scripts/postbuild.js && electron-builder --win",
+    "electron:build": "pnpm run build && pnpm run build:electron && electron-builder --win",
     "preview": "vite preview",
     "electron": "electron .",
     "test": "vitest run"
@@ -64,7 +64,6 @@
     "jsdom": "^27.0.0",
     "typescript": "^5.7.2",
     "vite": "^7.1.7",
-    "vite-plugin-electron": "^0.29.0",
     "vitest": "^3.0.5",
     "web-vitals": "^5.1.0"
   },
