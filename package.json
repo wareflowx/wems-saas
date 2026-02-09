@@ -2,10 +2,13 @@
   "name": "wems-saas",
   "private": true,
   "type": "module",
+  "main": "dist-electron/main.js",
   "scripts": {
-    "dev": "vite dev --port 3000",
+    "dev": "vite dev --port 5555 --host 127.0.0.1",
     "build": "vite build",
+    "build:electron": "tsc -p electron/tsconfig.json",
     "preview": "vite preview",
+    "electron": "electron .",
     "test": "vitest run"
   },
   "dependencies": {
@@ -22,6 +25,7 @@
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
     "date-fns": "^4.1.0",
+    "electron-updater": "^6.3.9",
     "embla-carousel-react": "^8.6.0",
     "i18next": "^25.8.1",
     "i18next-browser-languagedetector": "^8.2.0",
@@ -52,10 +56,78 @@
     "@types/react": "^19.2.0",
     "@types/react-dom": "^19.2.0",
     "@vitejs/plugin-react": "^5.0.4",
+    "electron": "^33.2.1",
+    "electron-builder": "^25.1.8",
     "jsdom": "^27.0.0",
     "typescript": "^5.7.2",
     "vite": "^7.1.7",
+    "vite-plugin-electron": "^0.29.0",
     "vitest": "^3.0.5",
     "web-vitals": "^5.1.0"
+  },
+  "build": {
+    "appId": "com.wareflowx.wems",
+    "productName": "WEMS",
+    "directories": {
+      "output": "release",
+      "buildResources": "electron/resources"
+    },
+    "files": [
+      "dist/**/*",
+      "dist-electron/**/*",
+      "package.json"
+    ],
+    "extraMetadata": {
+      "main": "dist-electron/main.js"
+    },
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64",
+            "arm64"
+          ]
+        }
+      ],
+      "icon": "electron/resources/icons/icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
+    },
+    "mac": {
+      "target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "x64",
+            "arm64"
+          ]
+        }
+      ],
+      "icon": "electron/resources/icons/icon.icns",
+      "category": "public.app-category.business"
+    },
+    "linux": {
+      "target": [
+        {
+          "target": "AppImage",
+          "arch": [
+            "x64",
+            "arm64"
+          ]
+        }
+      ],
+      "icon": "electron/resources/icons/icon.png",
+      "category": "Office"
+    },
+    "publish": {
+      "provider": "github",
+      "owner": "wareflowx",
+      "repo": "wems-saas"
+    }
   }
 }

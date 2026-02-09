@@ -36,10 +36,6 @@ interface Alert {
   date: string
 }
 
-export const Route = createFileRoute('/alerts')({
-  component: AlertsLayout,
-})
-
 const AlertsLayout = () => {
   const { t } = useTranslation()
   const [search, setSearch] = useState('')
@@ -454,3 +450,7 @@ const AlertsLayout = () => {
     </TooltipProvider>
   )
 }
+
+export const Route = createFileRoute('/alerts')({
+  component: AlertsLayout,
+})

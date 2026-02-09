@@ -45,10 +45,6 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 
-export const Route = createFileRoute('/contracts')({
-  component: ContractsLayout,
-})
-
 const ContractsLayout = () => {
   const { t } = useTranslation()
   const [search, setSearch] = useState('')
@@ -452,3 +448,7 @@ const ContractsLayout = () => {
     </>
   )
 }
+
+export const Route = createFileRoute('/contracts')({
+  component: ContractsLayout,
+})

@@ -10,10 +10,6 @@ import { useTranslation } from "react-i18next";
 import { PageHeaderCard } from "@/components/ui/page-header-card";
 import { DetailBadge } from "@/components/ui/badge";
 
-export const Route = createFileRoute("/settings/alerts")({
-  component: SettingsAlertsLayout,
-});
-
 const SettingsAlertsLayout = () => {
   const { t } = useTranslation();
   return (
@@ -130,3 +126,7 @@ const SettingsAlertsLayout = () => {
     </SidebarInset>
   );
 };
+
+export const Route = createFileRoute("/settings/alerts")({
+  component: SettingsAlertsLayout,
+});

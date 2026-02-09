@@ -31,10 +31,6 @@ import { PageHeaderCard } from "@/components/ui/page-header-card";
 import { MetricsSection } from "@/components/ui/metrics-section";
 import { StatusBadge, DetailBadge } from "@/components/ui/badge";
 
-export const Route = createFileRoute("/employees_/$id")({
-  component: EmployeeDetailLayout,
-});
-
 const employees = [
   {
     id: 1,
@@ -548,3 +544,7 @@ const EmployeeDetailLayout = () => {
     </SidebarInset>
   );
 };
+
+export const Route = createFileRoute("/employees_/$id")({
+  component: EmployeeDetailLayout,
+});
