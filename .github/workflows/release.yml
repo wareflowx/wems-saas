@@ -7,6 +7,8 @@ on:
 
 jobs:
   release:
+    permissions:
+      contents: write
     strategy:
       matrix:
         os: [windows-latest]
@@ -16,9 +18,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        with:
-          permissions:
-            contents: write
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
