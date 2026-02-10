@@ -95,7 +95,8 @@
           ]
         }
       ],
-      "icon": "electron/resources/icons/icon.ico"
+      "icon": "electron/resources/icons/icon.ico",
+      "sign": null
     },
     "nsis": {
       "oneClick": false,

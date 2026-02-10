@@ -1,13 +1,15 @@
 import { app, BrowserWindow, ipcMain, shell } from "electron";
 import path from "path";
 import { fileURLToPath } from "url";
+import { spawn } from "child_process";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const isDev = process.env.NODE_ENV === "development" || !app.isPackaged;
+const isDev = app.isPackaged === false;
 
 let mainWindow: BrowserWindow | null = null;
+let serverProcess: ReturnType<typeof spawn> | null = null;
 
 // IPC handlers for window controls
 ipcMain.on("window-minimize", () => {
@@ -30,7 +32,45 @@ ipcMain.handle("window-is-maximized", () => {
   return mainWindow ? mainWindow.isMaximized() : false;
 });
 
-function createWindow() {
+function startServer() {
+  if (isDev) {
+    return Promise.resolve("http://localhost:5555");
+  }
+
+  return new Promise<string>((resolve, reject) => {
+    const serverPath = path.join(__dirname, "../dist/server/index.js");
+    const PORT = 3000;
+
+    console.log("Starting server at:", serverPath);
+
+    serverProcess = spawn("node", [serverPath], {
+      env: { ...process.env, PORT: String(PORT), NODE_ENV: "production" },
+      stdio: "pipe",
+    });
+
+    serverProcess.on("error", (err) => {
+      console.error("Failed to start server:", err);
+      reject(err);
+    });
+
+    serverProcess.stdout?.on("data", (data) => {
+      console.log("Server stdout:", data.toString());
+    });
+
+    serverProcess.stderr?.on("data", (data) => {
+      console.error("Server stderr:", data.toString());
+    });
+
+    // Give server time to start
+    setTimeout(() => {
+      const url = `http://localhost:${PORT}`;
+      console.log("Server should be ready at:", url);
+      resolve(url);
+    }, 3000);
+  });
+}
+
+async function createWindow() {
   mainWindow = new BrowserWindow({
     width: 1200,
     height: 800,
@@ -42,12 +82,13 @@ function createWindow() {
     },
   });
 
+  const serverUrl = await startServer();
+
   if (isDev) {
     mainWindow.webContents.openDevTools();
-    mainWindow.loadURL("http://localhost:5555");
-  } else {
-    mainWindow.loadFile(path.join(__dirname, "../dist/index.html"));
   }
+
+  mainWindow.loadURL(serverUrl);
 }
 
 // This method will be called when Electron finishes loading
@@ -67,6 +108,14 @@ app.whenReady().then(() => {
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
     app.quit();
+  }
+});
+
+// Clean up server process on quit
+app.on("before-quit", () => {
+  if (serverProcess) {
+    serverProcess.kill();
+    serverProcess = null;
   }
 });
 
