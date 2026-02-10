@@ -1,5 +1,8 @@
 {
   "name": "wems-saas",
+  "version": "0.0.6",
+  "description": "WEMS - Workforce Employee Management System",
+  "author": "wareflowx",
   "private": true,
   "type": "module",
   "main": "dist-electron/main.js",
